@@ -1,4 +1,4 @@
-package com.hallila.trycatch.service
+package com.hallila.trycatch.handler
 
 import com.hallila.trycatch.repository.TestRepository
 import ratpack.handling.Context

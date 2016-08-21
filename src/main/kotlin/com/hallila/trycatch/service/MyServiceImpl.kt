@@ -1,6 +1,4 @@
-package com.hallila.trycatch
-
-import com.hallila.trycatch.MyService
+package com.hallila.trycatch.service
 
 /**
  * The service implementation.

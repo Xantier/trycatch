@@ -1,4 +1,4 @@
-package com.hallila.trycatch
+package com.hallila.trycatch.service
 
 /**
  * An example service interface.

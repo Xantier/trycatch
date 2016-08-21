@@ -1,6 +1,6 @@
-package com.hallila.trycatch
+package com.hallila.trycatch.handler
 
-import com.hallila.trycatch.MyService
+import com.hallila.trycatch.service.MyService
 import ratpack.handling.Context
 import ratpack.handling.Handler
 import javax.inject.Inject

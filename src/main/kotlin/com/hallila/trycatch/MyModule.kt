@@ -4,10 +4,18 @@ import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
 import com.google.inject.AbstractModule
 import com.google.inject.multibindings.Multibinder
 import com.google.inject.name.Names
+import com.hallila.trycatch.handler.HttpRequestHandler
+import com.hallila.trycatch.handler.LoggingHandler
+import com.hallila.trycatch.handler.MyHandler
+import com.hallila.trycatch.handler.TestHandler
 import com.hallila.trycatch.repository.TestRepository
 import com.hallila.trycatch.repository.TestRepositoryImpl
-import com.hallila.trycatch.service.TestHandler
+import com.hallila.trycatch.service.HttpClientService
+import com.hallila.trycatch.service.HttpClientServiceImpl
+import com.hallila.trycatch.service.MyService
+import com.hallila.trycatch.service.MyServiceImpl
 import ratpack.handling.HandlerDecorator
+import ratpack.rx.RxRatpack
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -17,11 +25,14 @@ import java.util.*
 class MyModule : AbstractModule() {
 
     override fun configure() {
+        RxRatpack.initialize()
         bindProperties()
         bind(MyService::class.java).to(MyServiceImpl::class.java)
         bind(TestRepository::class.java).to(TestRepositoryImpl::class.java)
+        bind(HttpClientService::class.java).to(HttpClientServiceImpl::class.java)
         bind(MyHandler::class.java)
         bind(TestHandler::class.java)
+        bind(HttpRequestHandler::class.java)
         Multibinder.newSetBinder(binder(), HandlerDecorator::class.java)
                 .addBinding()
                 .toInstance(HandlerDecorator.prepend(LoggingHandler()))

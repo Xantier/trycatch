@@ -1,6 +1,8 @@
 package com.hallila.trycatch
 
-import com.hallila.trycatch.service.TestHandler
+import com.hallila.trycatch.handler.HttpRequestHandler
+import com.hallila.trycatch.handler.MyHandler
+import com.hallila.trycatch.handler.TestHandler
 import org.slf4j.LoggerFactory.getLogger
 import ratpack.handling.Context
 import ratpack.server.BaseDir
@@ -45,11 +47,25 @@ object Main {
 
             // Map to a dependency injected handler
             path("injected", MyHandler::class.java)
-            path("test", TestHandler::class.java)
+            prefix("test") {
+                path("test", TestHandler::class.java)
+                path("get", HttpRequestHandler::class.java)
+            }
 
-            // Bind the /static app path to the src/ratpack/assets/images dir
             prefix("static") {
-                fileSystem("assets/images") { files() }
+                prefix("dist"){
+                    fileSystem("static/dist") { files() }
+                }
+                prefix("img"){
+                    fileSystem("static/img") { files() }
+                }
+                prefix("css"){
+                    fileSystem("static/css") { files() }
+                }
+            }
+
+            prefix("view") {
+                fileSystem("static/view") { files() }
             }
 
             all { render("root handler!") }

@@ -5,3 +5,5 @@
 *.iml
 *.iws
 *.log
+node_modules
+dist
