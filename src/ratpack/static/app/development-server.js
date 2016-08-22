@@ -16,10 +16,10 @@ export function run() {
   });
 
   const bundler = new WebpackDevServer(compiler, {
-    publicPath: '/',
+    publicPath: '/static/dist/',
     proxy: [{
-      path: /(?!\/dist\/.*js)$/,
-      target: 'http://localhost:5050/'
+      path: ['/view', '/static/style', '/api'],
+      target: 'http://localhost:5050'
     }],
     hot: true,
     quiet: false,

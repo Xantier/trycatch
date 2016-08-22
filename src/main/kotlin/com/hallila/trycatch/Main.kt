@@ -53,19 +53,23 @@ object Main {
             }
 
             prefix("static") {
-                prefix("dist"){
+                prefix("dist") {
                     fileSystem("static/dist") { files() }
                 }
-                prefix("img"){
+                prefix("img") {
                     fileSystem("static/img") { files() }
                 }
-                prefix("css"){
-                    fileSystem("static/css") { files() }
+                prefix("style") {
+                    fileSystem("static/style") { files() }
                 }
             }
 
             prefix("view") {
-                fileSystem("static/view") { files() }
+                fileSystem("static/view") { files({ it.indexFiles("index.html") }) }
+            }
+
+            prefix("api") {
+                post("json", HttpRequestHandler::class.java)
             }
 
             all { render("root handler!") }

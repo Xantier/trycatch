@@ -38,7 +38,7 @@ const TodoList = (props) => {
 };
 
 TodoList.propTypes = {
-  todos: React.PropTypes.array,
+  todos: React.PropTypes.object,
   toggleTodo: React.PropTypes.func,
   addTodo: React.PropTypes.func
 };

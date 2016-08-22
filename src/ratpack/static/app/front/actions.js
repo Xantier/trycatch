@@ -11,9 +11,9 @@ export function addTodo(text) {
   };
 }
 
-export function toggleTodo(id) {
+export function postJson(id) {
   return {
-    type: 'TOGGLE_TODO',
+    type: 'POST_JSON',
     payload: id
   };
 }

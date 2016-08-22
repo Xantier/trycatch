@@ -5,6 +5,7 @@
     "stage-1"
   ],
   "plugins": [
-    "transform-react-stateless-component-name"
+    "transform-react-stateless-component-name",
+    "babel-plugin-transform-runtime"
   ]
 }
