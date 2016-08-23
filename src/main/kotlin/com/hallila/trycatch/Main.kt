@@ -1,5 +1,6 @@
 package com.hallila.trycatch
 
+import com.hallila.trycatch.handler.DatabaseInsertHandler
 import com.hallila.trycatch.handler.HttpRequestHandler
 import com.hallila.trycatch.handler.MyHandler
 import com.hallila.trycatch.handler.TestHandler
@@ -70,6 +71,10 @@ object Main {
 
             prefix("api") {
                 post("json", HttpRequestHandler::class.java)
+            }
+
+            prefix("api") {
+                post("insert", DatabaseInsertHandler::class.java)
             }
 
             all { render("root handler!") }

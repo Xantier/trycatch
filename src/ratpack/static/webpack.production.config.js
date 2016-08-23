@@ -20,7 +20,7 @@ module.exports = {
    *  different pages and include only needed code to those pages.
    */
   entry: {
-    index: './app/front/index.ts',
+    index: './app/front/index.js',
     vendor: ['core-js', 'react']
   },
   /**
@@ -37,7 +37,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ["", ".ts", ".tsx", ".js", ".jsx"]
+    extensions: ['', '.js', '.jsx']
   },
 
   /**
@@ -52,7 +52,6 @@ module.exports = {
    */
   module: {
     loaders: [
-      {test: /\.tsx?$/, exclude: /node_modules/, loader: 'ts-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'eslint-loader'}
     ]

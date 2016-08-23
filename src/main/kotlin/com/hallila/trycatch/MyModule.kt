@@ -4,10 +4,7 @@ import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
 import com.google.inject.AbstractModule
 import com.google.inject.multibindings.Multibinder
 import com.google.inject.name.Names
-import com.hallila.trycatch.handler.HttpRequestHandler
-import com.hallila.trycatch.handler.LoggingHandler
-import com.hallila.trycatch.handler.MyHandler
-import com.hallila.trycatch.handler.TestHandler
+import com.hallila.trycatch.handler.*
 import com.hallila.trycatch.repository.TestRepository
 import com.hallila.trycatch.repository.TestRepositoryImpl
 import com.hallila.trycatch.service.HttpClientService
@@ -33,6 +30,7 @@ class MyModule : AbstractModule() {
         bind(MyHandler::class.java)
         bind(TestHandler::class.java)
         bind(HttpRequestHandler::class.java)
+        bind(DatabaseInsertHandler::class.java)
         Multibinder.newSetBinder(binder(), HandlerDecorator::class.java)
                 .addBinding()
                 .toInstance(HandlerDecorator.prepend(LoggingHandler()))

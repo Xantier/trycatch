@@ -1,6 +1,13 @@
-const uid = () => Math.random().toString(34).slice(2);
+const uid = (): String => Math.random().toString(34).slice(2);
 
-export function addTodo(text) {
+type Action = {
+  type: string,
+  payload?: any,
+  error?: boolean,
+  meta?: any,
+}
+
+export function addTodo(text: String): Action {
   return {
     type: 'ADD_TODO',
     payload: {
@@ -11,7 +18,16 @@ export function addTodo(text) {
   };
 }
 
-export function postJson(id) {
+export function initializeDatabase(query: String): Action {
+  return {
+    type: 'INITIALIZE_DATABASE',
+    payload: {
+      query: query
+    }
+  };
+}
+
+export function postJson(id: Number): Action {
   return {
     type: 'POST_JSON',
     payload: id

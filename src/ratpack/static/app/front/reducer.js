@@ -1,5 +1,7 @@
 import {List, Map} from 'immutable';
 
+export type State = Array;
+
 const init = List([]);
 
 export default function reducer(todos = init, action) {
