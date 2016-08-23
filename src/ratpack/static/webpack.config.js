@@ -25,9 +25,12 @@ module.exports = {
     index: [
       'webpack-dev-server/client?http://0.0.0.0:3000',
       'webpack/hot/dev-server',
-      './app/front/index.js'
+      './app/front/index.ts'
     ],
     vendor: ['core-js', 'react']
+  },
+  resolve: {
+    extensions: ["", ".ts", ".tsx", ".js", ".jsx"]
   },
 
   /**
@@ -56,6 +59,7 @@ module.exports = {
    */
   module: {
     loaders: [
+      {test: /\.tsx?$/, exclude: /node_modules/, loader: 'ts-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'react-hot-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'eslint-loader'}

@@ -12,7 +12,7 @@ var buildPath = path.resolve(__dirname, 'dist');
 module.exports = {
   /**
    *  Key, value config defining the entry points to our application.
-   *  1. bundle entry contains everything that is required by ./app/index.js and its' descendants
+   *  1. bundle entry contains everything that is required by ./app/index.ts and its' descendants
    *  2. vendor entry contains vendor libraries from node_modules. Every time for example react is
    *  required/imported webpack replaces that with a module from our vendor bundle
    *
@@ -20,7 +20,7 @@ module.exports = {
    *  different pages and include only needed code to those pages.
    */
   entry: {
-    index: './app/front/index.js',
+    index: './app/front/index.ts',
     vendor: ['core-js', 'react']
   },
   /**
@@ -36,6 +36,10 @@ module.exports = {
     publicPath: '/'
   },
 
+  resolve: {
+    extensions: ["", ".ts", ".tsx", ".js", ".jsx"]
+  },
+
   /**
    * Additional loaders that webpack will run against then bundle it creates.
    * For our production build we use babel and eslint.
@@ -48,6 +52,7 @@ module.exports = {
    */
   module: {
     loaders: [
+      {test: /\.tsx?$/, exclude: /node_modules/, loader: 'ts-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'eslint-loader'}
     ]
