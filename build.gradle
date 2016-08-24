@@ -36,7 +36,9 @@ dependencies {
             'org.funktionale:funktionale:0.9',
             'org.skyscreamer:jsonassert:1.3.0',
             'org.postgresql:postgresql:9.4.1209',
-            'com.h2database:h2:1.4.192'
+            'com.h2database:h2:1.4.192',
+            'com.github.seratch:kotliquery:1.1.1',
+            'com.zaxxer:HikariCP:2.4.7'
 
     runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.6.1',
             'org.apache.logging.log4j:log4j-api:2.6.1',

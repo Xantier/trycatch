@@ -2,5 +2,7 @@ version: 1.0
 released: 2016-08-20
 
 database:
-    url: jdbc:h2:mem:test
-    driver: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/trycatch
+    driver: org.postgresql.Driver
+    user: postgres
+    password: postgres

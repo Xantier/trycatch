@@ -2,18 +2,40 @@ package com.hallila.trycatch.repository
 
 import com.google.inject.Inject
 import com.google.inject.name.Named
+import kotliquery.HikariCP
+import kotliquery.queryOf
+import kotliquery.sessionOf
+import kotliquery.using
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.transactions.transaction
+import ratpack.exec.Promise
 
-class TestRepositoryImpl @Inject constructor(@Named("database.url") val dbUrl: String, @Named("database.driver") val dbDriver: String) : TestRepository {
+class TestRepositoryImpl @Inject constructor(
+    @Named("database.url") val dbUrl: String,
+    @Named("database.driver") val dbDriver: String,
+    @Named("database.user") val user: String,
+    @Named("database.password") val password: String) : TestRepository {
     override fun retrieveCases(): List<String> {
         return retrieve().map { it.toString() }
     }
 
+    override fun insert(statement: Promise<String>): Unit {
+        statement.then {
+            HikariCP.default(dbUrl, user, password)
+            using(sessionOf(HikariCP.dataSource())) { session ->
+                session.run(queryOf(it).asUpdate)
+            }
+            Database.connect(dbUrl, driver = dbDriver, user = user, password = password)
+            transaction {
+                val allCities = Cities.selectAll()
+                allCities.forEach { println(it.toString()) }
+            }
+        }
+    }
 
     fun retrieve(): List<String> {
-        Database.connect(dbUrl, driver = dbDriver)
+        Database.connect(dbUrl, driver = dbDriver, user = user, password = password)
         var returnable: List<String> = emptyList()
         transaction {
             create(Cities, Users)
@@ -74,10 +96,10 @@ class TestRepositoryImpl @Inject constructor(@Named("database.url") val dbUrl: S
 
             println("Manual join:")
             (Users innerJoin Cities).slice(Users.name, Cities.name).
-                    select {
-                        (Users.id.eq("andrey") or Users.name.eq("Sergey")) and
-                                Users.id.eq("sergey") and Users.cityId.eq(Cities.id)
-                    }.forEach {
+                select {
+                    (Users.id.eq("andrey") or Users.name.eq("Sergey")) and
+                        Users.id.eq("sergey") and Users.cityId.eq(Cities.id)
+                }.forEach {
                 println("${it[Users.name]} lives in ${it[Cities.name]}")
             }
 
@@ -85,7 +107,7 @@ class TestRepositoryImpl @Inject constructor(@Named("database.url") val dbUrl: S
 
 
             (Users innerJoin Cities).slice(Users.name, Users.cityId, Cities.name).
-                    select { Cities.name.eq("St. Petersburg") or Users.cityId.isNull() }.forEach {
+                select { Cities.name.eq("St. Petersburg") or Users.cityId.isNull() }.forEach {
                 if (it[Users.cityId] != null) {
                     println("${it[Users.name]} lives in ${it[Cities.name]}")
                 } else {
