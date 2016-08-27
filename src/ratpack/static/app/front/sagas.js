@@ -15,7 +15,7 @@ function* post(action: Object): void {
 
 function* initDb(action: Object): void {
   try {
-    const response = yield call(postJson('/api/insert'), action.payload);
+    const response = yield call(postJson('/api/select'), action.payload);
     yield put({type: 'INITIALIZE_DATABASE_SUCCESS', response: response});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);

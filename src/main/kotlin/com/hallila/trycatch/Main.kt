@@ -1,11 +1,11 @@
 package com.hallila.trycatch
 
-import com.hallila.trycatch.handler.DatabaseInsertHandler
-import com.hallila.trycatch.handler.HttpRequestHandler
-import com.hallila.trycatch.handler.MyHandler
-import com.hallila.trycatch.handler.TestHandler
+import com.hallila.trycatch.config.MainModule
+import com.hallila.trycatch.handler.*
+import com.zaxxer.hikari.HikariConfig
 import org.slf4j.LoggerFactory.getLogger
 import ratpack.handling.Context
+import ratpack.hikari.HikariModule
 import ratpack.server.BaseDir
 
 object Main {
@@ -13,20 +13,26 @@ object Main {
 
     @JvmStatic fun main(args: Array<String>) {
         try {
-            createServer().start()
+            createServer(args).start()
         } catch (e: Exception) {
             log.error("", e)
             System.exit(1)
         }
     }
 
-    fun createServer() = serverOf {
-        serverConfig {
-            baseDir(BaseDir.find())
+    fun createServer(args: Array<String>) = serverOf {
+        serverConfig { builder ->
+            builder
+                .baseDir(BaseDir.find())
+                .yaml("db.yml")
+                .env()
+                .sysProps()
+                .args(args)
+                .require("/db", HikariConfig::class.java)
         }
-
         guiceRegistry {
-            module(MyModule())
+            module(MainModule())
+            module(HikariModule())
         }
 
         handlers {
@@ -71,17 +77,12 @@ object Main {
 
             prefix("api") {
                 post("json", HttpRequestHandler::class.java)
-            }
-
-            prefix("api") {
                 post("insert", DatabaseInsertHandler::class.java)
+                post("select", DatabaseSelectHandler::class.java)
             }
-
-            all { render("root handler!") }
         }
     }
 }
-
 
 /** A handler as a method */
 fun bazHandler(context: Context) = context.render("from the baz handler")

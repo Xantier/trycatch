@@ -1,4 +1,4 @@
-package com.hallila.trycatch
+package com.hallila.trycatch.config
 
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
 import com.google.inject.AbstractModule
@@ -19,7 +19,7 @@ import java.nio.file.Paths
 import java.util.*
 
 
-class MyModule : AbstractModule() {
+class MainModule : AbstractModule() {
 
     override fun configure() {
         RxRatpack.initialize()
@@ -31,11 +31,13 @@ class MyModule : AbstractModule() {
         bind(TestHandler::class.java)
         bind(HttpRequestHandler::class.java)
         bind(DatabaseInsertHandler::class.java)
+        bind(DatabaseSelectHandler::class.java)
         Multibinder.newSetBinder(binder(), HandlerDecorator::class.java)
-                .addBinding()
-                .toInstance(HandlerDecorator.prepend(LoggingHandler()))
+            .addBinding()
+            .toInstance(ratpack.handling.HandlerDecorator.prepend(LoggingHandler()))
     }
 
+    @Deprecated("Replaced with ratpack embedded configuration. Modify property loader to load save test cases.")
     @Throws(IOException::class)
     fun bindProperties() {
         val yaml = Yaml()
@@ -48,8 +50,8 @@ class MyModule : AbstractModule() {
                 fun mapProps(key: String, value: Any) {
                     when (value) {
                         is Map<*, *> -> prefixKeys(key, value).forEach { mapProps(it.key, it.value!!) }
-                        is String -> bindConstant().annotatedWith(Names.named(key)).to(value.toString())
-                        else -> bindConstant().annotatedWith(Names.named(key)).to(value.toString())
+                        is String    -> bindConstant().annotatedWith(Names.named(key)).to(value.toString())
+                        else         -> bindConstant().annotatedWith(Names.named(key)).to(value.toString())
                     }
                 }
                 mapProps(str.toString(), property)

@@ -10,19 +10,20 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.transactions.transaction
 import ratpack.exec.Promise
+import ratpack.hikari.HikariService
 
 class TestRepositoryImpl @Inject constructor(
     @Named("database.url") val dbUrl: String,
     @Named("database.driver") val dbDriver: String,
     @Named("database.user") val user: String,
-    @Named("database.password") val password: String) : TestRepository {
+    @Named("database.password") val password: String,
+    val datasource: HikariService) : TestRepository {
     override fun retrieveCases(): List<String> {
         return retrieve().map { it.toString() }
     }
 
     override fun insert(statement: Promise<String>): Unit {
         statement.then {
-            HikariCP.default(dbUrl, user, password)
             using(sessionOf(HikariCP.dataSource())) { session ->
                 session.run(queryOf(it).asUpdate)
             }
@@ -31,6 +32,14 @@ class TestRepositoryImpl @Inject constructor(
                 val allCities = Cities.selectAll()
                 allCities.forEach { println(it.toString()) }
             }
+        }
+    }
+
+    override fun select(slct: Promise<String>): Promise<String> {
+        slct.then {
+            val stmt = datasource.dataSource    .getConnection().prepareStatement("SELECT * FROM Cities")
+            val resultSet = stmt.executeQuery()
+            println(resultSet.toString())
         }
     }
 
