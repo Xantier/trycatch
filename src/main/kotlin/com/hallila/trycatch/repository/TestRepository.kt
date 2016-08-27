@@ -8,5 +8,5 @@ interface TestRepository {
 
     fun insert(statement: Promise<String>): Any
 
-    fun select(slct: Promise<String>): Promise<String>
+    fun select(slct: String): Promise<List<String>>
 }

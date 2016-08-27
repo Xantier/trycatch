@@ -4,5 +4,5 @@ db:
   password: postgres
   dataSourceProperties:
     databaseName: trycatch
-    serverName: 192.168.0.4
+    serverName: localhost
     portNumber: 5432

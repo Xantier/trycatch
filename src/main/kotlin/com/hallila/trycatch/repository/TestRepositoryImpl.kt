@@ -2,12 +2,11 @@ package com.hallila.trycatch.repository
 
 import com.google.inject.Inject
 import com.google.inject.name.Named
-import kotliquery.HikariCP
+import kotliquery.Row
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import kotliquery.using
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.transactions.transaction
 import ratpack.exec.Promise
 import ratpack.hikari.HikariService
@@ -17,14 +16,14 @@ class TestRepositoryImpl @Inject constructor(
     @Named("database.driver") val dbDriver: String,
     @Named("database.user") val user: String,
     @Named("database.password") val password: String,
-    val datasource: HikariService) : TestRepository {
+    val hikari: HikariService) : TestRepository {
     override fun retrieveCases(): List<String> {
         return retrieve().map { it.toString() }
     }
 
     override fun insert(statement: Promise<String>): Unit {
         statement.then {
-            using(sessionOf(HikariCP.dataSource())) { session ->
+            using(sessionOf(hikari.dataSource)) { session ->
                 session.run(queryOf(it).asUpdate)
             }
             Database.connect(dbUrl, driver = dbDriver, user = user, password = password)
@@ -35,19 +34,32 @@ class TestRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun select(slct: Promise<String>): Promise<String> {
-        slct.then {
-            val stmt = datasource.dataSource    .getConnection().prepareStatement("SELECT * FROM Cities")
-            val resultSet = stmt.executeQuery()
-            println(resultSet.toString())
+    override fun select(slct: String): Promise<List<String>> {
+        val csv: (Row) -> String = { row ->
+            extract(row)
         }
+        val queryResult = using(sessionOf(hikari.dataSource)) { session ->
+            session.run(queryOf(slct).map(csv).asList)
+        }
+        return Promise.value(queryResult)
+    }
+
+    private fun extract(row: Row): String {
+        val builder = StringBuilder()
+        val columnCount = row.metaDataOrNull().columnCount
+        var i = 0
+        while (i < columnCount) {
+            builder.append(row.string(i + 1))
+            if (++i < columnCount) builder.append(",")
+        }
+        return builder.toString()
     }
 
     fun retrieve(): List<String> {
         Database.connect(dbUrl, driver = dbDriver, user = user, password = password)
         var returnable: List<String> = emptyList()
         transaction {
-            create(Cities, Users)
+/*            create(Cities, Users)
 
             val saintPetersburgId = Cities.insert {
                 it[name] = "St. Petersburg"
@@ -95,7 +107,7 @@ class TestRepositoryImpl @Inject constructor(
                 it[name] = "Alexey"
             }
 
-            Users.deleteWhere { Users.name like "%thing" }
+            Users.deleteWhere { Users.name like "%thing" }*/
 
             println("All cities:")
 
