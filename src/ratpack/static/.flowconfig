@@ -1,0 +1,14 @@
+[include]
+*./app/.*
+
+[ignore]
+*./dist/.*
+.*/node_modules/selectly/.*
+.*/node_modules/react-tap-event-plugin/.*
+
+[libs]
+./node_modules/fbjs/node_modules/promise
+./node_modules/fbjs/flow/lib
+
+[options]
+suppress_type=$FlowIssue
