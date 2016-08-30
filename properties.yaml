@@ -6,3 +6,5 @@ database:
     driver: org.postgresql.Driver
     user: postgres
     password: postgres
+
+scenario_location: scenarios

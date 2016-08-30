@@ -1,0 +1,15 @@
+insert: 
+  statement: "INSERT INTO Cities (name) values ('test city')"
+  expectation: "inserted successfully"
+json: 
+  payload: '{"hello":"world"}'
+  expectation: '{"hello":"world"}'
+  method: GET
+  param: 
+    API-Key: "foobar"
+select:
+  statement: "SELECT * FROM Cities where name = 'test city'"
+  expectation:
+    - "5,test city"
+    - "6,test city2"
+    
