@@ -1,15 +1,15 @@
-insert: 
-  statement: "INSERT INTO Cities (name) values ('test city')"
-  expectation: "inserted successfully"
-json: 
-  payload: '{"hello":"world"}'
-  expectation: '{"hello":"world"}'
+insert_city:
+  statement: INSERT INTO user (name) values ('test user')
+  expectation: inserted successfully
+request_get:
+  payload: '{"hi":"universe"}'
+  expectation: '{"hi":"universe"}'
   method: GET
-  param: 
-    API-Key: "foobar"
-select:
-  statement: "SELECT * FROM Cities where name = 'test city'"
+  path: "http://localhost/get"
+  params:
+    API-Key: foo
+select_test_city:
+  statement: SELECT * FROM user where name = 'test user'
   expectation:
-    - "5,test city"
-    - "6,test city2"
-    
+    - 5,test user
+    - 6,test user2

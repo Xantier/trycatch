@@ -1,6 +1,8 @@
 package com.hallila.trycatch.cli
 
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
+import com.hallila.trycatch.model.Scenario
+import com.hallila.trycatch.model.ScenarioBuilder
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
@@ -15,9 +17,9 @@ object MainCli {
 
     @JvmStatic fun main(args: Array<String>) {
         try {
-            println("Hello World")
             val scenarios = loadScenarios()
-            scenarios.forEach { println(it.keys) }
+            println(scenarios.size)
+            scenarios.forEach { println(it.toString()) }
         } catch (e: Exception) {
             log.error("", e)
             System.exit(1)
@@ -26,7 +28,7 @@ object MainCli {
 
     @Suppress("UNCHECKED_CAST")
     @Throws(IOException::class)
-    fun loadScenarios(): List<Map<String, String>> {
+    fun loadScenarios(): List<Scenario> {
         val yaml = Yaml()
         val scenario_location = Files.newInputStream(Paths.get("properties.yaml")).use({ `in` ->
             val config = yaml.loadAs(`in`, Properties::class.java)
@@ -34,11 +36,9 @@ object MainCli {
             if (!loc.endsWith("/")) loc + "/" else loc
         })
         val folder = File(scenario_location)
-        folder.listFiles().forEach {
-            println(it.name)
-        }
         return folder.walkTopDown().asIterable().filter { it.isFile }.map {
-            yaml.loadAs(it.inputStream(), Map::class.java) as Map<String, String>
+            val scenarios = yaml.loadAs(it.inputStream(), Map::class.java) as Map<String, String>
+            ScenarioBuilder.build(scenarios)
         }
     }
 }

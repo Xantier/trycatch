@@ -1,0 +1,15 @@
+insert_city:
+  statement: INSERT INTO Cities (name) values ('test city')
+  expectation: inserted successfully
+request_get:
+  payload: '{"hello":"world"}'
+  expectation: '{"hello":"world"}'
+  method: POST
+  path: "http://localhost/post"
+  params:
+    API-Key: bar
+select_test_city:
+  statement: SELECT * FROM Cities where name = 'test city'
+  expectation:
+    - 5,test city
+    - 6,test city2
