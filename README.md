@@ -14,7 +14,7 @@ Check this project out, cd into the directory and run:
 
 This will start the ratpack app in a development mode. In your browser go to `http://localhost:5050`.
 
-The Gradle Ratpack plugin builds on the Gradle Application plugin. This means it's easy to create a standalone
+The Gradle Ratpack plugin builds on the Gradle Application plugin. This means response's easy to create a standalone
 distribution for your app.
 
 Run:

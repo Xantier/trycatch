@@ -41,10 +41,10 @@ module.exports = {
   },
 
   /**
-   * Additional loaders that webpack will run against then bundle it creates.
+   * Additional loaders that webpack will run against then bundle response creates.
    * For our production build we use babel and eslint.
    *
-   * Babel transpiles ES6 and JSX files to ES5 javascript so it is compatible
+   * Babel transpiles ES6 and JSX files to ES5 javascript so response is compatible
    * to current browser versions.
    *
    * Eslint runs static analysis against our code and errors or warns in case

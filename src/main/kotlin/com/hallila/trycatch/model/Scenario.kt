@@ -8,17 +8,14 @@ import org.json.JSONObject
 
 data class Scenario(val steps: List<Step<*>>)
 
-data class InsertStep(val statement: String, override val expectation: DatabaseResponseExpectation) : Step<String>
-
-data class JsonAssertionStep(val payload: String, override val expectation: JsonExpectation, val request: Request = Request()) : Step<Json>
-
-data class SelectStep(val statement: String, override val expectation: CsvExpectation) : Step<List<String>>
+data class InsertStep(val statement: String, override val expectation: DatabaseResponseExpectation) : DatabaseStep<String>
+data class JsonAssertionStep(val payload: String, override val expectation: JsonExpectation, val request: Request = Request()) : HttpStep<Json>
+data class SelectStep(val statement: String, override val expectation: CsvExpectation) : DatabaseStep<List<String>>
 
 data class JsonExpectation(val json: Json) : Expectation<Json> {
     override fun getValue(): Json {
         return json
     }
-
     constructor(json: String) : this(Json(json))
 }
 
@@ -33,13 +30,14 @@ data class DatabaseResponseExpectation(val response: String) : Expectation<Strin
         return response
     }
 }
-
-interface Step<out T> {
-    val expectation: Expectation<T>
-}
-
 interface Expectation<out T> {
     fun getValue(): T
+}
+
+interface DatabaseStep<out T> : Step<T>
+interface HttpStep<out T> : Step<T>
+interface Step<out T> {
+    val expectation: Expectation<T>
 }
 
 class Json(val content: String) {

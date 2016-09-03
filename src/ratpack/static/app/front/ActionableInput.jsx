@@ -12,6 +12,7 @@ export default (props: Props): React.Element => {
     const text: string = input.value;
     const isEnterKey: boolean = (e.which === 13);
     const isLongEnough: boolean = text.length > 0;
+    console.log('fdadfsfds');
     if (isEnterKey && isLongEnough) {
       input.value = '';
       action(text);

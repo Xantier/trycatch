@@ -37,7 +37,6 @@ function* assertDatabaseValues(): void {
       expected: state.expected
     };
   });
-  console.log(payload);
   try {
     const response = yield call(postJson('/api/select'), payload);
     yield put({type: ASSERT_DATABASE_VALUES_SUCCESS, response: response});
