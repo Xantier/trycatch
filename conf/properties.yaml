@@ -1,0 +1,9 @@
+version: 1.0
+released: 2016-08-20
+
+database:
+  jdbcUrl: jdbc:postgresql://localhost:5432/trycatch
+  username: postgres
+  password: postgres
+
+scenario_location: scenarios

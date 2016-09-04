@@ -1,6 +1,6 @@
 package com.hallila.trycatch.web
 
-import com.hallila.trycatch.config.MainModule
+import com.hallila.trycatch.config.WebContextModule
 import com.hallila.trycatch.handler.DatabaseInsertHandler
 import com.hallila.trycatch.handler.DatabaseSelectHandler
 import com.hallila.trycatch.handler.HttpRequestHandler
@@ -35,7 +35,7 @@ object MainRat {
                 .require("/db", HikariConfig::class.java)
         }
         guiceRegistry {
-            module(MainModule())
+            module(WebContextModule())
             module(HikariModule())
         }
 
@@ -58,7 +58,6 @@ object MainRat {
 
             prefix("api") {
                 post("json", HttpRequestHandler::class.java)
-                path("get", HttpRequestHandler::class.java)
                 post("insert", DatabaseInsertHandler::class.java)
                 post("select", DatabaseSelectHandler::class.java)
             }

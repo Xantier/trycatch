@@ -15,28 +15,18 @@ import com.hallila.trycatch.service.HttpClientService
 import com.hallila.trycatch.service.HttpClientServiceImpl
 import ratpack.handling.HandlerDecorator
 import ratpack.rx.RxRatpack
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
-class MainModule : AbstractModule() {
+class WebContextModule : AbstractModule() {
 
     override fun configure() {
         RxRatpack.initialize()
-        val retrofit =
-            Retrofit.Builder()
-                .baseUrl("http://readthisfromsettingfile.com")
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build()
-        val retrofitService = retrofit.create(RetrofitService::class.java)
         bind(Repository::class.java).to(RepositoryImpl::class.java)
         bind(DatabaseService::class.java).to(DatabaseServiceImpl::class.java)
         bind(HttpClientService::class.java).to(HttpClientServiceImpl::class.java)
         bind(HttpRequestHandler::class.java)
         bind(DatabaseInsertHandler::class.java)
         bind(DatabaseSelectHandler::class.java)
-        bind(RetrofitService::class.java).toInstance(retrofitService)
+        bind(RetrofitService::class.java).toInstance(RetrofitContext.build().create(RetrofitService::class.java))
         Multibinder.newSetBinder(binder(), HandlerDecorator::class.java)
             .addBinding()
             .toInstance(ratpack.handling.HandlerDecorator.prepend(LoggingHandler()))

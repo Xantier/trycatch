@@ -1,8 +1,8 @@
 db:
   dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
-  username: postgres
-  password: postgres
   dataSourceProperties:
+    user: postgres
+    password: postgres
     databaseName: trycatch
     serverName: localhost
     portNumber: 5432
