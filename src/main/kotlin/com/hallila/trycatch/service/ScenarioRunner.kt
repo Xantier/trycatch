@@ -16,9 +16,11 @@ import rx.lang.kotlin.toObservable
                 is InsertStep -> databaseService.insert(step.statement).zipWith(Observable.just(step), { a, b ->
                     Result(b.expectation, a)
                 })
-                is SelectStep -> databaseService.select(step.statement).zipWith(Observable.just(step), { a, b ->
-                    Result(b.expectation, a)
-                })
+                is SelectStep -> databaseService.select(step.statement)
+                    .reduce { s1, s2 -> "$s1,$s2" }
+                    .zipWith(Observable.just(step), { a, b ->
+                        Result(b.expectation, a)
+                    })
                 is JsonAssertionStep -> httpClientService.call(step.request, step.payload).zipWith(Observable.just(step), { a, b ->
                     Result<Expectation<Json>, Json>(b.expectation, Json(a.body))
                 })
@@ -27,7 +29,8 @@ import rx.lang.kotlin.toObservable
         }.map { result ->
             AssertionService.assertEquals(result)
         }.subscribe {
-            if (it.isRight()) println(it.right()) else println(it.left())
+            if (it.isRight()) println("success") else println("fail")
+            println(it)
         }
         return ""
     }

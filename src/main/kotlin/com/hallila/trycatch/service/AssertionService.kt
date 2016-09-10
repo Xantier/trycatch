@@ -7,7 +7,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 
 object AssertionService {
     fun <T> assertEquals(expected: List<String>, actual: T): Either<AssertionResult, T> =
-        assertEquals(expected.toString(), actual)
+        assertEquals(expected.reduce { s, s2 -> "$s,$s2" }, actual)
 
     fun <T> assertEquals(expected: String, actual: T): Either<AssertionResult, T> =
         if (expected.equals(actual)) {
@@ -26,7 +26,8 @@ object AssertionService {
 
     private fun <U> assertEquals(expected: Json, result: U): Either<AssertionResult, U> =
         try {
-            JSONAssert.assertEquals(JSONObject(result), expected.obj(), true)
+            result as Json
+            JSONAssert.assertEquals(result.content, expected.content, true)
             Either.Right<AssertionResult, U>(result)
         } catch (e: Error) {
             Either.Left<AssertionResult, U>(AssertionResult(expected.toString(), result.toString()))

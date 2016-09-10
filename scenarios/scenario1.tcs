@@ -1,6 +1,6 @@
 insert_city:
-  statement: INSERT INTO cities (name) values ('new City')
-  expectation: inserted successfully
+  statement: INSERT INTO cities (name) values ('new City2')
+  expectation: "Insert statement executed. Response: 1"
 request_get:
   payload: '{"hi":"universe"}'
   expectation: '{
@@ -14,7 +14,11 @@ request_get:
   params:
     API-Key: foo
 select_test_city:
-  statement: SELECT * FROM cities where name = 'new City'
+  statement: SELECT * FROM cities where name = 'new City2'
   expectation:
-    - 5,test user
-    - 6,test user2
+    - 28,new City2
+    - 29,new City2
+    - 30,new City2
+    - 31,new City2
+    - 32,new City2
+    - 33,new City2
