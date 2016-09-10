@@ -1,15 +1,20 @@
 insert_city:
-  statement: INSERT INTO user (name) values ('test user')
+  statement: INSERT INTO cities (name) values ('new City')
   expectation: inserted successfully
 request_get:
   payload: '{"hi":"universe"}'
-  expectation: '{"hi":"universe"}'
+  expectation: '{
+                  "userId": 1,
+                  "id": 1,
+                  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+                  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+                }'
   method: GET
-  path: "http://localhost/get"
+  path: "http://jsonplaceholder.typicode.com/posts/1"
   params:
     API-Key: foo
 select_test_city:
-  statement: SELECT * FROM user where name = 'test user'
+  statement: SELECT * FROM cities where name = 'new City'
   expectation:
     - 5,test user
     - 6,test user2
