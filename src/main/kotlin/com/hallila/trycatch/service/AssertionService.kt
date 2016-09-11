@@ -6,41 +6,56 @@ import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 
 object AssertionService {
-    fun <T> assertEquals(expected: List<String>, actual: T): Either<AssertionResult, T> =
-        assertEquals(expected.reduce { s, s2 -> "$s,$s2" }, actual)
-
-    fun <T> assertEquals(expected: String, actual: T): Either<AssertionResult, T> =
-        if (expected.equals(actual)) {
-            Either.Right<AssertionResult, T>(actual)
+    fun assertEquals(expected: List<String>, actual: List<String>): Either<AssertionResult, List<String>> =
+        if (expected == actual) {
+            Either.Right<AssertionResult, List<String>>(actual)
         } else {
-            Either.Left<AssertionResult, T>(AssertionResult(expected, actual as String))
+            Either.Left<AssertionResult, List<String>>(AssertionResult(expected.reduce { a, b -> "$a,$b" }, actual.reduce { a, b -> "$a,$b" }))
         }
 
-    fun assertEquals(appResponse: QueryResult, json: JSONObject): Either<AssertionResult, QueryResult> =
+    fun assertEquals(expected: String, actual: String): Either<AssertionResult, String> =
+        if (expected == actual) {
+            Either.Right<AssertionResult, String>(actual)
+        } else {
+            Either.Left<AssertionResult, String>(AssertionResult(expected, actual))
+        }
+
+    fun assertEquals(expected: JSONObject, actual: QueryResult): Either<AssertionResult, QueryResult> =
         try {
-            JSONAssert.assertEquals(JSONObject(appResponse.body), json, true)
-            Either.Right<AssertionResult, QueryResult>(appResponse)
+            JSONAssert.assertEquals(JSONObject(actual.body), expected, true)
+            Either.Right<AssertionResult, QueryResult>(actual)
         } catch (e: Error) {
-            Either.Left<AssertionResult, QueryResult>(AssertionResult(json.toString(), appResponse.body))
+            Either.Left<AssertionResult, QueryResult>(AssertionResult(expected.toString(), actual.body))
         }
 
-    private fun <U> assertEquals(expected: Json, result: U): Either<AssertionResult, U> =
+    private fun assertEquals(expected: Json, result: Json): Either<AssertionResult, Json> =
         try {
-            result as Json
             JSONAssert.assertEquals(result.content, expected.content, true)
-            Either.Right<AssertionResult, U>(result)
+            Either.Right<AssertionResult, Json>(result)
         } catch (e: Error) {
-            Either.Left<AssertionResult, U>(AssertionResult(expected.toString(), result.toString()))
+            Either.Left<AssertionResult, Json>(AssertionResult(expected.toString(), result.toString()))
         }
 
-    fun <U> assertEquals(result: Result<Expectation<U>, U>): Either<AssertionResult, U> =
-
-        when (result.expectation) {
-            is DatabaseResponseExpectation -> assertEquals(result.expectation.getValue(), result.result)
-            is CsvExpectation -> assertEquals(result.expectation.getValue(), result.result)
-            is JsonExpectation -> assertEquals(result.expectation.getValue(), result.result)
+    @Suppress("UNCHECKED_CAST")
+    fun <U> assertEquals(assertable: Assertable<Expectation<U>, U>): Either<AssertionResult, *> =
+        when (assertable.expectation) {
+            is DatabaseResponseExpectation -> {
+                val expected: String = assertable.expectation.getValue()
+                val actual: String = assertable.result as String
+                assertEquals(expected, actual)
+            }
+            is CsvExpectation -> {
+                val expected: List<String> = assertable.expectation.getValue()
+                val actual: List<String> = assertable.result as List<String>
+                assertEquals(expected, actual)
+            }
+            is JsonExpectation -> {
+                val expected: Json = assertable.expectation.getValue()
+                val result: Json = assertable.result as Json
+                assertEquals(expected, result)
+            }
             else -> {
-                throw RuntimeException("whoops")
+                throw RuntimeException("Unable to determine expectation type :(")
             }
         }
 }

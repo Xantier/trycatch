@@ -21,7 +21,7 @@ import javax.inject.Singleton
         }.then { json ->
             RxRatpack.promiseSingle(client.get("http://jsonplaceholder.typicode.com/posts/1")
             ).then { x ->
-                val result = AssertionService.assertEquals(x, json)
+                val result = AssertionService.assertEquals(json, x)
                 ctx.response.send(ResponseParsingService.parseQueryResponse(result))
             }
         }

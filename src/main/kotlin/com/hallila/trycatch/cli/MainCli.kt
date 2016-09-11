@@ -23,7 +23,7 @@ object MainCli {
             val scenarios = loadScenarios()
             val injector = Guice.createInjector(CliContextModule(), HikariModule())
             val scenarioService = injector.getInstance(ScenarioRunner::class.java)
-            scenarioService.handleScenario(scenarios.first())
+            scenarioService.handleScenarios(scenarios)
         } catch (e: Exception) {
             log.error("", e)
             System.exit(1)

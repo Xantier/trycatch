@@ -11,25 +11,26 @@ data class Scenario(val steps: List<Step<*>>) {
         fun build(input: Map<String, Any>): Scenario {
             val steps = input.map { entry ->
                 val value = entry.key.substringBefore('_').toUpperCase()
+                val name = entry.key.substringAfter('_')
                 when (StepKey.valueOf(value)) {
                     StepKey.INSERT -> {
-                        val values = entry.value as Map<String, Any>
-                        InsertStep(values["statement"] as String, DatabaseResponseExpectation(values["expectation"] as String))
+                        val values = entry.value as Map<*, *>
+                        InsertStep(name, values["statement"] as String, DatabaseResponseExpectation(values["expectation"] as String))
                     }
                     StepKey.REQUEST -> {
-                        val values = entry.value as Map<String, Any>
+                        val values = entry.value as Map<*, *>
                         val request = values["method"] as String
                         val fuelManager = FuelManager.instance
-                        val params = values["params"] as Map<String, Any>
-                        JsonAssertionStep(values["payload"] as String,
+                        val params = values["params"] as Map<*, *>
+                        JsonAssertionStep(name, values["payload"] as String,
                             JsonExpectation(values["expectation"] as String),
                             fuelManager.request(Method.valueOf(request.toUpperCase()),
                                 values["path"] as String,
-                                params.toList()))
+                                params.toList() as List<Pair<String, String>>))
                     }
                     StepKey.SELECT -> {
-                        val values = entry.value as Map<String, Any>
-                        SelectStep(values["statement"] as String, CsvExpectation(values["expectation"] as List<String>))
+                        val values = entry.value as Map<*, *>
+                        SelectStep(name, values["statement"] as String, CsvExpectation(values["expectation"] as List<String>))
                     }
                 }
             }
@@ -38,9 +39,9 @@ data class Scenario(val steps: List<Step<*>>) {
     }
 }
 
-data class InsertStep(val statement: String, override val expectation: DatabaseResponseExpectation) : DatabaseStep<String>
-data class JsonAssertionStep(val payload: String, override val expectation: JsonExpectation, val request: Request = Request()) : HttpStep<Json>
-data class SelectStep(val statement: String, override val expectation: CsvExpectation) : DatabaseStep<List<String>>
+data class InsertStep(override val name: String, val statement: String, override val expectation: DatabaseResponseExpectation) : DatabaseStep<String>
+data class JsonAssertionStep(override val name: String, val payload: String, override val expectation: JsonExpectation, val request: Request = Request()) : HttpStep<Json>
+data class SelectStep(override val name: String, val statement: String, override val expectation: CsvExpectation) : DatabaseStep<List<String>>
 
 data class JsonExpectation(val json: Json) : Expectation<Json> {
     override fun getValue(): Json {
@@ -69,12 +70,14 @@ interface Expectation<out T> {
 interface DatabaseStep<out T> : Step<T>
 interface HttpStep<out T> : Step<T>
 interface Step<out T> {
+    val name: String
     val expectation: Expectation<T>
 }
 
 class Json(val content: String) {
     fun obj(): JSONObject = JSONObject(content)
     fun array(): JSONArray = JSONArray(content)
+    override fun toString(): String = obj().toString()
 }
 
 enum class StepKey() {

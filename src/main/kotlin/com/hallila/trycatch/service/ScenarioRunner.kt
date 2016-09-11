@@ -3,6 +3,7 @@ package com.hallila.trycatch.service
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.hallila.trycatch.model.*
+import org.funktionale.either.Either
 import rx.Observable
 import rx.lang.kotlin.toObservable
 
@@ -10,30 +11,50 @@ import rx.lang.kotlin.toObservable
     val databaseService: DatabaseService,
     val httpClientService: HttpClientService
 ) {
-    fun handleScenario(scenario: Scenario): String {
+    fun handleScenarios(scenarios: List<Scenario>): Unit =
+        report(scenarios.toObservable().flatMap {
+            handleScenario(it)
+        })
+
+    fun handleScenario(scenario: Scenario): Observable<Result> =
         scenario.steps.toObservable().flatMap { step ->
             when (step) {
-                is InsertStep -> databaseService.insert(step.statement).zipWith(Observable.just(step), { a, b ->
-                    Result(b.expectation, a)
-                })
-                is SelectStep -> databaseService.select(step.statement)
-                    .reduce { s1, s2 -> "$s1,$s2" }
+                is InsertStep -> databaseService.insert(step.statement)
                     .zipWith(Observable.just(step), { a, b ->
-                        Result(b.expectation, a)
+                        Assertable<DatabaseResponseExpectation, String>(step.name, b.expectation, a)
                     })
-                is JsonAssertionStep -> httpClientService.call(step.request, step.payload).zipWith(Observable.just(step), { a, b ->
-                    Result<Expectation<Json>, Json>(b.expectation, Json(a.body))
-                })
-                else -> Observable.just(Result(DatabaseResponseExpectation("1"), "1"))
+                is SelectStep -> databaseService.select(step.statement)
+                    .toList()
+                    .zipWith(Observable.just(step), { a, b ->
+                        Assertable<CsvExpectation, List<String>>(step.name, b.expectation, a)
+                    })
+                is JsonAssertionStep -> httpClientService.call(step.request, step.payload)
+                    .zipWith(Observable.just(step), { a, b ->
+                        Assertable(step.name, b.expectation, Json(a.body))
+                    }).onErrorResumeNext {
+                    // TODO: Create exception type for the monad that we can ignore
+                    Observable.just(Assertable(step.name, JsonExpectation("{}"), Json("{}")))
+                }
+                else -> throw RuntimeException("Failed to determine type of step in Scenario")
             }
-        }.map { result ->
-            AssertionService.assertEquals(result)
-        }.subscribe {
-            if (it.isRight()) println("success") else println("fail")
-            println(it)
+        }.map { assertable ->
+            val either = AssertionService.assertEquals(assertable)
+            Result(assertable.identifier, either)
         }
-        return ""
-    }
 }
 
-data class Result<out T : Expectation<U>, out U>(val expectation: T, val result: U)
+private fun report(results: Observable<Result>) {
+    results.map { result ->
+        val wasSuccessful = if (result.result.isRight()) "successful" else "failure"
+        val expectationResponse = if (result.result.isRight()) {
+            "Expected to get '${result.result.right().get().toString()}' and got that!"
+        } else
+            "Expected to get '${result.result.left().get().expected}' but instead got '${result.result.left().get().actual}' :((("
+        println("Step result for step ${result.identifier} was $wasSuccessful. $expectationResponse")
+    }.subscribe({}, {
+        println("Failed to process this step because of this: ${it.message}")
+    })
+}
+
+data class Assertable<out T : Expectation<U>, out U>(val identifier: String, val expectation: T, val result: U)
+data class Result(val identifier: String, val result: Either<AssertionResult, *>)
