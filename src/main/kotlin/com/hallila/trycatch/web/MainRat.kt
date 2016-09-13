@@ -50,6 +50,9 @@ object MainRat {
                 prefix("style") {
                     fileSystem("static/style") { files() }
                 }
+                prefix("lib") {
+                    fileSystem("static/lib") { files() }
+                }
             }
 
             prefix("view") {

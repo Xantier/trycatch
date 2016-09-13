@@ -1,6 +1,7 @@
 import React from 'react';
 import ActionableInput from './ActionableInput.jsx';
 import DatabaseAssertionInput from './DatabaseAssertionInput.jsx';
+import JsonTextArea from './JsonTextArea.jsx';
 
 type Props = {
   postJson: () => void,
@@ -17,6 +18,7 @@ export default (props: Props): React.Element => {
         <ActionableInput action={postJson} placeholder="Insert JSON"/>
         <ActionableInput action={initializeDatabase} placeholder="Insert DB script"/>
         <DatabaseAssertionInput submit={assertDatabaseValues} updateExpected={updateExpected} updateSelect={updateSelect}/>
+        <JsonTextArea/>
       </div>
   );
 };

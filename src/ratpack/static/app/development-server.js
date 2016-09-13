@@ -18,7 +18,7 @@ export function run() {
   const bundler = new WebpackDevServer(compiler, {
     publicPath: '/static/dist/',
     proxy: [{
-      path: ['/view', '/static/style', '/api'],
+      path: ['/view', '/static/style', '/static/lib', '/api'],
       target: 'http://localhost:5050'
     }],
     hot: true,
