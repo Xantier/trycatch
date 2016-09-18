@@ -1,5 +1,6 @@
 package com.hallila.trycatch.model
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.Method
 import com.github.kittinunf.fuel.core.Request
@@ -8,6 +9,7 @@ import org.json.JSONObject
 
 data class Scenario(val steps: List<Step<*>>) {
     companion object Factory {
+        val fuelManager = FuelManager.instance
         fun build(input: Map<String, Any>): Scenario {
             val steps = input.map { entry ->
                 val value = entry.key.substringBefore('_').toUpperCase()
@@ -20,7 +22,6 @@ data class Scenario(val steps: List<Step<*>>) {
                     StepKey.REQUEST -> {
                         val values = entry.value as Map<*, *>
                         val request = values["method"] as String
-                        val fuelManager = FuelManager.instance
                         val params = values["params"] as Map<*, *>
                         JsonAssertionStep(name, values["payload"] as String,
                             JsonExpectation(values["expectation"] as String),
@@ -34,6 +35,21 @@ data class Scenario(val steps: List<Step<*>>) {
                     }
                 }
             }
+            return Scenario(steps)
+        }
+
+        fun buildFromJson(input: JsonNode): Scenario {
+            val REQUEST = "request"
+            val INSERT = "insert"
+            val SELECT = "select"
+            val EXPECTATION = "expectation"
+            val name = "fromTheWeb"
+            val steps = listOf<Step<*>>(
+                InsertStep(name, input.get(INSERT).toString(), DatabaseResponseExpectation("Done successfully")),
+                JsonAssertionStep(name, input.get(REQUEST).toString(), JsonExpectation(input.get(REQUEST).asText()),
+                    fuelManager.request(Method.POST, "http://jsonplaceholder.typicode.com/posts/1", emptyList())),
+                SelectStep(name, input.get(SELECT).toString(), CsvExpectation(input.get(EXPECTATION).toString().split("|")))
+            )
             return Scenario(steps)
         }
     }

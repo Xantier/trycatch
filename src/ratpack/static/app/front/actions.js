@@ -1,4 +1,13 @@
-import {INITIALIZE_DATABASE, POST_JSON, ASSERT_DATABASE_VALUES, UPDATE_EXPECTED_DATABASE, UPDATE_DATABASE_ASSERTION_QUERY} from './constants';
+import {
+    INITIALIZE_DATABASE,
+    POST_JSON,
+    ASSERT_DATABASE_VALUES,
+    UPDATE_EXPECTED_DATABASE,
+    UPDATE_DATABASE_ASSERTION_QUERY,
+    SAVE_SCENARIO,
+    UPDATE_JSON,
+    UPDATE_DATABASE_INITALIZATION_QUERY
+} from './constants';
 
 type Action = {
   type: string,
@@ -25,9 +34,22 @@ export function assertDatabaseValues(query: String): Action {
 export function postJson(json: string): Action {
   return {type: POST_JSON, payload: json};
 }
+
+export function updateJson(json: string): Action {
+  return {type: UPDATE_JSON, payload: json};
+}
+
+export function updateInitializationScript(json: string): Action {
+  return {type: UPDATE_DATABASE_INITALIZATION_QUERY, payload: json};
+}
+
 export function updateSelect(query: string): Action {
   return {type: UPDATE_DATABASE_ASSERTION_QUERY, payload: query};
 }
 export function updateExpected(expectedCsv: string): Action {
   return {type: UPDATE_EXPECTED_DATABASE, payload: expectedCsv};
+}
+
+export function saveScenario(): Action {
+  return {type: SAVE_SCENARIO};
 }

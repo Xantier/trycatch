@@ -5,10 +5,7 @@ import com.google.inject.multibindings.Multibinder
 import com.hallila.trycatch.boundary.Repository
 import com.hallila.trycatch.boundary.RepositoryImpl
 import com.hallila.trycatch.boundary.RetrofitService
-import com.hallila.trycatch.handler.DatabaseInsertHandler
-import com.hallila.trycatch.handler.DatabaseSelectHandler
-import com.hallila.trycatch.handler.HttpRequestHandler
-import com.hallila.trycatch.handler.LoggingHandler
+import com.hallila.trycatch.handler.*
 import com.hallila.trycatch.service.DatabaseService
 import com.hallila.trycatch.service.DatabaseServiceImpl
 import com.hallila.trycatch.service.HttpClientService
@@ -24,6 +21,7 @@ class WebContextModule : AbstractModule() {
         bind(DatabaseService::class.java).to(DatabaseServiceImpl::class.java)
         bind(HttpClientService::class.java).to(HttpClientServiceImpl::class.java)
         bind(HttpRequestHandler::class.java)
+        bind(ScenarioSaveHandler::class.java)
         bind(DatabaseInsertHandler::class.java)
         bind(DatabaseSelectHandler::class.java)
         bind(RetrofitService::class.java).toInstance(RetrofitContext.build().create(RetrofitService::class.java))

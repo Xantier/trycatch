@@ -19,8 +19,8 @@ export default (props: Props): React.Element => {
   };
   return (
       <div>
-        <input type="text" className="todo__entry" placeholder="Insert Select Statement" onBlur={(e: Event) => update(e, updateSelect)}/>
-        <input type="text" className="todo__entry" placeholder="Insert Pipe separated results" onBlur={(e: Event) => update(e, updateExpected)}/>
+        <input type="text" className="todo__entry" placeholder="Insert Select Statement" onChange={(e: Event) => update(e, updateSelect)}/>
+        <input type="text" className="todo__entry" placeholder="Insert Pipe separated results" onChange={(e: Event) => update(e, updateExpected)}/>
         <button onClick={onSubmit}>Run</button>
       </div>
   );

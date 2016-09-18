@@ -5,7 +5,7 @@ import saga from 'redux-saga';
 import {Provider} from 'react-redux';
 import reducer from './reducer';
 import sagas from './sagas';
-import TodoList from './TodoListContainer.jsx';
+import ScenarioForm from './ScenarioForm.jsx';
 
 const sagaMiddleware = saga();
 const store = createStore(
@@ -16,7 +16,7 @@ sagaMiddleware.run(sagas);
 
 ReactDOM.render(
     <Provider store={store}>
-      <TodoList />
+      <ScenarioForm />
     </Provider>,
     document.getElementById('container')
 );

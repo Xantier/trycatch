@@ -6,7 +6,8 @@ import logger from '../logger';
 import {
     POST_JSON, POST_JSON_SUCCESS, POST_JSON_FAILED,
     INITIALIZE_DATABASE, INITIALIZE_DATABASE_SUCCESS, INITIALIZE_DATABASE_FAILED,
-    ASSERT_DATABASE_VALUES, ASSERT_DATABASE_VALUES_SUCCESS, ASSERT_DATABASE_VALUES_FAILED
+    ASSERT_DATABASE_VALUES, ASSERT_DATABASE_VALUES_SUCCESS, ASSERT_DATABASE_VALUES_FAILED,
+    SAVE_SCENARIO, SAVE_SCENARIO_SUCCESS, SAVE_SCENARIO_FAILED
 } from './constants';
 import type {State} from './reducer';
 
@@ -46,11 +47,25 @@ function* assertDatabaseValues(): void {
   }
 }
 
+function* saveScenario(): void {
+  const payload = yield select((state: State): Object => {
+    return state;
+  });
+  try {
+    const response = yield call(postJson('/api/scenario/save'), payload);
+    yield put({type: SAVE_SCENARIO_SUCCESS, response: response});
+  } catch (e) {
+    logger.error('Failed to post JSON. Error: ' + e);
+    yield put({type: SAVE_SCENARIO_FAILED, message: e.message});
+  }
+}
+
 function* rootSaga(): void {
   yield [
     takeEvery(POST_JSON, post),
     takeEvery(INITIALIZE_DATABASE, initDb),
-    takeEvery(ASSERT_DATABASE_VALUES, assertDatabaseValues)
+    takeEvery(ASSERT_DATABASE_VALUES, assertDatabaseValues),
+    takeEvery(SAVE_SCENARIO, saveScenario)
   ];
 }
 
