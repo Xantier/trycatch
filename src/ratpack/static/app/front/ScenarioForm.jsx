@@ -14,7 +14,7 @@ import type {State} from './reducer';
 
 const TodoListContainer = connect(
     function mapStateToProps(state: State): Object {
-      return {state: state};
+      return {request: state.request};
     },
     function mapDispatchToProps(dispatch: () => void): Object {
       return {

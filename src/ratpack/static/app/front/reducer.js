@@ -6,27 +6,37 @@ import {
     POST_JSON_FAILED,
     UPDATE_DATABASE_ASSERTION_QUERY,
     UPDATE_EXPECTED_DATABASE,
-    UPDATE_JSON,
+    UPDATE_JSON, UPDATE_JSON_FAILED,
     UPDATE_DATABASE_INITALIZATION_QUERY
 } from './constants';
 
 export type State = {
-  query: string,
-  expected: string
+  select: string,
+  expectation: string,
+  request: string,
+  insert: string
 };
+
+export type Request = {
+  payload: string,
+  validJson: boolean
+}
 
 const reducer = handleActions({
   [UPDATE_DATABASE_ASSERTION_QUERY]: (state: State, action: Object): State => {
-    return {...state, select: action.payload};
+    return {...state, select: {...state.select, query: action.payload}};
   },
   [UPDATE_EXPECTED_DATABASE]: (state: State, action: Object): State => {
-    return {...state, expectation: action.payload};
+    return {...state, select: {...state.select, expectation: action.payload}};
   },
   [UPDATE_JSON]: (state: State, action: Object): State => {
-    return {...state, request: action.payload};
+    return {...state, request: {...state.request, payload: action.payload, validJson: true}};
+  },
+  [UPDATE_JSON_FAILED]: (state: State): State => {
+    return {...state, request: {...state.request, validJson: false}};
   },
   [UPDATE_DATABASE_INITALIZATION_QUERY]: (state: State, action: Object): State => {
-    return {...state, insert: action.payload};
+    return {...state, insert: {...state.insert, query: action.payload}};
   },
   [POST_JSON_SUCCESS]: (state: State, action: Object): State => {
     return {...state, jsonPostResponse: action.payload};
@@ -40,6 +50,6 @@ const reducer = handleActions({
   [INITIALIZE_DATABASE_FAILED]: (state: State, action: Object): State => {
     return {...state, databaseInsertResponse: action.payload};
   }
-}, {});
+}, {request: {validJson: true}});
 
 export default reducer;

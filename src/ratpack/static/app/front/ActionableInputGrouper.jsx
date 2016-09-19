@@ -2,7 +2,9 @@ import React from 'react';
 import ActionableInput from './ActionableInput.jsx';
 import DatabaseAssertionInput from './DatabaseAssertionInput.jsx';
 import JsonTextArea from './JsonTextArea.jsx';
+import PrettyJsonComponent from './PrettyJsonComponent.jsx';
 import SaveButton from './SaveButton.jsx';
+import type {Request} from './reducer';
 
 type Props = {
   postJson: () => void,
@@ -12,7 +14,8 @@ type Props = {
   updateSelect: () => void,
   updateInitializationScript: () => void,
   updateJson: () => void,
-  saveScenario: () => void
+  saveScenario: () => void,
+  request: Request
 }
 
 export default (props: Props): React.Element => {
@@ -22,7 +25,8 @@ export default (props: Props): React.Element => {
         <ActionableInput action={postJson} updateState={updateJson} placeholder="Insert JSON"/>
         <ActionableInput action={initializeDatabase} updateState={updateInitializationScript} placeholder="Insert DB script"/>
         <DatabaseAssertionInput submit={assertDatabaseValues} updateExpected={updateExpected} updateSelect={updateSelect}/>
-        <JsonTextArea/>
+        <JsonTextArea updateJson={updateJson} {...props.request} />
+        <PrettyJsonComponent {...props.request}/>
         <SaveButton saveAction={saveScenario}/>
       </div>
   );

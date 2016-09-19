@@ -1,23 +1,17 @@
-/* global PrettyJSON, $ */
-/* eslint-disable no-new */
 import React from 'react';
 
-export default (): React.Element => {
+type Props = {
+  postJson: () => void,
+  validJson: boolean
+}
+
+export default ({updateJson, validJson}: Props): React.Element => {
   return (
       <div>
-        <input type="textarea" className="jsonarea" placeholder="Insert Json" onClick={() => {
-          const obj = {
-            name: 'John Doe',
-            age: 20,
-            children: [{name: 'Jack', age: 5}, {name: 'Ann', age: 8}],
-            wife: {name: 'Jane Doe', age: 28}
-          };
-
-          new PrettyJSON.view.Node({
-            el: $('#jsonarea'),
-            data: obj
-          });
+        <textarea rows="14" cols="250" className="jsonarea" placeholder="Insert Json" onChange={(e: Event) => {
+          updateJson(e.target.value);
         }}/>
+        <div>{!validJson ? <span style={{color: '#B03053'}}>Incorrect JSON</span> : <span>&nbsp;</span>}</div>
         <div id="jsonarea">&nbsp;</div>
       </div>
   );

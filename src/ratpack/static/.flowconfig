@@ -5,6 +5,7 @@
 *./dist/.*
 .*/node_modules/selectly/.*
 .*/node_modules/react-tap-event-plugin/.*
+./node_modules/fbjs/lib/.*
 
 [libs]
 ./node_modules/fbjs/node_modules/promise
@@ -12,3 +13,4 @@
 
 [options]
 suppress_type=$FlowIssue
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe

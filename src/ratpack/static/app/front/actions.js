@@ -5,7 +5,7 @@ import {
     UPDATE_EXPECTED_DATABASE,
     UPDATE_DATABASE_ASSERTION_QUERY,
     SAVE_SCENARIO,
-    UPDATE_JSON,
+    UPDATE_JSON, UPDATE_JSON_FAILED,
     UPDATE_DATABASE_INITALIZATION_QUERY
 } from './constants';
 
@@ -35,8 +35,13 @@ export function postJson(json: string): Action {
   return {type: POST_JSON, payload: json};
 }
 
-export function updateJson(json: string): Action {
-  return {type: UPDATE_JSON, payload: json};
+export function updateJson(jsonStr: string): Action {
+  try {
+    const jsonObj = JSON.parse(jsonStr);
+    return {type: UPDATE_JSON, payload: jsonObj};
+  } catch (_) {
+    return {type: UPDATE_JSON_FAILED};
+  }
 }
 
 export function updateInitializationScript(json: string): Action {
