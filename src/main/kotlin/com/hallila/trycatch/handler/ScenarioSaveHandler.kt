@@ -1,6 +1,9 @@
 package com.hallila.trycatch.handler
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.hallila.trycatch.model.Scenario
 import org.funktionale.either.eitherTry
 import ratpack.handling.Context
@@ -23,6 +26,8 @@ class ScenarioSaveHandler : Handler {
             eitherTry {
                 saveScenario(scenario)
             }
+        }.onError {
+            println(it)
         }.then {
             if (it.isLeft()) {
                 ctx.response.send("Failed to save")
@@ -35,16 +40,19 @@ class ScenarioSaveHandler : Handler {
     @Suppress("UNCHECKED_CAST")
     @Throws(IOException::class)
     private fun saveScenario(scenario: Scenario): Unit {
-        val yaml = Yaml()
         val scenario_location = Files.newInputStream(Paths.get("conf/properties.yaml")).use({ `in` ->
-            val config = yaml.loadAs(`in`, Properties::class.java)
+            val config = Yaml().loadAs(`in`, Properties::class.java)
             val loc = config.getProperty("scenario_location")
             if (!loc.endsWith("/")) loc + "/" else loc
         })
-        File(scenario_location + "newScenario.tcs").printWriter().use { out ->
-            scenario.steps.forEach {
-                out.println("${it.name}, ${it.expectation}")
+        val om = ObjectMapper(YAMLFactory()).registerKotlinModule()
+        try {
+            File(scenario_location + "newScenario.tcs").printWriter().use { out ->
+                om.writeValue(out, scenario.steps.reversed())
             }
+        } catch (e: Exception) {
+            println(e)
         }
+
     }
 }

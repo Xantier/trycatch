@@ -39,17 +39,23 @@ data class Scenario(val steps: List<Step<*>>) {
         }
 
         fun buildFromJson(input: JsonNode): Scenario {
+            val QUERY = "query"
             val REQUEST = "request"
             val INSERT = "insert"
             val SELECT = "select"
             val EXPECTATION = "expectation"
             val name = "fromTheWeb"
-            val steps = listOf<Step<*>>(
-                InsertStep(name, input.get(INSERT).toString(), DatabaseResponseExpectation("Done successfully")),
-                JsonAssertionStep(name, input.get(REQUEST).toString(), JsonExpectation(input.get(REQUEST).asText()),
-                    fuelManager.request(Method.POST, "http://jsonplaceholder.typicode.com/posts/1", emptyList())),
-                SelectStep(name, input.get(SELECT).toString(), CsvExpectation(input.get(EXPECTATION).toString().split("|")))
-            )
+            val steps = input.fields().asSequence().map {
+                when (it.key) {
+                    REQUEST -> JsonAssertionStep(REQUEST + name, it.value.get("payload").toString(), JsonExpectation(it.value.get("payload").toString()),
+                        fuelManager.request(Method.POST, "http://jsonplaceholder.typicode.com/posts/1", emptyList()))
+
+                    INSERT -> InsertStep(INSERT + name, it.value.get(QUERY).toString(), DatabaseResponseExpectation("Done successfully"))
+
+                    SELECT -> SelectStep(SELECT + name, it.value.get(QUERY).toString(), CsvExpectation(it.value.get(EXPECTATION).toString().split("|")))
+                    else -> throw RuntimeException("Unable to parse posted JSON :(")
+                }
+            }.toList()
             return Scenario(steps)
         }
     }

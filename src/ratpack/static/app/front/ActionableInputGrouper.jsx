@@ -22,11 +22,10 @@ export default (props: Props): React.Element => {
   const {postJson, initializeDatabase, assertDatabaseValues, updateExpected, updateSelect, saveScenario, updateJson, updateInitializationScript} = props;
   return (
       <div className="todo">
-        <ActionableInput action={postJson} updateState={updateJson} placeholder="Insert JSON"/>
-        <ActionableInput action={initializeDatabase} updateState={updateInitializationScript} placeholder="Insert DB script"/>
-        <DatabaseAssertionInput submit={assertDatabaseValues} updateExpected={updateExpected} updateSelect={updateSelect}/>
         <JsonTextArea updateJson={updateJson} {...props.request} />
         <PrettyJsonComponent {...props.request}/>
+        <ActionableInput action={initializeDatabase} updateState={updateInitializationScript} placeholder="Insert DB script"/>
+        <DatabaseAssertionInput submit={assertDatabaseValues} updateExpected={updateExpected} updateSelect={updateSelect}/>
         <SaveButton saveAction={saveScenario}/>
       </div>
   );
