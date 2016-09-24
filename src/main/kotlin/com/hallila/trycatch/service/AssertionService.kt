@@ -40,17 +40,17 @@ object AssertionService {
     fun <U> assertEquals(assertable: Assertable<Expectation<U>, U>): Either<AssertionResult, *> =
         when (assertable.expectation) {
             is DatabaseResponseExpectation -> {
-                val expected: String = assertable.expectation.getValue()
+                val expected: String = assertable.expectation.value
                 val actual: String = assertable.result as String
                 assertEquals(expected, actual)
             }
             is CsvExpectation -> {
-                val expected: List<String> = assertable.expectation.getValue()
+                val expected: List<String> = assertable.expectation.value
                 val actual: List<String> = assertable.result as List<String>
                 assertEquals(expected, actual)
             }
             is JsonExpectation -> {
-                val expected: Json = assertable.expectation.getValue()
+                val expected: Json = assertable.expectation.value
                 val result: Json = assertable.result as Json
                 assertEquals(expected, result)
             }

@@ -1,24 +1,35 @@
-insert_city:
-  statement: INSERT INTO cities (name) values ('new City2')
-  expectation: "Insert statement executed. Response: 1"
-request_get:
-  payload: '{"hi":"universe"}'
-  expectation: '{
-                  "userId": 1,
-                  "id": 1,
-                  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-                  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-                }'
-  method: GET
-  path: "http://jsonplaceholder.typicode.com/posts/1"
-  params:
-    API-Key: foo
-select_test_city:
-  statement: SELECT * FROM cities where name = 'new City2'
-  expectation:
-    - 28,new City2
-    - 29,new City2
-    - 30,new City2
-    - 31,new City2
-    - 32,new City2
-    - 33,new City2
+name: "First scenario"
+steps:
+  - type: INSERT
+    name: insert scenario one
+    statement: INSERT INTO cities (name) values ('new City2')
+    expectation:
+      value:
+        "Insert statement executed. Response: 1"
+  - type: REQUEST
+    name: request scenario one
+    payload: '{"hi":"universe"}'
+    expectation:
+      value:
+        content: '{
+                "userId": 1,
+                "id": 1,
+                "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+                "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+              }'
+    request:
+      method: GET
+      path: "http://jsonplaceholder.typicode.com/posts/1"
+      params:
+        API-Key: foo
+  - type: SELECT
+    name: select scenario one
+    statement: SELECT * FROM cities where name = 'new City2'
+    expectation:
+      value:
+        - 28,new City2
+        - 29,new City2
+        - 30,new City2
+        - 31,new City2
+        - 32,new City2
+        - 33,new City2
