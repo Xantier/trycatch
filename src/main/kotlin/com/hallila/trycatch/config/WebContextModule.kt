@@ -6,10 +6,7 @@ import com.hallila.trycatch.boundary.Repository
 import com.hallila.trycatch.boundary.RepositoryImpl
 import com.hallila.trycatch.boundary.RetrofitService
 import com.hallila.trycatch.handler.*
-import com.hallila.trycatch.service.DatabaseService
-import com.hallila.trycatch.service.DatabaseServiceImpl
-import com.hallila.trycatch.service.HttpClientService
-import com.hallila.trycatch.service.HttpClientServiceImpl
+import com.hallila.trycatch.service.*
 import ratpack.handling.HandlerDecorator
 import ratpack.rx.RxRatpack
 
@@ -22,6 +19,8 @@ class WebContextModule : AbstractModule() {
         bind(HttpClientService::class.java).to(HttpClientServiceImpl::class.java)
         bind(HttpRequestHandler::class.java)
         bind(ScenarioSaveHandler::class.java)
+        bind(ScenarioRunHandler::class.java)
+        bind(ScenarioRunner::class.java)
         bind(DatabaseInsertHandler::class.java)
         bind(DatabaseSelectHandler::class.java)
         bind(RetrofitService::class.java).toInstance(RetrofitContext.build().create(RetrofitService::class.java))

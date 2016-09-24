@@ -1,6 +1,7 @@
 package com.hallila.trycatch.handler
 
 
+import com.hallila.trycatch.WithLogging
 import ratpack.handling.Context
 import ratpack.handling.Handler
 
@@ -9,9 +10,9 @@ import ratpack.handling.Handler
  *
  * @see MyModule
  */
-class LoggingHandler : Handler {
+class LoggingHandler : WithLogging(), Handler {
     override fun handle(context: Context) {
-        println("Received: ${context.request.uri}")
+        LOG.info("Received: ${context.request.uri}")
         context.next()
     }
 }

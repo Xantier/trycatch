@@ -8,7 +8,8 @@ import {
     updateSelect,
     updateJson,
     updateInitializationScript,
-    saveScenario
+    saveScenario,
+    runScenario
 } from './actions';
 import type {State} from './reducer';
 
@@ -25,7 +26,8 @@ const TodoListContainer = connect(
         updateSelect: (text: string) => dispatch(updateSelect(text)),
         updateJson: (text: string) => dispatch(updateJson(text)),
         updateInitializationScript: (text: string) => dispatch(updateInitializationScript(text)),
-        saveScenario: () => dispatch(saveScenario())
+        saveScenario: () => dispatch(saveScenario()),
+        runScenario: () => dispatch(runScenario())
       };
     }
 )(ActionableInputGrouper);

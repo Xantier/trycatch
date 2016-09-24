@@ -7,7 +7,7 @@ export function postJson(url: string): () => void {
         .post(url)
         .send({json: payload})
         .set('Accept', 'application/json')
-        .end((err, res) => {
+        .end((err: Object, res: Object) => {
           if (err || !res.ok) {
             logger.warn('Oh no! error');
             logger.warn(err);

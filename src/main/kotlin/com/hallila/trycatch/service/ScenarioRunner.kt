@@ -43,18 +43,5 @@ import rx.lang.kotlin.toObservable
         }
 }
 
-private fun report(results: Observable<Result>) {
-    results.map { result ->
-        val wasSuccessful = if (result.result.isRight()) "successful" else "failure"
-        val expectationResponse = if (result.result.isRight()) {
-            "Expected to get '${result.result.right().get().toString()}' and got that!"
-        } else
-            "Expected to get '${result.result.left().get().expected}' but instead got '${result.result.left().get().actual}' :((("
-        println("Step result for step ${result.identifier} was $wasSuccessful. $expectationResponse")
-    }.subscribe({}, {
-        println("Failed to process this step because of this: ${it.message}")
-    })
-}
-
 data class Assertable<out T : Expectation<U>, out U>(val identifier: String, val expectation: T, val result: U)
 data class Result(val identifier: String, val result: Either<AssertionResult, *>)

@@ -10,7 +10,9 @@ object AssertionService {
         if (expected == actual) {
             Either.Right<AssertionResult, List<String>>(actual)
         } else {
-            Either.Left<AssertionResult, List<String>>(AssertionResult(expected.reduce { a, b -> "$a,$b" }, actual.reduce { a, b -> "$a,$b" }))
+            val exp = expected.fold("", { a, b -> "$a,$b" })
+            val act = actual.fold("", { a, b -> "$a,$b" })
+            Either.Left<AssertionResult, List<String>>(AssertionResult(exp, act))
         }
 
     fun assertEquals(expected: String, actual: String): Either<AssertionResult, String> =

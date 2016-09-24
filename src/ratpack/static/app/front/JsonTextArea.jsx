@@ -12,7 +12,6 @@ export default ({updateJson, validJson}: Props): React.Element => {
           updateJson(e.target.value);
         }}/>
         <div>{!validJson ? <span style={{color: '#B03053'}}>Incorrect JSON</span> : <span>&nbsp;</span>}</div>
-        <div id="jsonarea">&nbsp;</div>
       </div>
   );
 };

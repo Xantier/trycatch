@@ -1,10 +1,7 @@
 package com.hallila.trycatch.web
 
 import com.hallila.trycatch.config.WebContextModule
-import com.hallila.trycatch.handler.DatabaseInsertHandler
-import com.hallila.trycatch.handler.DatabaseSelectHandler
-import com.hallila.trycatch.handler.HttpRequestHandler
-import com.hallila.trycatch.handler.ScenarioSaveHandler
+import com.hallila.trycatch.handler.*
 import com.hallila.trycatch.serverOf
 import com.zaxxer.hikari.HikariConfig
 import org.slf4j.LoggerFactory
@@ -63,6 +60,7 @@ object MainRat {
             prefix("api") {
                 prefix("scenario"){
                     post("save", ScenarioSaveHandler::class.java)
+                    post("run", ScenarioRunHandler::class.java)
                 }
 
                 post("json", HttpRequestHandler::class.java)

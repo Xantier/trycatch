@@ -2,8 +2,9 @@ import React from 'react';
 import ActionableInput from './ActionableInput.jsx';
 import DatabaseAssertionInput from './DatabaseAssertionInput.jsx';
 import JsonTextArea from './JsonTextArea.jsx';
+import IndividualStepContainer from './IndividualStepContainer.jsx';
 import PrettyJsonComponent from './PrettyJsonComponent.jsx';
-import SaveButton from './SaveButton.jsx';
+import Button from './Button.jsx';
 import type {Request} from './reducer';
 
 type Props = {
@@ -15,18 +16,28 @@ type Props = {
   updateInitializationScript: () => void,
   updateJson: () => void,
   saveScenario: () => void,
+  runScenario: () => void,
   request: Request
 }
 
 export default (props: Props): React.Element => {
-  const {postJson, initializeDatabase, assertDatabaseValues, updateExpected, updateSelect, saveScenario, updateJson, updateInitializationScript} = props;
+  const {postJson, initializeDatabase, assertDatabaseValues, updateExpected, updateSelect, saveScenario, runScenario, updateJson, updateInitializationScript} = props;
   return (
       <div className="todo">
-        <JsonTextArea updateJson={updateJson} {...props.request} />
+        <IndividualStepContainer run={postJson}>
+          <JsonTextArea updateJson={updateJson} {...props.request} />
+        </IndividualStepContainer>
         <PrettyJsonComponent {...props.request}/>
-        <ActionableInput action={initializeDatabase} updateState={updateInitializationScript} placeholder="Insert DB script"/>
-        <DatabaseAssertionInput submit={assertDatabaseValues} updateExpected={updateExpected} updateSelect={updateSelect}/>
-        <SaveButton saveAction={saveScenario}/>
+
+        <IndividualStepContainer run={initializeDatabase}>
+          <ActionableInput updateState={updateInitializationScript} placeholder="Insert DB script"/>
+        </IndividualStepContainer>
+
+        <IndividualStepContainer run={assertDatabaseValues}>
+          <DatabaseAssertionInput updateExpected={updateExpected} updateSelect={updateSelect}/>
+        </IndividualStepContainer>
+        <Button action={saveScenario} text="Save scenario"/>
+        <Button action={runScenario} text="Run scenario"/>
       </div>
   );
 };
