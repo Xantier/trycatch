@@ -7,7 +7,9 @@ import {
     UPDATE_DATABASE_ASSERTION_QUERY,
     UPDATE_EXPECTED_DATABASE,
     UPDATE_JSON, UPDATE_JSON_FAILED,
-    UPDATE_DATABASE_INITALIZATION_QUERY
+    UPDATE_DATABASE_INITALIZATION_QUERY,
+    UPDATE_NAME,
+    UPDATE_REQUEST
 } from './constants';
 
 export type State = {
@@ -22,7 +24,36 @@ export type Request = {
   validJson: boolean
 }
 
+const init = {
+  request: {
+    validJson: {
+      payload: true,
+      expected: true
+    },
+    url: '',
+    method: '',
+    params: [{key: '', value: '', id: 0}]
+  }
+};
+
+function updateHeader(state: Object[], action: Object): Object {
+  return state.map((it: Object): Object => {
+    if (it.id === action.meta.id) {
+      return action.meta.contentType.endsWith('key') ? {...it, key: action.payload} : {...it, value: action.payload};
+    }
+    return it;
+  });
+}
 const reducer = handleActions({
+  [UPDATE_NAME]: (state: State, action: Object): State => {
+    return {...state, name: action.payload};
+  },
+  [UPDATE_REQUEST]: (state: State, action: Object): State => {
+    if (action.meta.contentType.startsWith('header')) {
+      return {...state, request: {...state.request, params: updateHeader(state.request.params, action)}};
+    }
+    return {...state, request: {...state.request, [action.meta.contentType]: action.payload}};
+  },
   [UPDATE_DATABASE_ASSERTION_QUERY]: (state: State, action: Object): State => {
     return {...state, select: {...state.select, query: action.payload}};
   },
@@ -30,10 +61,10 @@ const reducer = handleActions({
     return {...state, select: {...state.select, expectation: action.payload}};
   },
   [UPDATE_JSON]: (state: State, action: Object): State => {
-    return {...state, request: {...state.request, payload: action.payload, validJson: true}};
+    return {...state, request: {...state.request, [action.meta]: action.payload, validJson: {...state.request.validJson, [action.meta]: true}}};
   },
-  [UPDATE_JSON_FAILED]: (state: State): State => {
-    return {...state, request: {...state.request, validJson: false}};
+  [UPDATE_JSON_FAILED]: (state: State, action: Object): State => {
+    return {...state, request: {...state.request, validJson: {...state.request.validJson, [action.meta]: false}}};
   },
   [UPDATE_DATABASE_INITALIZATION_QUERY]: (state: State, action: Object): State => {
     return {...state, insert: {...state.insert, query: action.payload}};
@@ -50,6 +81,6 @@ const reducer = handleActions({
   [INITIALIZE_DATABASE_FAILED]: (state: State, action: Object): State => {
     return {...state, databaseInsertResponse: action.payload};
   }
-}, {request: {validJson: true}});
+}, init);
 
 export default reducer;

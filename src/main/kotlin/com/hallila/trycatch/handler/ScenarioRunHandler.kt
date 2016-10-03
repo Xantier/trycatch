@@ -3,10 +3,12 @@ package com.hallila.trycatch.handler
 import com.hallila.trycatch.WithLogging
 import com.hallila.trycatch.model.Scenario
 import com.hallila.trycatch.service.ScenarioRunner
+import com.hallila.trycatch.service.jsonReport
 import io.netty.handler.codec.http.HttpResponseStatus
 import ratpack.handling.Context
 import ratpack.handling.Handler
 import ratpack.jackson.Jackson
+import ratpack.jackson.Jackson.json
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,9 +23,7 @@ import javax.inject.Singleton
             LOG.warn("Failed to construct Scenario", e)
             ctx.response.status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()).send("Failed to construct Scenario: ${e.message}")
         }.then {
-            println(it)
-            //report(scenarioRunner.handleScenario(it), { ctx.response.send() })
-            ctx.response.send("Done")
+            jsonReport(scenarioRunner.handleScenario(it), { ctx.render(json(it)) })
         }
     }
 }

@@ -9,7 +9,9 @@ import {
     updateJson,
     updateInitializationScript,
     saveScenario,
-    runScenario
+    runScenario,
+    updateName,
+    updateRequest
 } from './actions';
 import type {State} from './reducer';
 
@@ -24,8 +26,10 @@ const TodoListContainer = connect(
         assertDatabaseValues: (text: string) => dispatch(assertDatabaseValues(text)),
         updateExpected: (text: string) => dispatch(updateExpected(text)),
         updateSelect: (text: string) => dispatch(updateSelect(text)),
-        updateJson: (text: string) => dispatch(updateJson(text)),
+        updateJson: (value: string, contentType: string) => dispatch(updateJson(value, contentType)),
         updateInitializationScript: (text: string) => dispatch(updateInitializationScript(text)),
+        updateName: (text: string) => dispatch(updateName(text)),
+        updateRequest: (contentType: string, text: string, id?: number) => dispatch(updateRequest(contentType, text, id)),
         saveScenario: () => dispatch(saveScenario()),
         runScenario: () => dispatch(runScenario())
       };

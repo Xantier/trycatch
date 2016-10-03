@@ -6,8 +6,9 @@ import {
     UPDATE_DATABASE_ASSERTION_QUERY,
     SAVE_SCENARIO,
     RUN_SCENARIO,
-    UPDATE_JSON, UPDATE_JSON_FAILED,
-    UPDATE_DATABASE_INITALIZATION_QUERY
+    UPDATE_JSON, UPDATE_JSON_FAILED, UPDATE_NAME,
+    UPDATE_DATABASE_INITALIZATION_QUERY,
+    UPDATE_REQUEST
 } from './constants';
 
 type Action = {
@@ -16,12 +17,20 @@ type Action = {
   error?: boolean,
   meta?: any,
 }
-export function updateJson(jsonStr: string): Action {
+export function updateRequest(contentType: string, text: string, id?: number): Action {
+  return {type: UPDATE_REQUEST, payload: text, meta: {contentType, id}};
+}
+
+export function updateName(scenarioName: string): Action {
+  return {type: UPDATE_NAME, payload: scenarioName};
+}
+
+export function updateJson(jsonStr: string, contentType: string): Action {
   try {
     const jsonObj = JSON.parse(jsonStr);
-    return {type: UPDATE_JSON, payload: jsonObj};
+    return {type: UPDATE_JSON, payload: jsonObj, meta: contentType};
   } catch (_) {
-    return {type: UPDATE_JSON_FAILED};
+    return {type: UPDATE_JSON_FAILED, meta: contentType};
   }
 }
 export function updateInitializationScript(json: string): Action {
