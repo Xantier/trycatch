@@ -22,9 +22,9 @@ object AssertionService {
             Either.Left<AssertionResult, String>(AssertionResult(expected, actual))
         }
 
-    fun assertEquals(expected: JSONObject, actual: QueryResult): Either<AssertionResult, QueryResult> =
+    fun assertEquals(expected: Json, actual: QueryResult): Either<AssertionResult, QueryResult> =
         try {
-            JSONAssert.assertEquals(JSONObject(actual.body), expected, true)
+            JSONAssert.assertEquals(JSONObject(actual.body), JSONObject(expected), true)
             Either.Right<AssertionResult, QueryResult>(actual)
         } catch (e: Error) {
             Either.Left<AssertionResult, QueryResult>(AssertionResult(expected.toString(), actual.body))

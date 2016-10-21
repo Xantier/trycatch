@@ -19,7 +19,7 @@ export function run() {
     publicPath: '/static/dist/',
     proxy: [{
       path: ['/view', '/static/style', '/static/lib', '/api'],
-      target: 'http://localhost:5050'
+      target: 'http://localhost:7357'
     }],
     hot: true,
     quiet: false,

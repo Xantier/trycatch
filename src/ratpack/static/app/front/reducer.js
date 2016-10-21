@@ -32,11 +32,14 @@ const init = {
     },
     url: '',
     method: '',
-    params: [{key: '', value: '', id: 0}]
+    params: []
   }
 };
 
 function updateHeader(state: Object[], action: Object): Object {
+  if (action.meta.contentType.endsWith('add')) {
+    return [...state, {key: '', value: '', id: state.length + 1}];
+  }
   return state.map((it: Object): Object => {
     if (it.id === action.meta.id) {
       return action.meta.contentType.endsWith('key') ? {...it, key: action.payload} : {...it, value: action.payload};

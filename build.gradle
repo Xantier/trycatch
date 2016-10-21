@@ -86,6 +86,7 @@ idea {
 }
 
 run {
+    jvmArgs "-Dratpack.port=7357"
     if (project.hasProperty("cli")) {
         args "cli"
     }

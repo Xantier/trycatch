@@ -26,7 +26,8 @@ const actionButtonStyle = {
 };
 
 export default ({updateRequest, method, url, params}: Props): React.Element => {
-  const headers = params.sort((a: Object, b: Object): number => a.id - b.id)
+  const headers = params
+      .sort((a: Object, b: Object): number => a.id - b.id)
       .map((it: HeaderMap): React.Element => {
         return (
             <div key={it.id}>
@@ -49,9 +50,6 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
                   onNewRequest={(value: string) => {
                     updateRequest('header-value', value, it.id);
                   }}/>
-              <FloatingActionButton mini={true} style={actionButtonStyle}>
-                <ContentAdd />
-              </FloatingActionButton>
             </div>);
       });
   return (
@@ -60,10 +58,10 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
                      onChange={(_: Object, __: string, value: string) => {
                        updateRequest('method', value);
                      }}>
-          <MenuItem value={1} primaryText="GET"/>
-          <MenuItem value={2} primaryText="POST"/>
-          <MenuItem value={3} primaryText="PUT"/>
-          <MenuItem value={4} primaryText="DELETE"/>
+          <MenuItem value="GET" primaryText="GET"/>
+          <MenuItem value="POST" primaryText="POST"/>
+          <MenuItem value="PUT" primaryText="PUT"/>
+          <MenuItem value="DELETE" primaryText="DELETE"/>
         </SelectField>
 
         <TextField
@@ -76,6 +74,12 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
         <Divider />
         <Subheader>Additional headers</Subheader>
         {headers}
+        <FloatingActionButton mini={true} style={actionButtonStyle}
+          onClick={() => {
+            updateRequest('header-add');
+          }}>
+          <ContentAdd />
+        </FloatingActionButton>
       </div>
   );
 };

@@ -13,7 +13,7 @@ import {
 import type {State} from './reducer';
 
 function* jsonPost(): void {
-  const payload = yield select((state: State): Object => state.request.payload);
+  const payload = yield select((state: State): Object => state.request);
   try {
     const response = yield call(postJson('/api/json'), payload);
     yield put({type: POST_JSON_SUCCESS, response: response});

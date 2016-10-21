@@ -5,7 +5,7 @@ export function postJson(url: string): () => void {
   return function (payload: string) {
     superagent
         .post(url)
-        .send({json: payload})
+        .send(payload)
         .set('Accept', 'application/json')
         .end((err: Object, res: Object) => {
           if (err || !res.ok) {
