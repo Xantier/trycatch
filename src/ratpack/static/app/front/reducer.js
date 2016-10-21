@@ -73,6 +73,7 @@ const reducer = handleActions({
     return {...state, insert: {...state.insert, query: action.payload}};
   },
   [POST_JSON_SUCCESS]: (state: State, action: Object): State => {
+    console.log(action);
     return {...state, jsonPostResponse: action.payload};
   },
   [POST_JSON_FAILED]: (state: State, action: Object): State => {

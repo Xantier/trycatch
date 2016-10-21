@@ -44,4 +44,4 @@ import rx.lang.kotlin.toObservable
 }
 
 data class Assertable<out T : Expectation<U>, out U>(val identifier: String, val expectation: T, val result: U)
-data class Result(val identifier: String, val result: Either<AssertionResult, *>)
+data class Result(val identifier: String, val result: Either<AssertionResult<*>, *>)

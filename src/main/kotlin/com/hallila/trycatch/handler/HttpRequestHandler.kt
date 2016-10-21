@@ -17,6 +17,7 @@ import ratpack.jackson.Jackson.jsonNode
 import ratpack.rx.RxRatpack
 import javax.inject.Inject
 import javax.inject.Singleton
+import ratpack.jackson.Jackson.json
 
 
 @Singleton class HttpRequestHandler @Inject constructor(val client: HttpClientService) : Handler, WithLogging() {
@@ -28,8 +29,9 @@ import javax.inject.Singleton
     private val PARAMS = "params"
     override fun handle(ctx: Context) {
         ctx.parse(jsonNode()).map {
-            LOG.debug("Got Json {}", it)
-            JsonAssertionStep("Individual Step", tryParseJson(it, PAYLOAD), JsonExpectation(tryParseJson(it, EXPECTED)),
+            LOG.debug("Client input JSON: {}", it)
+            val valid = it.get(VALID_JSON)
+            JsonAssertionStep("Individual Step", tryParseJson(valid, it, PAYLOAD), JsonExpectation(tryParseJson(valid, it, EXPECTED)),
                 Request(method(it.get(METHOD).asText()), it.get(URL).asText(), toParamsMap(it.get(PARAMS) as ArrayNode)))
         }.onError { e ->
             LOG.warn("Failed to parse JSON", e)
@@ -40,13 +42,14 @@ import javax.inject.Singleton
                     LOG.warn("Failed to make request to external API", e)
                     ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send("Failed to make request to external API: ${e.message}")
                 }.then { x ->
+                LOG.debug("API Responded with: {}", x)
                 val result = AssertionService.assertEquals(req.expectation.value, x)
-                ctx.response.send(ResponseParsingService.parseQueryResponse(result))
+                ctx.render(json(ResponseParsingService.parseQueryResponse(result)))
             }
         }
     }
 
-    private fun tryParseJson(it: JsonNode, key: String) = if (it.get(VALID_JSON).get(key).asBoolean()) it.get(key).toString() else "{}"
+    private fun tryParseJson(valid: JsonNode, it: JsonNode?, key: String): String = if (valid.get(key).asBoolean()) it?.get(key)?.toString() ?: "{}" else "{}"
 
     private fun toParamsMap(params: ArrayNode): Map<String, String> = params.map { it.get("key").asText() to it.get("value").asText() }.toMap()
 

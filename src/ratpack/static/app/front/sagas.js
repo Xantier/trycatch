@@ -16,7 +16,7 @@ function* jsonPost(): void {
   const payload = yield select((state: State): Object => state.request);
   try {
     const response = yield call(postJson('/api/json'), payload);
-    yield put({type: POST_JSON_SUCCESS, response: response});
+    yield put({type: POST_JSON_SUCCESS, payload: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: POST_JSON_FAILED, message: e.message});
