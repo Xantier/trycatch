@@ -19,7 +19,8 @@ const TodoListContainer = connect(
     function mapStateToProps(state: State): Object {
       return {
         request: state.request,
-        requestResponse: state.requestResponse
+        requestResponse: state.requestResponse,
+        select: state.select
       };
     },
     function mapDispatchToProps(dispatch: () => void): Object {

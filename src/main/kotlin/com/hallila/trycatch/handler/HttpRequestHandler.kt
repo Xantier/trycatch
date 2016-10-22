@@ -13,17 +13,17 @@ import com.hallila.trycatch.service.ResponseParsingService
 import io.netty.handler.codec.http.HttpResponseStatus
 import ratpack.handling.Context
 import ratpack.handling.Handler
+import ratpack.jackson.Jackson.json
 import ratpack.jackson.Jackson.jsonNode
 import ratpack.rx.RxRatpack
 import javax.inject.Inject
 import javax.inject.Singleton
-import ratpack.jackson.Jackson.json
 
 
 @Singleton class HttpRequestHandler @Inject constructor(val client: HttpClientService) : Handler, WithLogging() {
     private val VALID_JSON = "validJson"
     private val PAYLOAD = "payload"
-    private val EXPECTED = "expected"
+    private val EXPECTED = "expectation"
     private val URL = "url"
     private val METHOD = "method"
     private val PARAMS = "params"

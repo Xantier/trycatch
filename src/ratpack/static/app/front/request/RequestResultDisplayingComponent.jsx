@@ -11,7 +11,7 @@ type Actual = {
 
 type Props = {
   result: string,
-  expected: string,
+  expectation: string,
   actual: Actual
 }
 
@@ -44,16 +44,16 @@ export default class PrettyJsonComponent extends React.Component {
     }
 
     if (this.props.result) {
-      displayJson.call(this, 'expected', this.props.expected);
+      displayJson.call(this, 'expectation', this.props.expectation);
       displayJson.call(this, 'actual', this.props.actual.body);
     }
 
   }
 
   render(): React.Element {
-    const expectedJsx = this.props.expected ? (<div>
+    const expectedJsx = this.props.expectation ? (<div>
       <h2>Expected</h2>
-      <div ref="expected"/>
+      <div ref="expectation"/>
     </div>) : null;
     return this.props.result ? (
         <div>

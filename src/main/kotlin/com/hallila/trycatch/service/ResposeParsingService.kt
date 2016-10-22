@@ -25,7 +25,7 @@ object ResponseParsingService {
                 val left = response.l
                 mapOf(
                     "result" to "failure",
-                    "expected" to left.expected,
+                    "expectation" to left.expected,
                     "actual" to left.actual
                 )
             }

@@ -14,16 +14,20 @@ import {
 
 export type Request = {
   payload: string,
-  expected: string,
+  expectation: string,
   validJson: Object[],
   url: string,
   method: string,
   params: Object[]
 }
 
+export type Select = {
+  query: string,
+  expectation: string
+}
+
 export type State = {
-  select: string,
-  expectation: string,
+  select: Select,
   request: Request,
   requestResponse: Object,
   insert: string
@@ -33,11 +37,15 @@ const init = {
   request: {
     validJson: {
       payload: true,
-      expected: true
+      expectation: true
     },
     url: '',
     method: '',
     params: []
+  },
+  select: {
+    query: '',
+    expectation: ''
   }
 };
 

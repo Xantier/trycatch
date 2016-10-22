@@ -8,7 +8,7 @@ import RequestResultDisplayingComponent from './request/RequestResultDisplayingC
 import IndividualStepContainer from './IndividualStepContainer.jsx';
 import Button from './Button.jsx';
 import TextField from 'material-ui/TextField';
-import type {Request} from './reducer';
+import type {Request, Select} from './reducer';
 
 type Props = {
   postJson: () => void,
@@ -23,14 +23,14 @@ type Props = {
   runScenario: () => void,
   updateRequest: () => void,
   request: Request,
-  requestResponse: Object[]
+  requestResponse: Object[],
+  select: Select
 }
 
 export default (props: Props): React.Element => {
   const {
             postJson, initializeDatabase, assertDatabaseValues,
-            updateExpected, updateSelect, saveScenario,
-            runScenario, updateInitializationScript, updateName
+            saveScenario, runScenario, updateInitializationScript, updateName
         } = props;
   return (
       <div className="todo">
@@ -42,8 +42,8 @@ export default (props: Props): React.Element => {
           <RequestComponent {...props} {...props.request}/>
           <JsonTextArea {...props} label="Insert JSON payload" contentType="payload" {...props.request} />
           <PrettyJsonComponent payload={props.request.payload} validJson={props.request.validJson.payload}/>
-          <JsonTextArea {...props} label="Insert expected JSON" contentType="expected" {...props.request} />
-          <PrettyJsonComponent payload={props.request.expected} validJson={props.request.validJson.payload}/>
+          <JsonTextArea {...props} label="Insert expected JSON" contentType="expectation" {...props.request} />
+          <PrettyJsonComponent payload={props.request.expectation} validJson={props.request.validJson.payload}/>
           <RequestResultDisplayingComponent {...props.requestResponse} />
         </IndividualStepContainer>
 
@@ -52,7 +52,7 @@ export default (props: Props): React.Element => {
         </IndividualStepContainer>
 
         <IndividualStepContainer run={assertDatabaseValues}>
-          <DatabaseAssertionInput updateExpected={updateExpected} updateSelect={updateSelect}/>
+          <DatabaseAssertionInput {...props}/>
         </IndividualStepContainer>
         <Button action={saveScenario} text="Save scenario"/>
         <Button action={runScenario} text="Run scenario"/>
