@@ -5,6 +5,7 @@ import org.funktionale.either.Either
 import org.json.JSONException
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
+import org.skyscreamer.jsonassert.JSONCompareMode
 
 object AssertionService {
     fun assertEquals(expected: List<String>, actual: List<String>): Either<AssertionResult<String>, List<String>> =
@@ -25,7 +26,7 @@ object AssertionService {
 
     fun assertEquals(expected: Json, actual: QueryResult): Either<AssertionResult<QueryResult>, QueryResult> =
         try {
-            JSONAssert.assertEquals(JSONObject(actual.body), JSONObject(expected), true)
+            JSONAssert.assertEquals(JSONObject(expected.content), JSONObject(actual.body), JSONCompareMode.LENIENT)
             Either.Right<AssertionResult<QueryResult>, QueryResult>(actual)
         } catch(e: Throwable) {
             when (e) {
@@ -37,7 +38,7 @@ object AssertionService {
 
     private fun assertEquals(expected: Json, result: Json): Either<AssertionResult<Json>, Json> =
         try {
-            JSONAssert.assertEquals(result.content, expected.content, true)
+            JSONAssert.assertEquals(expected.content, result.content, JSONCompareMode.LENIENT)
             Either.Right<AssertionResult<Json>, Json>(result)
         } catch (e: Error) {
             Either.Left<AssertionResult<Json>, Json>(AssertionResult(expected.toString(), result))

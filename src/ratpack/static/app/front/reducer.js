@@ -12,17 +12,22 @@ import {
     UPDATE_REQUEST
 } from './constants';
 
+export type Request = {
+  payload: string,
+  expected: string,
+  validJson: Object[],
+  url: string,
+  method: string,
+  params: Object[]
+}
+
 export type State = {
   select: string,
   expectation: string,
-  request: string,
+  request: Request,
+  requestResponse: Object,
   insert: string
 };
-
-export type Request = {
-  payload: string,
-  validJson: boolean
-}
 
 const init = {
   request: {
@@ -73,11 +78,10 @@ const reducer = handleActions({
     return {...state, insert: {...state.insert, query: action.payload}};
   },
   [POST_JSON_SUCCESS]: (state: State, action: Object): State => {
-    console.log(action);
-    return {...state, jsonPostResponse: action.payload};
+    return {...state, requestResponse: action.payload};
   },
   [POST_JSON_FAILED]: (state: State, action: Object): State => {
-    return {...state, jsonPostResponse: action.payload};
+    return {...state, requestResponse: action.payload};
   },
   [INITIALIZE_DATABASE_SUCCESS]: (state: State, action: Object): State => {
     return {...state, databaseInsertResponse: action.payload};

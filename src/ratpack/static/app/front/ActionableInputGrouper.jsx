@@ -4,6 +4,7 @@ import DatabaseAssertionInput from './DatabaseAssertionInput.jsx';
 import JsonTextArea from './request/JsonTextArea.jsx';
 import PrettyJsonComponent from './request/PrettyJsonComponent.jsx';
 import RequestComponent from './request/RequestComponent.jsx';
+import RequestResultDisplayingComponent from './request/RequestResultDisplayingComponent.jsx';
 import IndividualStepContainer from './IndividualStepContainer.jsx';
 import Button from './Button.jsx';
 import TextField from 'material-ui/TextField';
@@ -21,7 +22,8 @@ type Props = {
   saveScenario: () => void,
   runScenario: () => void,
   updateRequest: () => void,
-  request: Request
+  request: Request,
+  requestResponse: Object[]
 }
 
 export default (props: Props): React.Element => {
@@ -42,6 +44,7 @@ export default (props: Props): React.Element => {
           <PrettyJsonComponent payload={props.request.payload} validJson={props.request.validJson.payload}/>
           <JsonTextArea {...props} label="Insert expected JSON" contentType="expected" {...props.request} />
           <PrettyJsonComponent payload={props.request.expected} validJson={props.request.validJson.payload}/>
+          <RequestResultDisplayingComponent {...props.requestResponse} />
         </IndividualStepContainer>
 
         <IndividualStepContainer run={initializeDatabase}>

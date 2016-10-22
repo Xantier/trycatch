@@ -1,8 +1,7 @@
 import superagent from 'superagent';
-import logger from '../logger';
 
-export function postJson(url: string): () => void {
-  return function (payload: string) {
+export function postJson(url: string): () => Promise {
+  return function (payload: string): Promise{
     return superagent
         .post(url)
         .send(payload)
