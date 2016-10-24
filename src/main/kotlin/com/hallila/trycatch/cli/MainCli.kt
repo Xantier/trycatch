@@ -1,6 +1,7 @@
 package com.hallila.trycatch.cli
 
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.inject.Guice
 import com.hallila.trycatch.config.CliContextModule
 import com.hallila.trycatch.config.HikariModule
@@ -41,7 +42,7 @@ object MainCli {
         })
         val folder = File(scenario_location)
         return folder.walkTopDown().asIterable().filter { it.isFile }.map {
-            val scenarios = yaml.loadAs(it.inputStream(), Map::class.java) as Map<String, String>
+            val scenarios = jacksonObjectMapper().readValue(it.inputStream(), Map::class.java) as Map<String, String>
             Scenario.build(scenarios)
         }
     }

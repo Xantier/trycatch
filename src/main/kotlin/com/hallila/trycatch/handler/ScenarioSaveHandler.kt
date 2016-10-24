@@ -1,9 +1,7 @@
 package com.hallila.trycatch.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.hallila.trycatch.model.Scenario
 import org.funktionale.either.eitherTry
 import ratpack.handling.Context
@@ -43,7 +41,7 @@ class ScenarioSaveHandler : Handler {
             val loc = config.getProperty("scenario_location")
             if (!loc.endsWith("/")) loc + "/" else loc
         })
-        val om = ObjectMapper(YAMLFactory()).registerKotlinModule()
+        val om = ObjectMapper()
         try {
             File(scenario_location + scenario.name + ".tcs").printWriter().use { out ->
                 om.writeValue(out, scenario)
