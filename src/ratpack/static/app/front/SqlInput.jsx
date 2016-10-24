@@ -1,5 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import ActionLineStyle from 'material-ui/svg-icons/action/line-style';
 import {pd as prettyData} from 'pretty-data';
 
 type Props = {
@@ -24,10 +26,11 @@ export default (props: Props): React.Element => {
         rows={10}
         rowsMax={40}
         multiLine={true}
+        fullWidth={true}
         value={query}
         onChange={(e: Event) => {
           update(e.target.value, updateFn);
         }}/>
-    <button onClick={() => beautify(updateFn)} value="Beautify">Beautify</button>
+    <RaisedButton label="Beautify" onClick={() => beautify(updateFn)} secondary={true} icon={<ActionLineStyle/>}/>
   </div>);
 };

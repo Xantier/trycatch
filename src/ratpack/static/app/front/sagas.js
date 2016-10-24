@@ -45,8 +45,14 @@ function* assertDatabaseValues(): void {
   }
 }
 
+function scenarioPayload(): (state: State) => Object {
+  return select((state: State): Object => {
+    return {request: state.request, insert: state.insert, select: state.select, name: state.name};
+  });
+}
+
 function* saveScenario(): void {
-  const payload = yield select((state: State): Object => state);
+  const payload = yield scenarioPayload();
   try {
     const response = yield call(postJson('/api/scenario/save'), payload);
     yield put({type: SAVE_SCENARIO_SUCCESS, response: response});
@@ -57,7 +63,7 @@ function* saveScenario(): void {
 }
 
 function* runScenario(): void {
-  const payload = yield select((state: State): Object => state);
+  const payload = yield scenarioPayload();
   try {
     const response = yield call(postJson('/api/scenario/run'), payload);
     yield put({type: RUN_SCENARIO_SUCCESS, response: response});

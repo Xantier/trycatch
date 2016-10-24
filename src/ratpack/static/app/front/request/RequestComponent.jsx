@@ -26,6 +26,8 @@ const actionButtonStyle = {
 };
 
 export default ({updateRequest, method, url, params}: Props): React.Element => {
+  const KEY = 'header-key';
+  const VALUE = 'header-value';
   const headers = params
       .sort((a: Object, b: Object): number => a.id - b.id)
       .map((it: HeaderMap): React.Element => {
@@ -35,20 +37,20 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
                   value={it.key}
                   hintText="Key" dataSource={httpHeaders}
                   onUpdateInput={(value: string) => {
-                    updateRequest('header-key', value, it.id);
+                    updateRequest(KEY, value, it.id);
                   }}
                   onNewRequest={(value: string) => {
-                    updateRequest('header-key', value, it.id);
+                    updateRequest(KEY, value, it.id);
                   }}/>
               <AutoComplete
                   value={it.value}
                   hintText="Value"
                   dataSource={httpHeaders}
                   onUpdateInput={(value: string) => {
-                    updateRequest('header-value', value, it.id);
+                    updateRequest(VALUE, value, it.id);
                   }}
                   onNewRequest={(value: string) => {
-                    updateRequest('header-value', value, it.id);
+                    updateRequest(VALUE, value, it.id);
                   }}/>
             </div>);
       });

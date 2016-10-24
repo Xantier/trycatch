@@ -21,16 +21,17 @@ export type Request = {
   params: Object[]
 }
 
-export type Select = {
+export type SqlInputType = {
   query: string,
   expectation: string
 }
 
 export type State = {
-  select: Select,
+  name: string,
+  select: SqlInputType,
   request: Request,
   requestResponse: Object,
-  insert: string
+  insert: SqlInputType
 };
 
 const init = {
@@ -44,6 +45,10 @@ const init = {
     params: []
   },
   select: {
+    query: '',
+    expectation: ''
+  },
+  insert: {
     query: '',
     expectation: ''
   }

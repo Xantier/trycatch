@@ -1,7 +1,12 @@
 package com.hallila.trycatch.model
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ArrayNode
 import com.github.kittinunf.fuel.core.Method
+import com.hallila.trycatch.handler.JsonHelpers
+import com.hallila.trycatch.handler.method
+import com.hallila.trycatch.handler.toParamsMap
+import com.hallila.trycatch.handler.tryParseJson
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -18,15 +23,15 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                         InsertStep(entryName, entry["statement"] as String, DatabaseResponseExpectation(content(entry)))
                     }
                     StepKey.REQUEST -> {
-                        val request = entry["request"] as Map<*, *>
-                        val payload = entry["payload"] as String
+                        val request = entry[JsonHelpers.REQUEST] as Map<*, *>
+                        val payload = entry[JsonHelpers.PAYLOAD] as String
                         val path = request["path"] as String
                         val method = Method.valueOf(request["method"].toString().toUpperCase())
                         JsonAssertionStep(entryName, payload, JsonExpectation(jsonContent(entry)),
                             Request(method, path, request["params"] as Map<String, String>))
                     }
                     StepKey.SELECT -> {
-                        val expectation = entry["expectation"] as Map<*, *>
+                        val expectation = entry[JsonHelpers.EXPECTATION] as Map<*, *>
                         SelectStep(entryName, entry["statement"] as String, CsvExpectation(expectation["value"] as List<String>))
                     }
                 }
@@ -35,36 +40,43 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
         }
 
         private fun content(entry: Map<*, *>): String {
-            val expectation = entry["expectation"] as Map<*, *>
+            val expectation = entry[JsonHelpers.EXPECTATION] as Map<*, *>
             val content = expectation["value"] as String
             return content
         }
 
         private fun jsonContent(entry: Map<*, *>): String {
-            val expectation = entry["expectation"] as Map<*, *>
+            val expectation = entry[JsonHelpers.EXPECTATION] as Map<*, *>
             val exp = expectation["value"] as Map<*, *>
             val content = exp["content"] as String
             return content
         }
 
         fun buildFromJson(input: JsonNode): Scenario {
-            val QUERY = "query"
-            val REQUEST = "request"
-            val INSERT = "insert"
-            val SELECT = "select"
-            val EXPECTATION = "expectation"
-            val name = "fromTheWeb"
-            val steps = input.fields().asSequence().map {
-                when (it.key) {
-                    REQUEST -> JsonAssertionStep(REQUEST + name, it.value.get("payload").toString(), JsonExpectation(it.value.get("payload").toString()),
-                        Request(Method.POST, "http://jsonplaceholder.typicode.com/posts/1", emptyMap<String, String>()), StepKey.REQUEST)
+            val name = input.get("name").asText()
+            val steps = input.fields().asSequence()
+                .filter { it.key != "name" }
+                .map {
+                    when (it.key) {
+                        JsonHelpers.REQUEST -> {
+                            val valid = it.value.get(JsonHelpers.VALID_JSON)
+                            JsonAssertionStep(JsonHelpers.REQUEST + " " + name, tryParseJson(valid, it.value, JsonHelpers.PAYLOAD),
+                                JsonExpectation(tryParseJson(valid, it.value, JsonHelpers.EXPECTED)),
+                                Request(method(it.value.get(JsonHelpers.METHOD).asText()), it.value.get(JsonHelpers.URL).asText(),
+                                    toParamsMap(it.value.get(JsonHelpers.PARAMS) as ArrayNode)),
+                                StepKey.REQUEST)
+                        }
 
-                    INSERT -> InsertStep(INSERT + name, it.value.get(QUERY).asText(), DatabaseResponseExpectation("Done successfully"), StepKey.INSERT)
+                        JsonHelpers.INSERT -> InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                            DatabaseResponseExpectation("Done successfully"),
+                            StepKey.INSERT)
 
-                    SELECT -> SelectStep(SELECT + name, it.value.get(QUERY).asText(), CsvExpectation(listOf(it.value.get(EXPECTATION).asText())), StepKey.SELECT)
-                    else -> throw RuntimeException("Unable to parse posted JSON :(")
-                }
-            }.toList()
+                        JsonHelpers.SELECT -> SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                            CsvExpectation(listOf(it.value.get(JsonHelpers.EXPECTATION).asText())),
+                            StepKey.SELECT)
+                        else -> throw RuntimeException("Unable to parse posted JSON :(")
+                    }
+                }.toList()
             return Scenario(name, steps)
         }
     }

@@ -54,11 +54,11 @@ class KServerSpec(val delegate: RatpackServerSpec) : RatpackServerSpec by delega
     fun handlers(cb: KChain.() -> Unit) = delegate.handlers { KChain(it).cb() }
 }
 
-public fun <T : Any> logger(forClass: Class<T>): Logger {
+fun <T : Any> logger(forClass: Class<T>): Logger {
     return LoggerFactory.getLogger(unwrapCompanionClass(forClass).name)
 }
 
-public fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
+fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     return if (ofClass.enclosingClass != null && ofClass.enclosingClass.kotlin.companionObject?.java == ofClass) {
         ofClass.enclosingClass
     } else {
@@ -66,30 +66,30 @@ public fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     }
 }
 
-public fun <T : Any> unwrapCompanionClass(ofClass: KClass<T>): KClass<*> {
+fun <T : Any> unwrapCompanionClass(ofClass: KClass<T>): KClass<*> {
     return unwrapCompanionClass(ofClass.java).kotlin
 }
 
-public fun <T : Any> logger(forClass: KClass<T>): Logger {
+fun <T : Any> logger(forClass: KClass<T>): Logger {
     return logger(forClass.java)
 }
 
-public fun <T : Any> T.logger(): Logger {
+fun <T : Any> T.logger(): Logger {
     return logger(this.javaClass)
 }
 
-public fun <R : Any> R.lazyLogger(): Lazy<Logger> {
+fun <R : Any> R.lazyLogger(): Lazy<Logger> {
     return lazy { logger(this.javaClass) }
 }
 
-public fun <R : Any> R.injectLogger(): Lazy<Logger> {
+fun <R : Any> R.injectLogger(): Lazy<Logger> {
     return lazyOf(logger(this.javaClass))
 }
 
 interface Loggable {}
 
-public fun Loggable.logger(): Logger = logger(this.javaClass)
-public abstract class WithLogging : Loggable {
+fun Loggable.logger(): Logger = logger(this.javaClass)
+abstract class WithLogging : Loggable {
     val LOG = logger()
 }
 

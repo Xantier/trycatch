@@ -19,8 +19,6 @@ import java.util.*
 class ScenarioSaveHandler : Handler {
     override fun handle(ctx: Context) {
         ctx.parse(Jackson.jsonNode()).map {
-            it.get("json")
-        }.map {
             Scenario.buildFromJson(it)
         }.map { scenario ->
             eitherTry {
@@ -47,7 +45,7 @@ class ScenarioSaveHandler : Handler {
         })
         val om = ObjectMapper(YAMLFactory()).registerKotlinModule()
         try {
-            File(scenario_location + "newScenario.tcs").printWriter().use { out ->
+            File(scenario_location + scenario.name + ".tcs").printWriter().use { out ->
                 om.writeValue(out, scenario)
             }
         } catch (e: Exception) {

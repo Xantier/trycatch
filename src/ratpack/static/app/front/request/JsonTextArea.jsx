@@ -14,6 +14,7 @@ export default ({updateJson, validJson, label, contentType}: Props): React.Eleme
         <TextField
             hintText={label}
             floatingLabelText={label}
+            fullWidth={true}
             onChange={(e: Event) => {
               updateJson(e.target.value, contentType);
             }}

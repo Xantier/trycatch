@@ -20,7 +20,8 @@ const TodoListContainer = connect(
       return {
         request: state.request,
         requestResponse: state.requestResponse,
-        select: state.select
+        select: state.select,
+        insert: state.insert
       };
     },
     function mapDispatchToProps(dispatch: () => void): Object {

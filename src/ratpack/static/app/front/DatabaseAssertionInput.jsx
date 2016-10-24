@@ -1,12 +1,12 @@
 import React from 'react';
 import SqlInput from './SqlInput.jsx';
 
-import type {Select} from './reducer';
+import type {SqlInputType} from './reducer';
 
 type Props = {
   updateExpected: () => void,
   updateSelect: () => void,
-  select: Select
+  select: SqlInputType
 }
 
 export default (props: Props): React.Element => {
