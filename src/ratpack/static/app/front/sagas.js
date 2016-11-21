@@ -1,14 +1,15 @@
 import {takeEvery} from 'redux-saga';
 import {select} from 'redux-saga/effects';
 import {call, put} from 'redux-saga/effects';
-import {postJson} from '../api/jsonApi';
+import {postJson, getFromUrl} from '../api/jsonApi';
 import logger from '../logger';
 import {
     POST_JSON, POST_JSON_SUCCESS, POST_JSON_FAILED,
     INITIALIZE_DATABASE, INITIALIZE_DATABASE_SUCCESS, INITIALIZE_DATABASE_FAILED,
     ASSERT_DATABASE_VALUES, ASSERT_DATABASE_VALUES_SUCCESS, ASSERT_DATABASE_VALUES_FAILED,
     SAVE_SCENARIO, SAVE_SCENARIO_SUCCESS, SAVE_SCENARIO_FAILED,
-    RUN_SCENARIO, RUN_SCENARIO_SUCCESS, RUN_SCENARIO_FAILED
+    RUN_SCENARIO, RUN_SCENARIO_SUCCESS, RUN_SCENARIO_FAILED,
+    LOAD_SCENARIOS, LOAD_SCENARIOS_SUCCESS, LOAD_SCENARIOS_FAILED
 } from './constants';
 import type {State} from './reducer';
 
@@ -73,13 +74,24 @@ function* runScenario(): void {
   }
 }
 
+function* loadScenarios(): void {
+  try {
+    const response = yield call(getFromUrl('/api/scenario/list'));
+    yield put({type: LOAD_SCENARIOS_SUCCESS, response: response});
+  } catch (e) {
+    logger.error('Failed to post JSON. Error: ' + e);
+    yield put({type: LOAD_SCENARIOS_FAILED, message: e.message});
+  }
+}
+
 function* rootSaga(): void {
   yield [
     takeEvery(POST_JSON, jsonPost),
     takeEvery(INITIALIZE_DATABASE, initDb),
     takeEvery(ASSERT_DATABASE_VALUES, assertDatabaseValues),
     takeEvery(SAVE_SCENARIO, saveScenario),
-    takeEvery(RUN_SCENARIO, runScenario)
+    takeEvery(RUN_SCENARIO, runScenario),
+    takeEvery(LOAD_SCENARIOS, loadScenarios)
   ];
 }
 

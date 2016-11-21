@@ -5,7 +5,6 @@ import com.hallila.trycatch.handler.*
 import com.hallila.trycatch.serverOf
 import com.zaxxer.hikari.HikariConfig
 import org.slf4j.LoggerFactory
-import ratpack.handling.Context
 import ratpack.hikari.HikariModule
 import ratpack.server.BaseDir
 
@@ -53,24 +52,19 @@ object MainRat {
                 }
             }
 
-            prefix("view") {
-                fileSystem("static/view") { files({ it.indexFiles("index.html") }) }
-            }
 
             prefix("api") {
-                prefix("scenario"){
+                prefix("scenario") {
                     post("save", ScenarioSaveHandler::class.java)
                     post("run", ScenarioRunHandler::class.java)
+                    get("list", ScenarioLoadHandler::class.java)
                 }
 
                 post("json", HttpRequestHandler::class.java)
                 post("insert", DatabaseInsertHandler::class.java)
                 post("select", DatabaseSelectHandler::class.java)
             }
+            fileSystem("static/view") { files({ it.indexFiles("index.html") }) }
         }
     }
 }
-
-/** A handler as a method */
-fun bazHandler(context: Context) = context.render("from the baz handler")
-

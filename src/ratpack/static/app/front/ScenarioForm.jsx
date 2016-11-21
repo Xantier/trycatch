@@ -15,7 +15,7 @@ import {
 } from './actions';
 import type {State} from './reducer';
 
-const TodoListContainer = connect(
+const ScenarioForm = connect(
     function mapStateToProps(state: State): Object {
       return {
         request: state.request,
@@ -41,4 +41,4 @@ const TodoListContainer = connect(
     }
 )(ActionableInputGrouper);
 
-export default TodoListContainer;
+export default ScenarioForm;

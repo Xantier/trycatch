@@ -20,6 +20,7 @@ class WebContextModule : AbstractModule() {
         bind(HttpRequestHandler::class.java)
         bind(ScenarioSaveHandler::class.java)
         bind(ScenarioRunHandler::class.java)
+        bind(ScenarioLoadHandler::class.java)
         bind(ScenarioRunner::class.java)
         bind(DatabaseInsertHandler::class.java)
         bind(DatabaseSelectHandler::class.java)

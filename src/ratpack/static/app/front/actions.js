@@ -8,7 +8,8 @@ import {
     RUN_SCENARIO,
     UPDATE_JSON, UPDATE_JSON_FAILED, UPDATE_NAME,
     UPDATE_DATABASE_INITALIZATION_QUERY,
-    UPDATE_REQUEST
+    UPDATE_REQUEST,
+    LOAD_SCENARIOS
 } from './constants';
 
 type Action = {
@@ -57,4 +58,8 @@ export function saveScenario(): Action {
 }
 export function runScenario(): Action {
   return {type: RUN_SCENARIO};
+}
+
+export function loadScenarios(): Action {
+  return {type: LOAD_SCENARIOS};
 }

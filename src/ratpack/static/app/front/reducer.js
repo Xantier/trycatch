@@ -1,15 +1,14 @@
 import {handleActions} from 'redux-actions';
 import {
-    INITIALIZE_DATABASE_SUCCESS,
-    INITIALIZE_DATABASE_FAILED,
-    POST_JSON_SUCCESS,
-    POST_JSON_FAILED,
+    INITIALIZE_DATABASE_SUCCESS, INITIALIZE_DATABASE_FAILED,
+    POST_JSON_SUCCESS, POST_JSON_FAILED,
     UPDATE_DATABASE_ASSERTION_QUERY,
     UPDATE_EXPECTED_DATABASE,
     UPDATE_JSON, UPDATE_JSON_FAILED,
     UPDATE_DATABASE_INITALIZATION_QUERY,
     UPDATE_NAME,
-    UPDATE_REQUEST
+    UPDATE_REQUEST,
+    LOAD_SCENARIOS, LOAD_SCENARIOS_SUCCESS, LOAD_SCENARIOS_FAILED
 } from './constants';
 
 export type Request = {
@@ -51,7 +50,9 @@ const init = {
   insert: {
     query: '',
     expectation: ''
-  }
+  },
+  scenarios: [],
+  loading: false
 };
 
 function updateHeader(state: Object[], action: Object): Object {
@@ -101,6 +102,15 @@ const reducer = handleActions({
   },
   [INITIALIZE_DATABASE_FAILED]: (state: State, action: Object): State => {
     return {...state, databaseInsertResponse: action.payload};
+  },
+  [LOAD_SCENARIOS]: (state: State): State => {
+    return {...state, loading: true};
+  },
+  [LOAD_SCENARIOS_FAILED]: (state: State, action: Object): State => {
+    return {...state, loading: false, errorMsg: action.payload};
+  },
+  [LOAD_SCENARIOS_SUCCESS]: (state: State, action: Object): State => {
+    return {...state, loading: false, scenarios: action.payload};
   }
 }, init);
 

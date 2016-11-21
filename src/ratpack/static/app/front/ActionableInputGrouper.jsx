@@ -28,13 +28,17 @@ type Props = {
   insert: SqlInputType
 }
 
+const centralStyles = {
+  marginLeft: 350,
+  width: 600
+};
 export default (props: Props): React.Element => {
   const {
             postJson, initializeDatabase, assertDatabaseValues,
             saveScenario, runScenario, updateInitializationScript, updateName, insert
         } = props;
   return (
-      <div className="todo">
+      <div style={centralStyles}>
         <TextField hintText="Scenario Name" floatingLabelText="Enter name for the scenario"
                    onChange={(e: Event) => {
                      updateName(e.target.value);

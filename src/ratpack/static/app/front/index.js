@@ -7,6 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import reducer from './reducer';
 import sagas from './sagas';
 import ScenarioForm from './ScenarioForm.jsx';
+import Menu from './Menu.jsx';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -23,7 +24,14 @@ sagaMiddleware.run(sagas);
 ReactDOM.render(
     <Provider store={store}>
       <MuiThemeProvider>
-        <ScenarioForm />
+        <div>
+          <div>
+            <Menu/>
+          </div>
+          <div>
+            <ScenarioForm />
+          </div>
+        </div>
       </MuiThemeProvider>
     </Provider>,
     document.getElementById('container')
