@@ -77,7 +77,7 @@ function* runScenario(): void {
 function* loadScenarios(): void {
   try {
     const response = yield call(getFromUrl('/api/scenario/list'));
-    yield put({type: LOAD_SCENARIOS_SUCCESS, response: response});
+    yield put({type: LOAD_SCENARIOS_SUCCESS, payload: response.body});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: LOAD_SCENARIOS_FAILED, message: e.message});

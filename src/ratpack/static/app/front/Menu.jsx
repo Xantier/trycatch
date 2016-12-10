@@ -5,23 +5,16 @@ import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import {loadScenarios} from './actions';
-type Props = {
-  loadScenarios: () => void
-}
 
-class Menu extends React.Element {
-  constructor(props) {
-    super(props);
-  }
-
+class Menu extends React.Component {
   componentDidMount() {
-    props.loadScenarios();
+    this.props.loadScenarios();
   }
 
-  render() {
+  render(): React.Element {
     const {scenarios} = this.props;
     const scenarioComponents = scenarios.map((it) => {
-      return <MenuItem onTouchTap={() => {console.log(`Opening Item ${it.name}`);}}>{it.name}</MenuItem>;
+      return <MenuItem key={it.name} onTouchTap={() => {console.log(`Opening Item ${it.name}`);}}>{it.name}</MenuItem>;
     });
     return (
       <div>
