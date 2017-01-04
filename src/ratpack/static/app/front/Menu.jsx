@@ -17,10 +17,10 @@ class Menu extends React.Component {
   }
 
   componentDidMount() {
-    this.props.loadScenarios();
+    props.loadScenarios();
   }
 
-  render() {
+  render(): React.Element {
     const {scenarios} = this.props;
     const scenarioComponents = scenarios.map((it) => {
       return (<MenuItem key={it.name} onTouchTap={() => {
