@@ -4,24 +4,29 @@ import type {State} from './reducer';
 import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import {loadScenarios} from './actions';
+import {loadScenarios, selectScenario} from './actions';
 type Props = {
-  loadScenarios: () => void
+  loadScenarios: () => void,
+  selectScenario: () => void,
+  scenarios: Array
 }
 
-class Menu extends React.Element {
-  constructor(props) {
+class Menu extends React.Component {
+  constructor(props: Props) {
     super(props);
   }
 
   componentDidMount() {
-    props.loadScenarios();
+    this.props.loadScenarios();
   }
 
   render() {
     const {scenarios} = this.props;
     const scenarioComponents = scenarios.map((it) => {
-      return <MenuItem onTouchTap={() => {console.log(`Opening Item ${it.name}`);}}>{it.name}</MenuItem>;
+      return (<MenuItem key={it.name} onTouchTap={() => {
+        console.log(`Opening Item ${it.name}`);
+        this.props.selectScenario(it.name);
+      }}>{it.name}</MenuItem>);
     });
     return (
       <div>
@@ -41,7 +46,8 @@ const MenuConnector = connect(
   },
   function mapDispatchToProps(dispatch: () => void): Object {
     return {
-      loadScenarios: () => dispatch(loadScenarios())
+      loadScenarios: () => dispatch(loadScenarios()),
+      selectScenario: (name) => dispatch(selectScenario(name))
     };
   }
 )(Menu);

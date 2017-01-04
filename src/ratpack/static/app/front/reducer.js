@@ -1,15 +1,5 @@
 import {handleActions} from 'redux-actions';
-import {
-    INITIALIZE_DATABASE_SUCCESS, INITIALIZE_DATABASE_FAILED,
-    POST_JSON_SUCCESS, POST_JSON_FAILED,
-    UPDATE_DATABASE_ASSERTION_QUERY,
-    UPDATE_EXPECTED_DATABASE,
-    UPDATE_JSON, UPDATE_JSON_FAILED,
-    UPDATE_DATABASE_INITALIZATION_QUERY,
-    UPDATE_NAME,
-    UPDATE_REQUEST,
-    LOAD_SCENARIOS, LOAD_SCENARIOS_SUCCESS, LOAD_SCENARIOS_FAILED
-} from './constants';
+import * as t from './constants';
 
 export type Request = {
   payload: string,
@@ -25,7 +15,7 @@ export type SqlInputType = {
   expectation: string
 }
 
-export type State = {
+export type Scenario = {
   name: string,
   select: SqlInputType,
   request: Request,
@@ -33,84 +23,120 @@ export type State = {
   insert: SqlInputType
 };
 
+export type State = {
+  active: Scenario,
+  scenarios: Array<Scenario>,
+  loading: boolean
+};
+
 const init = {
-  request: {
-    validJson: {
-      payload: true,
-      expectation: true
+  active: {
+    request: {
+      validJson: {
+        payload: true,
+        expectation: true
+      },
+      url: '',
+      method: '',
+      params: []
     },
-    url: '',
-    method: '',
-    params: []
-  },
-  select: {
-    query: '',
-    expectation: ''
-  },
-  insert: {
-    query: '',
-    expectation: ''
+    select: {
+      query: '',
+      expectation: ''
+    },
+    insert: {
+      query: '',
+      expectation: ''
+    }
   },
   scenarios: [],
   loading: false
 };
 
-function updateHeader(state: Object[], action: Object): Object {
+function updateHeader(params: Object[], action: Object): Object {
   if (action.meta.contentType.endsWith('add')) {
-    return [...state, {key: '', value: '', id: state.length + 1}];
+    return [...params, {key: '', value: '', id: params.length + 1}];
   }
-  return state.map((it: Object): Object => {
+  return params.map((it: Object): Object => {
     if (it.id === action.meta.id) {
       return action.meta.contentType.endsWith('key') ? {...it, key: action.payload} : {...it, value: action.payload};
     }
     return it;
   });
 }
+
 const reducer = handleActions({
-  [UPDATE_NAME]: (state: State, action: Object): State => {
-    return {...state, name: action.payload};
+  [t.UPDATE_NAME]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, name: action.payload}};
   },
-  [UPDATE_REQUEST]: (state: State, action: Object): State => {
+  [t.UPDATE_REQUEST]: (state: State, action: Object): State => {
     if (action.meta.contentType.startsWith('header')) {
-      return {...state, request: {...state.request, params: updateHeader(state.request.params, action)}};
+      return {
+        ...state,
+        active: {
+          ...state.active,
+          request: {...state.active.request, params: updateHeader(state.active.request.params, action)}
+        }
+      };
     }
-    return {...state, request: {...state.request, [action.meta.contentType]: action.payload}};
+    return {
+      ...state,
+      active: {...state.active, request: {...state.active.request, [action.meta.contentType]: action.payload}}
+    };
   },
-  [UPDATE_DATABASE_ASSERTION_QUERY]: (state: State, action: Object): State => {
-    return {...state, select: {...state.select, query: action.payload}};
+  [t.UPDATE_DATABASE_ASSERTION_QUERY]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, select: {...state.active.select, query: action.payload}}};
   },
-  [UPDATE_EXPECTED_DATABASE]: (state: State, action: Object): State => {
-    return {...state, select: {...state.select, expectation: action.payload}};
+  [t.UPDATE_EXPECTED_DATABASE]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, select: {...state.active.select, expectation: action.payload}}};
   },
-  [UPDATE_JSON]: (state: State, action: Object): State => {
-    return {...state, request: {...state.request, [action.meta]: action.payload, validJson: {...state.request.validJson, [action.meta]: true}}};
+  [t.UPDATE_JSON]: (state: State, action: Object): State => {
+    return {
+      ...state, active: {
+        ...state.active,
+        request: {
+          ...state.active.request,
+          [action.meta]: action.payload,
+          validJson: {...state.active.request.validJson, [action.meta]: true}
+        }
+      }
+    };
   },
-  [UPDATE_JSON_FAILED]: (state: State, action: Object): State => {
-    return {...state, request: {...state.request, validJson: {...state.request.validJson, [action.meta]: false}}};
+  [t.UPDATE_JSON_FAILED]: (state: State, action: Object): State => {
+    return {
+      ...state,
+      active: {
+        ...state.active,
+        request: {...state.active.request, validJson: {...state.active.request.validJson, [action.meta]: false}}
+      }
+    };
   },
-  [UPDATE_DATABASE_INITALIZATION_QUERY]: (state: State, action: Object): State => {
-    return {...state, insert: {...state.insert, query: action.payload}};
+  [t.UPDATE_DATABASE_INITALIZATION_QUERY]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, insert: {...state.active.insert, query: action.payload}}};
   },
-  [POST_JSON_SUCCESS]: (state: State, action: Object): State => {
-    return {...state, requestResponse: action.payload};
+  [t.POST_JSON_SUCCESS]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, requestResponse: action.payload}};
   },
-  [POST_JSON_FAILED]: (state: State, action: Object): State => {
-    return {...state, requestResponse: action.payload};
+  [t.POST_JSON_FAILED]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, requestResponse: action.payload}};
   },
-  [INITIALIZE_DATABASE_SUCCESS]: (state: State, action: Object): State => {
-    return {...state, databaseInsertResponse: action.payload};
+  [t.INITIALIZE_DATABASE_SUCCESS]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, databaseInsertResponse: action.payload}};
   },
-  [INITIALIZE_DATABASE_FAILED]: (state: State, action: Object): State => {
-    return {...state, databaseInsertResponse: action.payload};
+  [t.INITIALIZE_DATABASE_FAILED]: (state: State, action: Object): State => {
+    return {...state, active: {...state.active, databaseInsertResponse: action.payload}};
   },
-  [LOAD_SCENARIOS]: (state: State): State => {
+  [t.LOAD_SCENARIOS]: (state: State): State => {
     return {...state, loading: true};
   },
-  [LOAD_SCENARIOS_FAILED]: (state: State, action: Object): State => {
+  [t.LOAD_SCENARIOS_FAILED]: (state: State, action: Object): State => {
     return {...state, loading: false, errorMsg: action.payload};
   },
-  [LOAD_SCENARIOS_SUCCESS]: (state: State, action: Object): State => {
-    return {...state, loading: false, scenarios: action.payload};
+  [t.LOAD_SCENARIOS_SUCCESS]: (state: State, action: Object): State => {
+    return {...state, loading: false, scenarios: action.response};
+  },
+  [t.SELECT_SCENARIO]: (state: State, action: Object): State => {
+    return {...state, active: state.scenarios.find((it: Scenario) => it.name === action.payload)};
   }
 }, init);
 

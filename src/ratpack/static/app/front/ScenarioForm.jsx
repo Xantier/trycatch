@@ -18,9 +18,9 @@ import type {State} from './reducer';
 const ScenarioForm = connect(
     function mapStateToProps(state: State): Object {
       return {
-        request: state.request,
-        requestResponse: state.requestResponse,
-        select: state.select,
+        request: state.active.request,
+        requestResponse: state.active.requestResponse,
+        select: state.active.select,
         insert: state.insert
       };
     },

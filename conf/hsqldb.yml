@@ -1,5 +1,5 @@
 db:
-  dataSourceClassName: 
+  dataSourceClassName:
   dataSourceProperties:
     user: postgres
     password: postgres

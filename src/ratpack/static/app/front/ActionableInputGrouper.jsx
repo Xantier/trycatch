@@ -11,7 +11,7 @@ import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentSend from 'material-ui/svg-icons/content/send';
 
 import TextField from 'material-ui/TextField';
-import type {SqlInputType} from './reducer';
+import type {SqlInputType, Request} from './reducer';
 
 type Props = {
   postJson: () => void,
@@ -25,7 +25,9 @@ type Props = {
   saveScenario: () => void,
   runScenario: () => void,
   updateRequest: () => void,
-  insert: SqlInputType
+  insert: SqlInputType,
+  request: Request,
+  requestResponse: Object
 }
 
 const centralStyles = {

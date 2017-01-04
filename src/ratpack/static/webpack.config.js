@@ -8,9 +8,9 @@
  * of our application is possible.
  */
 
-var path = require('path');
-var Webpack = require('webpack');
-var buildPath = path.resolve(__dirname, 'dist');
+const path = require('path');
+const Webpack = require('webpack');
+const buildPath = path.resolve(__dirname, 'dist');
 
 module.exports = {
   /**
@@ -40,7 +40,7 @@ module.exports = {
   output: {
     path: buildPath,
     filename: '[name].js',
-    publicPath: '/'
+    publicPath: '/static/dist/'
   },
 
   /**

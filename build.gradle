@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.0.5'
+    ext.kotlin_version = '1.0.6'
     repositories {
         jcenter()
         maven { url "http://jcenter.bintray.com" }
@@ -23,7 +23,7 @@ apply plugin: "idea"
 sourceSets {
     main {
         resources {
-            srcDirs "src/main/resources", "conf";
+            srcDirs "src/main/resources", "conf"
             exclude "**/node_modules/**"
 
         }
@@ -89,7 +89,7 @@ idea {
 run {
     jvmArgs "-Dratpack.port=7357"
     if (project.hasProperty("cli")) {
-        args "cli"
+        args ["cli"]
     }
 }
 
