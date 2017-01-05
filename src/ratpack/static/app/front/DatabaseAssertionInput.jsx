@@ -24,7 +24,7 @@ export default (props: Props): React.Element => {
   return (
       <div>
         <SqlInput {...sql} updateFn={updateSelect}/>
-        <input type="text" className="todo__entry" placeholder="Insert Pipe separated results" onChange={(e: Event) => update(e.target.value, updateExpected)}/>
+        <input type="text" placeholder="Insert Pipe separated results" onChange={(e: Event) => update(e.target.value, updateExpected)}/>
       </div>
   );
 };
