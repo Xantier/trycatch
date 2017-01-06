@@ -33,16 +33,16 @@ interface HttpClientService {
 
     override fun get(url: String, payload: String): Observable<QueryResult> =
         //TODO: Convert payload to request params
-        api.get(url).map { QueryResult(it) }
+        api.get(url).map(::QueryResult)
 
     override fun post(url: String, payload: String): Observable<QueryResult> =
-        api.post(url, requestBody(payload)).map { QueryResult(it) }
+        api.post(url, requestBody(payload)).map(::QueryResult)
 
     override fun put(url: String, payload: String): Observable<QueryResult> =
-        api.put(url, requestBody(payload)).map { QueryResult(it) }
+        api.put(url, requestBody(payload)).map(::QueryResult)
 
     override fun delete(url: String, payload: String): Observable<QueryResult> =
-        api.delete(url, requestBody(payload)).map { QueryResult(it) }
+        api.delete(url, requestBody(payload)).map(::QueryResult)
 
     private fun requestBody(payload: String) = RequestBody.create(MediaType.parse("application/json"), payload)
 }
