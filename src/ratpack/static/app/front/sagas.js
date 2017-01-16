@@ -1,8 +1,10 @@
 import {takeEvery} from 'redux-saga';
 import {select} from 'redux-saga/effects';
 import {call, put} from 'redux-saga/effects';
+import logger from 'loglevel';
+
 import {postJson, getFromUrl} from '../api/jsonApi';
-import logger from '../logger';
+import {normalizeScenarios} from './normalizer';
 import * as t from './constants';
 import type {State} from './reducer';
 
@@ -70,7 +72,8 @@ function* runScenario(): void {
 function* loadScenarios(): void {
   try {
     const response = yield call(getFromUrl('/api/scenario/list'));
-    yield put({type: t.LOAD_SCENARIOS_SUCCESS, response: JSON.parse(response.text)});
+    const scenarios = normalizeScenarios(JSON.parse(response.text));
+    yield put({type: t.LOAD_SCENARIOS_SUCCESS, response: scenarios});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: t.LOAD_SCENARIOS_FAILED, message: e.message});

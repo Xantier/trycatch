@@ -14,10 +14,11 @@ type Props = {
 class Menu extends React.Component {
   constructor(props: Props) {
     super(props);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
-    props.loadScenarios();
+    this.props.loadScenarios();
   }
 
   render(): React.Element {

@@ -31,6 +31,7 @@ export type State = {
 
 const init = {
   active: {
+    name: '',
     request: {
       validJson: {
         payload: true,

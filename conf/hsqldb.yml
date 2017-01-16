@@ -1,8 +1,7 @@
 db:
-  dataSourceClassName:
+  dataSourceClassName: org.hsqldb.jdbc.JDBCDataSource
   dataSourceProperties:
-    user: postgres
-    password: postgres
+    user: sa
+    password: ""
     databaseName: trycatch
-    serverName: localhost
-    portNumber: 5432
+    url: jdbc:hsqldb:mem

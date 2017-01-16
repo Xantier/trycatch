@@ -25,7 +25,7 @@ object MainRat {
         serverConfig { builder ->
             builder
                 .baseDir(BaseDir.find())
-                .yaml("db.yml")
+                .yaml("hsqldb.yml")
                 .env()
                 .sysProps()
                 .args(args)
