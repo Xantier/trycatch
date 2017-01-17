@@ -17,9 +17,9 @@ export function updateName(scenarioName: string): Action {
 export function updateJson(jsonStr: string, contentType: string): Action {
   try {
     const jsonObj = JSON.parse(jsonStr);
-    return {type: t.UPDATE_JSON, payload: jsonObj, meta: contentType};
+    return {type: t.UPDATE_JSON, payload: jsonObj, meta: contentType, rawPayload: jsonStr};
   } catch (_) {
-    return {type: t.UPDATE_JSON_FAILED, meta: contentType};
+    return {type: t.UPDATE_JSON_FAILED, meta: contentType, rawPayload: jsonStr};
   }
 }
 export function updateInitializationScript(json: string): Action {

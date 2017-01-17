@@ -36,33 +36,37 @@ const centralStyles = {
 };
 export default (props: Props): React.Element => {
   const {
-            postJson, initializeDatabase, assertDatabaseValues,
-            saveScenario, runScenario, updateInitializationScript, updateName, insert
-        } = props;
+    postJson, initializeDatabase, assertDatabaseValues, scenarioName,
+    saveScenario, runScenario, updateInitializationScript, updateName, insert
+  } = props;
   return (
-      <div style={centralStyles}>
-        <TextField hintText="Scenario Name" floatingLabelText="Enter name for the scenario"
-                   onChange={(e: Event) => {
-                     updateName(e.target.value);
-                   }}/>
-        <IndividualStepContainer run={postJson}>
-          <RequestComponent {...props} {...props.request}/>
-          <JsonTextArea {...props} label="Insert JSON payload" contentType="payload" {...props.request} />
-          <PrettyJsonComponent payload={props.request.payload} validJson={props.request.validJson.payload}/>
-          <JsonTextArea {...props} label="Insert expected JSON" contentType="expectation" {...props.request} />
-          <PrettyJsonComponent payload={props.request.expectation} validJson={props.request.validJson.payload}/>
-          <RequestResultDisplayingComponent {...props.requestResponse} />
-        </IndividualStepContainer>
+    <div style={centralStyles}>
+      <TextField hintText="Scenario Name" floatingLabelText="Enter name for the scenario"
+                 value={scenarioName}
+                 onChange={(e: Event) => {
+                   updateName(e.target.value);
+                 }}/>
+      <IndividualStepContainer run={postJson}>
+        <RequestComponent {...props} {...props.request}/>
+        <JsonTextArea {...props} jsonString={props.request.payloadJson} label="Insert JSON payload"
+                                 contentType="payload" {...props.request} />
+        <PrettyJsonComponent payload={props.request.payload} validJson={props.request.validJson.payload}/>
+        <JsonTextArea {...props} jsonString={props.request.expectationJson} label="Insert expected JSON"
+                                 contentType="expectation" {...props.request} />
+        <PrettyJsonComponent payload={props.request.expectation} validJson={props.request.validJson.payload}/>
+        <RequestResultDisplayingComponent {...props.requestResponse} />
+      </IndividualStepContainer>
 
-        <IndividualStepContainer run={initializeDatabase}>
-          <SqlInput updateFn={updateInitializationScript} label="Insert Statement" placeholder="Insert DB insert statement" query={insert.query}/>
-        </IndividualStepContainer>
+      <IndividualStepContainer run={initializeDatabase}>
+        <SqlInput updateFn={updateInitializationScript} label="Insert Statement"
+                  placeholder="Insert DB insert statement" name={insert.name} query={insert.query}/>
+      </IndividualStepContainer>
 
-        <IndividualStepContainer run={assertDatabaseValues}>
-          <DatabaseAssertionInput {...props}/>
-        </IndividualStepContainer>
-        <RaisedButton onClick={saveScenario} label="Save scenario" icon={<ContentSave/>} secondary={true}/>
-        <RaisedButton onClick={runScenario} label="Run scenario" icon={<ContentSend/>} primary={true}/>
-      </div>
+      <IndividualStepContainer run={assertDatabaseValues}>
+        <DatabaseAssertionInput {...props}/>
+      </IndividualStepContainer>
+      <RaisedButton onClick={saveScenario} label="Save scenario" icon={<ContentSave/>} secondary={true}/>
+      <RaisedButton onClick={runScenario} label="Run scenario" icon={<ContentSend/>} primary={true}/>
+    </div>
   );
 };

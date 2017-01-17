@@ -34,11 +34,13 @@ export const normalizeScenarios = (scenarios: BackendScenario[]): Scenario[] => 
               },
               url: step.request.path,
               method: step.request.method,
-              params: Object.keys(step.request.params).map((key) => {
-                return {[key]: step.request.params[key]};
+              params: Object.keys(step.request.params).map((key: string, idx: number): Object => {
+                return {key: key, value: step.request.params[key], id: idx};
               }),
-              payload: step.payload,
-              expectation: step.expectation.value.content
+              payload: JSON.parse(step.payload),
+              payloadJson: step.payload,
+              expectation: JSON.parse(step.expectation.value.content),
+              expectationJson: step.expectation.value.content
             }
           };
         default:

@@ -18,13 +18,15 @@ export default (props: Props): React.Element => {
   const sql = {
     query,
     placeholder: 'Insert Select Statement',
-    label: 'DB Query'
+    label: 'DB Query',
+    name: select.name
   };
 
   return (
-      <div>
-        <SqlInput {...sql} updateFn={updateSelect}/>
-        <input type="text" placeholder="Insert Pipe separated results" onChange={(e: Event) => update(e.target.value, updateExpected)}/>
-      </div>
+    <div>
+      <SqlInput {...sql} updateFn={updateSelect}/>
+      <input type="text" placeholder="Insert Pipe separated results"
+             onChange={(e: Event) => update(e.target.value, updateExpected)}/>
+    </div>
   );
 };

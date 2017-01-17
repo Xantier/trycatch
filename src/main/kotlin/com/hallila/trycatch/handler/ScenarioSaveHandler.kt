@@ -43,7 +43,7 @@ class ScenarioSaveHandler : Handler {
         })
         val om = ObjectMapper()
         try {
-            File(scenario_location + scenario.name + ".tcs").printWriter().use { out ->
+            File(scenario_location + scenario.name + ".json").printWriter().use { out ->
                 om.writeValue(out, scenario)
             }
         } catch (e: Exception) {

@@ -43,7 +43,12 @@ function* assertDatabaseValues(): void {
 
 function scenarioPayload(): (state: State) => Object {
   return select((state: State): Object => {
-    return {request: state.request, insert: state.insert, select: state.select, name: state.name};
+    return {
+      request: state.active.request,
+      insert: state.active.insert,
+      select: state.active.select,
+      name: state.active.name
+    };
   });
 }
 

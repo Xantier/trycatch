@@ -21,7 +21,8 @@ const ScenarioForm = connect(
         request: state.active.request,
         requestResponse: state.active.requestResponse,
         select: state.active.select,
-        insert: state.active.insert
+        insert: state.active.insert,
+        scenarioName: state.active.name
       };
     },
     function mapDispatchToProps(dispatch: () => void): Object {

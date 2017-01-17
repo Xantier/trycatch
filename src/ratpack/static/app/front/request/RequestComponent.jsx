@@ -29,60 +29,52 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
   const KEY = 'header-key';
   const VALUE = 'header-value';
   const headers = params
-      .sort((a: Object, b: Object): number => a.id - b.id)
-      .map((it: HeaderMap): React.Element => {
-        return (
-            <div key={it.id}>
-              <AutoComplete
-                  value={it.key}
-                  hintText="Key" dataSource={httpHeaders}
-                  onUpdateInput={(value: string) => {
-                    updateRequest(KEY, value, it.id);
-                  }}
-                  onNewRequest={(value: string) => {
-                    updateRequest(KEY, value, it.id);
-                  }}/>
-              <AutoComplete
-                  value={it.value}
-                  hintText="Value"
-                  dataSource={httpHeaders}
-                  onUpdateInput={(value: string) => {
-                    updateRequest(VALUE, value, it.id);
-                  }}
-                  onNewRequest={(value: string) => {
-                    updateRequest(VALUE, value, it.id);
-                  }}/>
-            </div>);
-      });
-  return (
-      <div>
-        <SelectField value={method} floatingLabelFixed={true} floatingLabelText="HTTP Method"
-                     onChange={(_: Object, __: string, value: string) => {
-                       updateRequest('method', value);
-                     }}>
-          <MenuItem value="GET" primaryText="GET"/>
-          <MenuItem value="POST" primaryText="POST"/>
-          <MenuItem value="PUT" primaryText="PUT"/>
-          <MenuItem value="DELETE" primaryText="DELETE"/>
-        </SelectField>
-
-        <TextField
-            hintText="http://www.jsonapi.com/get"
-            floatingLabelText="URL"
-            value={url}
-            onChange={(e: Event) => {
-              updateRequest('url', e.target.value);
+    .sort((a: Object, b: Object): number => a.id - b.id)
+    .map((it: HeaderMap): React.Element => {
+      return (
+        <div key={it.id}>
+          <AutoComplete
+            searchText={it.key} hintText="Key" dataSource={httpHeaders}
+            onNewRequest={(value: string) => {
+              updateRequest(KEY, value, it.id);
             }}/>
-        <Divider />
-        <Subheader>Additional headers</Subheader>
-        {headers}
-        <FloatingActionButton mini={true} style={actionButtonStyle}
-          onClick={() => {
-            updateRequest('header-add');
-          }}>
-          <ContentAdd />
-        </FloatingActionButton>
-      </div>
+          <AutoComplete
+            searchText={it.value} hintText="Value"
+            dataSource={httpHeaders}
+            onNewRequest={(value: string) => {
+              updateRequest(VALUE, value, it.id);
+            }}/>
+        </div>);
+    });
+  return (
+    <div>
+      <SelectField value={method} floatingLabelFixed={true} floatingLabelText="HTTP Method"
+                   onChange={(_: Object, __: string, value: string) => {
+                     updateRequest('method', value);
+                   }}>
+        <MenuItem value="GET" primaryText="GET"/>
+        <MenuItem value="POST" primaryText="POST"/>
+        <MenuItem value="PUT" primaryText="PUT"/>
+        <MenuItem value="DELETE" primaryText="DELETE"/>
+      </SelectField>
+
+      <TextField
+        hintText="http://www.jsonapi.com/get"
+        floatingLabelText="URL"
+        value={url}
+        onChange={(e: Event) => {
+          updateRequest('url', e.target.value);
+        }}/>
+      <Divider />
+      <Subheader>Additional headers</Subheader>
+      {headers}
+      <FloatingActionButton mini={true} style={actionButtonStyle}
+                            onClick={() => {
+                              updateRequest('header-add');
+                            }}>
+        <ContentAdd />
+      </FloatingActionButton>
+    </div>
   );
 };
 

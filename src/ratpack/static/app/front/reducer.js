@@ -98,6 +98,7 @@ const reducer = handleActions({
         request: {
           ...state.active.request,
           [action.meta]: action.payload,
+          [`${action.meta}Json`]: action.rawPayload,
           validJson: {...state.active.request.validJson, [action.meta]: true}
         }
       }
@@ -108,7 +109,11 @@ const reducer = handleActions({
       ...state,
       active: {
         ...state.active,
-        request: {...state.active.request, validJson: {...state.active.request.validJson, [action.meta]: false}}
+        request: {
+          ...state.active.request,
+          [`${action.meta}Json`]: action.rawPayload,
+          validJson: {...state.active.request.validJson, [action.meta]: false}
+        }
       }
     };
   },
