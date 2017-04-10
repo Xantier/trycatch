@@ -1,10 +1,10 @@
 import {connect} from 'react-redux';
-import type {State} from './reducer';
+import type {State, Scenario} from './reducer';
 
 import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import {loadScenarios, selectScenario} from './actions';
+import {loadScenarios, selectScenario, newScenario} from './actions';
 type Props = {
   loadScenarios: () => void,
   selectScenario: () => void,
@@ -23,7 +23,7 @@ class Menu extends React.Component {
 
   render(): React.Element {
     const {scenarios} = this.props;
-    const scenarioComponents = scenarios.map((it) => {
+    const scenarioComponents = scenarios.map((it: Scenario): MenuItem[] => {
       return (<MenuItem key={it.name} onTouchTap={() => {
         console.log(`Opening Item ${it.name}`);
         this.props.selectScenario(it.name);
@@ -32,6 +32,10 @@ class Menu extends React.Component {
     return (
       <div>
         <Drawer width={300} open={true}>
+          <MenuItem key="new" onTouchTap={() => {
+            console.log('Creating new scenario');
+            this.props.newScenario();
+          }}>New Scenario</MenuItem>
           {scenarioComponents}
         </Drawer>
       </div>
@@ -48,7 +52,8 @@ const MenuConnector = connect(
   function mapDispatchToProps(dispatch: () => void): Object {
     return {
       loadScenarios: () => dispatch(loadScenarios()),
-      selectScenario: (name) => dispatch(selectScenario(name))
+      newScenario: () => dispatch(newScenario()),
+      selectScenario: (name: String) => dispatch(selectScenario(name))
     };
   }
 )(Menu);

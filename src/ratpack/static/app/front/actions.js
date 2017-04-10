@@ -41,6 +41,9 @@ export function assertDatabaseValues(): Action {
 export function postJson(): Action {
   return {type: t.POST_JSON};
 }
+export function newScenario(): Action {
+  return {type: t.NEW_SCENARIO};
+}
 export function saveScenario(): Action {
   return {type: t.SAVE_SCENARIO};
 }

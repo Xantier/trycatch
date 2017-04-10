@@ -39,6 +39,10 @@ const init = {
       },
       url: '',
       method: '',
+      payload: '',
+      payloadJson: '',
+      expectationJson: '',
+      expectation: '',
       params: []
     },
     select: {
@@ -143,6 +147,12 @@ const reducer = handleActions({
   },
   [t.SELECT_SCENARIO]: (state: State, action: Object): State => {
     return {...state, active: state.scenarios.find((it: Scenario) => it.name === action.payload)};
+  },
+  [t.NEW_SCENARIO]: (state: State, action: Object): State => {
+    return {...state, active: init.active};
+  },
+  [t.SAVE_SCENARIO_SUCCESS]: (state: State, action: Object): State => {
+    return {...state, scenarios: [...state.scenarios, action.response]};
   }
 }, init);
 
