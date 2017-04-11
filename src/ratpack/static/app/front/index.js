@@ -4,7 +4,11 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import saga from 'redux-saga';
 import createLogger from 'redux-logger';
 import {Provider} from 'react-redux';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 import reducer from './reducer';
 import sagas from './sagas';
 import ScenarioForm from './ScenarioForm.jsx';
@@ -25,7 +29,7 @@ sagaMiddleware.run(sagas);
 
 ReactDOM.render(
   <Provider store={store}>
-    <MuiThemeProvider>
+    <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
       <div>
         <div>
           <Menu/>

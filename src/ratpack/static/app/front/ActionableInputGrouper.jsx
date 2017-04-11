@@ -1,12 +1,13 @@
 import React from 'react';
 import SqlInput from './SqlInput.jsx';
 import DatabaseAssertionInput from './DatabaseAssertionInput.jsx';
-import JsonTextArea from './request/JsonTextArea.jsx';
-import PrettyJsonComponent from './request/PrettyJsonComponent.jsx';
+import JsonComponent from './request/JsonComponent.jsx';
 import RequestComponent from './request/RequestComponent.jsx';
 import RequestResultDisplayingComponent from './request/RequestResultDisplayingComponent.jsx';
 import IndividualStepContainer from './IndividualStepContainer.jsx';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
+import Divider from 'material-ui/Divider';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentSend from 'material-ui/svg-icons/content/send';
 
@@ -41,28 +42,38 @@ export default (props: Props): React.Element => {
   } = props;
   return (
     <div style={centralStyles}>
-      <TextField hintText="Scenario Name" floatingLabelText="Enter name for the scenario"
-                 value={scenarioName}
-                 onChange={(e: Event) => {
-                   updateName(e.target.value);
-                 }}/>
-      <IndividualStepContainer run={postJson}>
+
+      <Card>
+        <CardHeader title="Scenario Name"/>
+        <CardText>
+          <TextField hintText="Scenario Name" floatingLabelText="Enter name for the scenario"
+                     value={scenarioName}
+                     onChange={(e: Event) => {
+                       updateName(e.target.value);
+                     }}/>
+        </CardText>
+      </Card>
+      <Divider/>
+
+      <IndividualStepContainer run={postJson} title="Make HTTP Request">
         <RequestComponent {...props} {...props.request}/>
-        <JsonTextArea {...props} jsonString={props.request.payloadJson} label="Insert JSON payload"
-                                 contentType="payload" {...props.request} />
-        <PrettyJsonComponent payload={props.request.payload} validJson={props.request.validJson.payload}/>
-        <JsonTextArea {...props} jsonString={props.request.expectationJson} label="Insert expected JSON"
-                                 contentType="expectation" {...props.request} />
-        <PrettyJsonComponent payload={props.request.expectation} validJson={props.request.validJson.payload}/>
+        <div>
+          <JsonComponent {...props} isRequest={true}/>
+        </div>
+        <div>
+          <JsonComponent {...props} isRequest={false}/>
+        </div>
         <RequestResultDisplayingComponent {...props.requestResponse} />
       </IndividualStepContainer>
+      <Divider/>
 
-      <IndividualStepContainer run={initializeDatabase}>
+      <IndividualStepContainer run={initializeDatabase} title="Initialize Database">
         <SqlInput updateFn={updateInitializationScript} label="Insert Statement"
                   placeholder="Insert DB insert statement" name={insert.name} query={insert.query}/>
       </IndividualStepContainer>
+      <Divider/>
 
-      <IndividualStepContainer run={assertDatabaseValues}>
+      <IndividualStepContainer run={assertDatabaseValues} title="Assert Database Values">
         <DatabaseAssertionInput {...props}/>
       </IndividualStepContainer>
       <RaisedButton onClick={saveScenario} label="Save scenario" icon={<ContentSave/>} secondary={true}/>

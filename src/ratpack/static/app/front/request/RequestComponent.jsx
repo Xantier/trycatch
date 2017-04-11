@@ -48,7 +48,7 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
     });
   return (
     <div>
-      <SelectField value={method} floatingLabelFixed={true} floatingLabelText="HTTP Method"
+      <SelectField value={method} floatingLabelText="HTTP Method"
                    onChange={(_: Object, __: string, value: string) => {
                      updateRequest('method', value);
                    }}>
@@ -57,7 +57,7 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
         <MenuItem value="PUT" primaryText="PUT"/>
         <MenuItem value="DELETE" primaryText="DELETE"/>
       </SelectField>
-
+      <Divider/>
       <TextField
         hintText="http://www.jsonapi.com/get"
         floatingLabelText="URL"

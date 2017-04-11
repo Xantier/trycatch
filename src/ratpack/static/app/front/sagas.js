@@ -9,7 +9,7 @@ import * as t from './constants';
 import type {State} from './reducer';
 
 function* jsonPost(): void {
-  const payload = yield select((state: State): Object => state.request);
+  const payload = yield select((state: State): Object => state.active.request);
   try {
     const response = yield call(postJson('/api/json'), payload);
     yield put({type: t.POST_JSON_SUCCESS, payload: JSON.parse(response.text)});
@@ -20,7 +20,7 @@ function* jsonPost(): void {
 }
 
 function* initDb(): void {
-  const payload = yield select((state: State): Object => state.insert);
+  const payload = yield select((state: State): Object => state.active.insert);
   try {
     const response = yield call(postJson('/api/insert'), payload);
     yield put({type: t.INITIALIZE_DATABASE_SUCCESS, response: response});
@@ -31,7 +31,7 @@ function* initDb(): void {
 }
 
 function* assertDatabaseValues(): void {
-  const payload = yield select((state: State): Object => state.select);
+  const payload = yield select((state: State): Object => state.active.select);
   try {
     const response = yield call(postJson('/api/select'), payload);
     yield put({type: t.ASSERT_DATABASE_VALUES_SUCCESS, response: response});

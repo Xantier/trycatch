@@ -11,6 +11,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 data class Scenario(val name: String, val steps: List<Step<*>>) {
+    @Suppress("UNCHECKED_CAST")
     companion object Factory {
         fun build(input: Map<String, Any>): Scenario {
             val name = input["name"] as String
@@ -19,7 +20,7 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                 val entryName = entry["name"] as String
                 val value = entry["type"]
                 when (StepKey.valueOf(value as String)) {
-                    StepKey.INSERT -> {
+                    StepKey.INSERT  -> {
                         InsertStep(entryName, entry["statement"] as String, DatabaseResponseExpectation(content(entry)))
                     }
                     StepKey.REQUEST -> {
@@ -30,7 +31,7 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                         JsonAssertionStep(entryName, payload, JsonExpectation(jsonContent(entry)),
                             Request(method, path, request["params"] as Map<String, String>))
                     }
-                    StepKey.SELECT -> {
+                    StepKey.SELECT  -> {
                         val expectation = entry[JsonHelpers.EXPECTATION] as Map<*, *>
                         SelectStep(entryName, entry["statement"] as String, CsvExpectation(expectation["value"] as List<String>))
                     }
@@ -67,14 +68,14 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                                 StepKey.REQUEST)
                         }
 
-                        JsonHelpers.INSERT -> InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                        JsonHelpers.INSERT  -> InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
                             DatabaseResponseExpectation("Done successfully"),
                             StepKey.INSERT)
 
-                        JsonHelpers.SELECT -> SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                        JsonHelpers.SELECT  -> SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
                             CsvExpectation(listOf(it.value.get(JsonHelpers.EXPECTATION).asText())),
                             StepKey.SELECT)
-                        else -> throw RuntimeException("Unable to parse posted JSON :(")
+                        else                -> throw RuntimeException("Unable to parse posted JSON :(")
                     }
                 }.toList()
             return Scenario(name, steps)
@@ -82,9 +83,27 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
     }
 }
 
-data class InsertStep(override val name: String, val statement: String, override val expectation: DatabaseResponseExpectation, override val type: StepKey = StepKey.INSERT) : DatabaseStep<String>
-data class JsonAssertionStep(override val name: String, val payload: String, override val expectation: JsonExpectation, val request: Request, override val type: StepKey = StepKey.REQUEST) : HttpStep<Json>
-data class SelectStep(override val name: String, val statement: String, override val expectation: CsvExpectation, override val type: StepKey = StepKey.SELECT) : DatabaseStep<List<String>>
+data class InsertStep(
+    override val name: String,
+    val statement: String,
+    override val expectation: DatabaseResponseExpectation,
+    override val type: StepKey = StepKey.INSERT
+) : DatabaseStep<String>
+
+data class JsonAssertionStep(
+    override val name: String,
+    val payload: String,
+    override val expectation: JsonExpectation,
+    val request: Request,
+    override val type: StepKey = StepKey.REQUEST
+) : HttpStep<Json>
+
+data class SelectStep(
+    override val name: String,
+    val statement: String,
+    override val expectation: CsvExpectation,
+    override val type: StepKey = StepKey.SELECT
+) : DatabaseStep<List<String>>
 
 data class CsvExpectation(override val value: List<String>) : Expectation<List<String>>
 data class DatabaseResponseExpectation(override val value: String) : Expectation<String>

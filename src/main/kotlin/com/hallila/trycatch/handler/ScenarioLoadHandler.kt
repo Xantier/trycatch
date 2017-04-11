@@ -4,6 +4,7 @@ import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.hallila.trycatch.WithLogging
 import com.hallila.trycatch.model.Scenario
+import org.h2.value.DataType.readValue
 import ratpack.handling.Context
 import ratpack.handling.Handler
 import ratpack.jackson.Jackson
@@ -32,7 +33,6 @@ fun loadScenarios(): List<Scenario> {
     })
     val folder = File(scenario_location)
     return folder.walkTopDown().asIterable().filter { it.isFile }.map {
-        val scenarios = jacksonObjectMapper().readValue(it.inputStream(), Map::class.java) as Map<String, String>
-        Scenario.build(scenarios)
+        Scenario.build(jacksonObjectMapper().readValue(it.inputStream(), Map::class.java) as Map<String, Any>)
     }
 }

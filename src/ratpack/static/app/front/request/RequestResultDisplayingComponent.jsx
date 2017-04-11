@@ -56,14 +56,16 @@ export default class PrettyJsonComponent extends React.Component {
       <div ref="expectation"/>
     </div>) : null;
     return this.props.result ? (
+      <div>
+        {expectedJsx}
         <div>
-          {expectedJsx}
           <h2>Actual</h2>
           <div ref="actual"/>
-          <span>{this.props.actual ? 'Response Code: ' + this.props.actual.responseCode : null}</span>
-          <h4>Test Result</h4>
-          <span>{this.props.result}</span>
         </div>
+        <span>{this.props.actual ? 'Response Code: ' + this.props.actual.responseCode : null}</span>
+        <h4>Test Result</h4>
+        <span>{this.props.result}</span>
+      </div>
     ) : <div/>;
   }
 }

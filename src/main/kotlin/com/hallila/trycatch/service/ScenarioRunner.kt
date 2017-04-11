@@ -20,17 +20,17 @@ import rx.lang.kotlin.toObservable
         scenario.steps.toObservable().flatMap { step ->
             when (step) {
                 is InsertStep -> databaseService.insert(step.statement)
-                    .zipWith(Observable.just(step), { a, b ->
-                        Assertable<DatabaseResponseExpectation, String>(step.name, b.expectation, a)
+                    .zipWith(Observable.just(step), { result, expected ->
+                        Assertable<DatabaseResponseExpectation, String>(step.name, expected.expectation, result)
                     })
                 is SelectStep -> databaseService.select(step.statement)
                     .toList()
-                    .zipWith(Observable.just(step), { a, b ->
-                        Assertable<CsvExpectation, List<String>>(step.name, b.expectation, a)
+                    .zipWith(Observable.just(step), { result, expected ->
+                        Assertable<CsvExpectation, List<String>>(step.name, expected.expectation, result)
                     })
                 is JsonAssertionStep -> httpClientService.call(step.request, step.payload)
-                    .zipWith(Observable.just(step), { a, b ->
-                        Assertable(step.name, b.expectation, Json(a.body))
+                    .zipWith(Observable.just(step), { result, expected ->
+                        Assertable(step.name, expected.expectation, Json(result.body))
                     }).onErrorResumeNext {
                     // TODO: Create exception type for the monad that we can ignore
                     Observable.just(Assertable(step.name, JsonExpectation("{}"), Json("{}")))

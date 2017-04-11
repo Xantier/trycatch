@@ -34,7 +34,7 @@
     "babel-plugin-transform-runtime": "^6.12.0",
     "lodash": "^4.15.0",
     "loglevel": "^1.4.1",
-    "material-ui": "^0.15.4",
+    "material-ui": "^0.17.2",
     "pretty-data": "^0.40.0",
     "react": "^15.3.2",
     "react-addons-create-fragment": "^15.3.1",

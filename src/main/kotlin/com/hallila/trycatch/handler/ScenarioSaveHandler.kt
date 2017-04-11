@@ -2,6 +2,7 @@ package com.hallila.trycatch.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
+import com.hallila.trycatch.WithLogging
 import com.hallila.trycatch.model.Scenario
 import org.funktionale.either.eitherTry
 import ratpack.handling.Context
@@ -14,7 +15,8 @@ import java.nio.file.Paths
 import java.util.*
 
 
-class ScenarioSaveHandler : Handler {
+class ScenarioSaveHandler : Handler, WithLogging() {
+    val om = ObjectMapper()
     override fun handle(ctx: Context) {
         ctx.parse(Jackson.jsonNode()).map {
             Scenario.buildFromJson(it)
@@ -23,7 +25,7 @@ class ScenarioSaveHandler : Handler {
                 saveScenario(scenario)
             }
         }.onError {
-            println(it)
+            LOG.error("Failed to build Scenario from JSON. {}", it)
         }.then {
             if (it.isLeft()) {
                 ctx.response.send("Failed to save")
@@ -41,13 +43,12 @@ class ScenarioSaveHandler : Handler {
             val loc = config.getProperty("scenario_location")
             if (!loc.endsWith("/")) loc + "/" else loc
         })
-        val om = ObjectMapper()
         try {
             File(scenario_location + scenario.name + ".json").printWriter().use { out ->
                 om.writeValue(out, scenario)
             }
         } catch (e: Exception) {
-            println(e)
+            LOG.error("Failed to save Scenario", e)
         }
 
     }
