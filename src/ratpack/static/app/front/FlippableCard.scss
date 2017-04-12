@@ -1,0 +1,102 @@
+$card-size: 12rem;
+$flip-duration: 0.5s;
+$perspective: 15rem;
+$degree: 90deg;
+.Card {
+  display: inline-block;
+  cursor: pointer;
+
+  .Card-Front,
+  .Card-Back {
+    width: $card-size;
+    height: $card-size;
+    text-align: center;
+    margin-bottom: -$card-size / 2;
+  }
+
+  .Card-Front {
+    position: relative;
+    z-index: 1;
+
+    // Animations
+    &.Card-Back-Flip {
+      animation: back-flip-1 $flip-duration 1 forwards;
+      @keyframes back-flip-1 {
+        0% {
+          transform: rotateY(0deg);
+          z-index: 1
+        }
+        50% {
+          transform: rotateY($degree) perspective($perspective);
+          z-index: 1
+        }
+        100% {
+          transform: rotateY($degree);
+          z-index: -1
+        }
+      }
+    }
+
+    &.Card-Front-Flip {
+      animation: front-flip-1 $flip-duration 1 forwards;
+      @keyframes front-flip-1 {
+        0% {
+          transform: rotateY(-$degree);
+          z-index: -1
+        }
+        50% {
+          transform: rotateY(-$degree) perspective($perspective);
+          z-index: -1
+        }
+        100% {
+          transform: rotateY(0deg);
+          z-index: 1
+        }
+      }
+    }
+  }
+
+  .Card-Back {
+    font-size: 0.9rem;
+    position: relative;
+    z-index: -1;
+    top: -$card-size / 2;
+
+    // Animations
+    transform: rotateY(-$degree);
+    &.Card-Back-Flip {
+      animation: back-flip-2 $flip-duration 1 forwards;
+      @keyframes back-flip-2 {
+        0% {
+          z-index: -1
+        }
+        50% {
+          transform: rotateY(-$degree) perspective($perspective);
+          z-index: -1
+        }
+        100% {
+          transform: rotate(0deg);
+          z-index: 1
+        }
+      }
+    }
+
+    &.Card-Front-Flip {
+      animation: front-flip-2 $flip-duration 1 forwards;
+      @keyframes front-flip-2 {
+        0% {
+          transform: rotate(0deg);
+          z-index: 1
+        }
+        50% {
+          transform: rotateY($degree) perspective($perspective);
+          z-index: 1
+        }
+        100% {
+          transform: rotateY($degree);
+          z-index: -1
+        }
+      }
+    }
+  }
+}

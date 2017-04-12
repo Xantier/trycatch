@@ -14,31 +14,31 @@ export default class CardExampleControlled extends React.Component {
   }
 
   handleExpandChange = (expanded) => {
-    this.setState({expanded: expanded});
+    this.setState({flipped: expanded});
   };
 
   handleToggle = (event, toggle) => {
-    this.setState({expanded: toggle});
+    this.setState({flipped: toggle});
   };
 
   handleExpand = () => {
-    this.setState({expanded: true});
+    this.setState({flipped: true});
   };
 
   handleReduce = () => {
-    this.setState({expanded: false});
+    this.setState({flipped: false});
   };
 
   render() {
     return (
       <div style={{float: 'left'}}>
-        <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
+        <Card expanded={this.state.flipped} onExpandChange={this.handleExpandChange}>
           <CardHeader actAsExpander={true}
                       showExpandableButton={true}
           />
           <CardText>
             <Toggle
-              toggled={this.state.expanded}
+              toggled={this.state.flipped}
               onToggle={this.handleToggle}
               labelPosition="right"
               label="Display Results"

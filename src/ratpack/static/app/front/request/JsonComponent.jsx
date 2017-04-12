@@ -12,6 +12,7 @@ export default (props: Props): React.Element => {
                                              contentType="payload" {...props.request} />}
                       expandable={<PrettyJsonComponent payload={props.request.payload}
                                                        validJson={props.request.validJson.payload}/>}
+                      canExpand={props.request.validJson.payload}
       />
     </div>);
   }
@@ -21,7 +22,8 @@ export default (props: Props): React.Element => {
                                            label="Insert expected JSON"
                                            contentType="expectation" {...props.request} />}
                     expandable={<PrettyJsonComponent payload={props.request.expectation}
-                                                     validJson={props.request.validJson.payload}/>}
+                                                     validJson={props.request.validJson.expectation}/>}
+                    canExpand={props.request.validJson.expectation}
     />
   </div>);
 };

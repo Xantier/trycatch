@@ -32,8 +32,7 @@ type Props = {
 }
 
 const centralStyles = {
-  marginLeft: 350,
-  width: 600
+  marginLeft: 350
 };
 export default (props: Props): React.Element => {
   const {
