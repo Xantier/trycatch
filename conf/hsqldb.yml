@@ -4,4 +4,4 @@ db:
     user: sa
     password: ""
     databaseName: trycatch
-    url: jdbc:hsqldb:mem
+    url: jdbc:hsqldb:mem`

@@ -25,7 +25,7 @@ export default (props: Props): React.Element => {
   return (
     <div>
       <SqlInput {...sql} updateFn={updateSelect}/>
-      <input type="text" placeholder="Insert Pipe separated results"
+      <textarea type="text" placeholder="Insert Comma separated expected results"
              onChange={(e: Event) => update(e.target.value, updateExpected)}/>
     </div>
   );

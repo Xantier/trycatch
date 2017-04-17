@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.HttpResponseStatus
 import ratpack.handling.Context
 import ratpack.handling.Handler
 import ratpack.jackson.Jackson
+import ratpack.jackson.Jackson.json
 import ratpack.rx.RxRatpack
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,7 +32,7 @@ import javax.inject.Singleton
                 }
                 .then { response ->
                     val result = AssertionService.assertEquals(exp, response.first())
-                    ctx.response.send(ResponseParsingService.parseResponse(result))
+                    ctx.render(json(ResponseParsingService.parseResponse(result)))
                 }
         }
     }

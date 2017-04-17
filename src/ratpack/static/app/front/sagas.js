@@ -23,7 +23,7 @@ function* initDb(): void {
   const payload = yield select((state: State): Object => state.active.insert);
   try {
     const response = yield call(postJson('/api/insert'), payload);
-    yield put({type: t.INITIALIZE_DATABASE_SUCCESS, response: response});
+    yield put({type: t.INITIALIZE_DATABASE_SUCCESS, response: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: t.INITIALIZE_DATABASE_FAILED, message: e.message});
@@ -33,8 +33,8 @@ function* initDb(): void {
 function* assertDatabaseValues(): void {
   const payload = yield select((state: State): Object => state.active.select);
   try {
-    const response = yield call(postJson('/api/select'), payload);
-    yield put({type: t.ASSERT_DATABASE_VALUES_SUCCESS, response: response});
+    const response = yield call(postJson('/api/select'), {json: payload});
+    yield put({type: t.ASSERT_DATABASE_VALUES_SUCCESS, response: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: t.ASSERT_DATABASE_VALUES_FAILED, message: e.message});

@@ -8,24 +8,24 @@ export default class ExpandableCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      flipped: false,
+      expanded: false,
       clicked: false
     };
   }
 
   handleToggle = (_, toggle) => {
-    this.setState({flipped: toggle, clicked: true});
+    this.setState({expanded: toggle, clicked: true});
   };
 
   render() {
-    let flippedCSS = this.state.flipped ? ' Card-Back-Flip' : ' Card-Front-Flip';
+    let flippedCSS = this.state.expanded ? ' Card-Back-Flip' : ' Card-Front-Flip';
     if (!this.state.clicked) flippedCSS = '';
     return (
       <div className="Card">
         <div className={'Card-Front' + flippedCSS}>
           <Card>
             <Toggle
-              toggled={this.state.flipped}
+              toggled={this.state.expanded}
               onToggle={this.handleToggle}
               labelPosition="right"
               label={this.props.label}
@@ -38,7 +38,7 @@ export default class ExpandableCard extends React.Component {
         <div className={'Card-Back' + flippedCSS}>
           <Card>
             <Toggle
-              toggled={this.state.flipped}
+              toggled={this.state.expanded}
               onToggle={this.handleToggle}
               labelPosition="right"
               label={this.props.label}
