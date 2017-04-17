@@ -105,9 +105,9 @@ data class SelectStep(
     override val type: StepKey = StepKey.SELECT
 ) : DatabaseStep<List<String>>
 
-data class CsvExpectation(override val value: List<String>) : Expectation<List<String>>
-data class DatabaseResponseExpectation(override val value: String) : Expectation<String>
-data class JsonExpectation(override val value: Json) : Expectation<Json> {
+data class CsvExpectation(override var value: List<String>) : Expectation<List<String>>
+data class DatabaseResponseExpectation(override var value: String) : Expectation<String>
+data class JsonExpectation(override var value: Json = Json()) : Expectation<Json> {
     constructor(value: String) : this(Json(value))
 }
 
@@ -125,9 +125,9 @@ interface Step<out T> {
     val type: StepKey
 }
 
-class Json(val content: String) {
-    fun obj(): JSONObject = JSONObject(content)
-    fun array(): JSONArray = JSONArray(content)
+class Json(val content: String = "{}") {
+    fun obj(): JSONObject = if (content == "{}") JSONObject() else JSONObject(content)
+    fun array(): JSONArray = if (content == "{}") JSONArray() else JSONArray(content)
     override fun toString(): String = obj().toString()
 }
 

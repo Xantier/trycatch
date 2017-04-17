@@ -44,7 +44,7 @@ import javax.inject.Singleton
 
     private fun parseHttpRequest(it: JsonNode, method: Method): JsonAssertionStep {
         return if (method == Method.GET) {
-            JsonAssertionStep("Individual Step", "", JsonExpectation(""),
+            JsonAssertionStep("Individual Step", "{\"empty\":\"empty\"}", JsonExpectation(),
                 Request(method, it.get(JsonHelpers.URL).asText(), toParamsMap(it.get(JsonHelpers.PARAMS) as ArrayNode)))
         } else {
             val valid = it.get(JsonHelpers.VALID_JSON)

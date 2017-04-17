@@ -1,95 +1,155 @@
 html, body, input, button {
-  font-family: Sawasdee;
-  font-size: 20px;
+    font-family: Sawasdee;
+    font-size: 20px;
 }
 
 .todo__list {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 }
 
 .todo__item {
-  padding: .5em .25em;
-  border-bottom: solid 1px #eee;
+    padding: .5em .25em;
+    border-bottom: solid 1px #eee;
 }
 
 .todo__item:hover {
-  background: #f7f7f7;
-  cursor: pointer;
+    background: #f7f7f7;
+    cursor: pointer;
 }
 
 .todo__entry {
-  border: solid 1px #ccc;
-  padding: .25em .5em;
-  border-radius: .2em;
-  background: #f3f3f3;
-  width: 100%;
-  box-sizing: border-box;
+    border: solid 1px #ccc;
+    padding: .25em .5em;
+    border-radius: .2em;
+    background: #f3f3f3;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .todo__button {
-  border: 0;
-  border-radius: .2em;
-  background: #71B7FF;  
-  color: #fff;
-  padding: .25em .5em;
-  margin: .5em 0;
-  margin-right: .25em;
-  cursor: pointer;
+    border: 0;
+    border-radius: .2em;
+    background: #71B7FF;
+    color: #fff;
+    padding: .25em .5em;
+    margin: .5em 0;
+    margin-right: .25em;
+    cursor: pointer;
 }
 
 .todo__button:hover {
-  background: #B2D8FF;
+    background: #B2D8FF;
 }
-
 
 /* common */
-.mark-water{
-  color:#bbb;
+.mark-water {
+    color: #bbb;
 }
+
 /* eof common */
 
 /* node */
-.node-content-wrapper{
-  font-family: 'Quicksand', sans-serif;
-  background-color:#fff;
+.node-content-wrapper {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #fff;
 }
-.node-content-wrapper ul{
-  border-left:1px dotted #ccc;
-  list-style:none;
-  padding-left:25px;
-  margin:0px;
+
+.node-content-wrapper ul {
+    border-left: 1px dotted #ccc;
+    list-style: none;
+    padding-left: 25px;
+    margin: 0px;
 }
-.node-content-wrapper ul li{
-  list-style:none;
-  border-bottom:0;
-  padding-bottom:0
+
+.node-content-wrapper ul li {
+    list-style: none;
+    border-bottom: 0;
+    padding-bottom: 0
 }
-.node-hgl-path{
-  background-color:#fefbdf;
+
+.node-hgl-path {
+    background-color: #fefbdf;
 }
-.node-bracket{
-  font-weight:bold;
-  display:inline-block;
-  cursor:pointer;
+
+.node-bracket {
+    font-weight: bold;
+    display: inline-block;
+    cursor: pointer;
 }
-.node-bracket:hover{
-  color:#999;
+
+.node-bracket:hover {
+    color: #999;
 }
+
 /* eof node */
 
 /* leaf */
-.leaft-container{
-  width:100%;
-  max-width:300px;
-  height:100%;
+.leaft-container {
+    width: 100%;
+    max-width: 300px;
+    height: 100%;
 }
 
-.title{ color:#ccc;}
-.string{ color:#080;}
-.number{ color:#ccaa00;}
-.boolean{ color:#1979d3;}
-.date{ color:#aa6655;}
-.null{ color:#ff5050;}
-/* eof leaf */
+.title {
+    color: #ccc;
+}
+
+.string {
+    color: #080;
+}
+
+.number {
+    color: #ccaa00;
+}
+
+.boolean {
+    color: #1979d3;
+}
+
+.date {
+    color: #aa6655;
+}
+
+.null {
+    color: #ff5050;
+}
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(../font/MaterialIcons-Regular.eot); /* For IE6-8 */
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(../font/MaterialIcons-Regular.woff2) format('woff2'),
+    url(../font/MaterialIcons-Regular.woff) format('woff'),
+    url(../font/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+

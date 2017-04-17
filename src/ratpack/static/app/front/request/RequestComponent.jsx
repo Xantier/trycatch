@@ -59,7 +59,7 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
       </SelectField>
       <Divider/>
       <TextField
-        hintText="http://www.jsonapi.com/get"
+        hintText="https://jsonplaceholder.typicode.com/posts/1"
         floatingLabelText="URL"
         value={url}
         onChange={(e: Event) => {

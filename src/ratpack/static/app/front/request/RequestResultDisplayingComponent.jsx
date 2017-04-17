@@ -3,6 +3,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import FontIcon from 'material-ui/FontIcon';
+import {green500, red500} from 'material-ui/styles/colors';
 
 type Actual = {
   body: string,
@@ -51,7 +53,10 @@ export default class PrettyJsonComponent extends React.Component {
   }
 
   render(): React.Element {
-    const expectedJsx = this.props.expectation ? (<div>
+    const icon = this.props.actual.responseCode !== -1 ?
+      <FontIcon className="material-icons" color={green500}>done</FontIcon>
+      : <FontIcon className="material-icons" color={red500}>error</FontIcon>;
+    const expectedJsx = this.props.expectation && this.props.expectation !== '' ? (<div>
       <h2>Expected</h2>
       <div ref="expectation"/>
     </div>) : null;
@@ -60,11 +65,11 @@ export default class PrettyJsonComponent extends React.Component {
         {expectedJsx}
         <div>
           <h2>Actual</h2>
-          <div ref="actual"/>
+          {this.props.actual.responseCode === -1 ? 'Application Error, please see logs' : <div ref="actual"/>}
         </div>
         <span>{this.props.actual ? 'Response Code: ' + this.props.actual.responseCode : null}</span>
         <h4>Test Result</h4>
-        <span>{this.props.result}</span>
+        <span>{icon}</span>
       </div>
     ) : <div/>;
   }

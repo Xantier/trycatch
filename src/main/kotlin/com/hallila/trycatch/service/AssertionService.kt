@@ -31,8 +31,8 @@ object AssertionService {
         } catch(e: Throwable) {
             when (e) {
                 is AssertionError -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult(expected.toString(), actual))
-                is JSONException -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult("Error:Parse", QueryResult("Failed to parse JSON response from API", -1)))
-                else -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult("Error:Generic", QueryResult("Failed to parse JSON response from API", -1)))
+                is JSONException  -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult(expected.toString(), QueryResult("Failed to parse JSON response from API", -1)))
+                else              -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult(expected.toString(), QueryResult("Failed to parse JSON response from API", -1)))
             }
         }
 
@@ -52,17 +52,17 @@ object AssertionService {
                 val actual: String = assertable.result as String
                 assertEquals(expected, actual)
             }
-            is CsvExpectation -> {
+            is CsvExpectation              -> {
                 val expected: List<String> = assertable.expectation.value
                 val actual: List<String> = assertable.result as List<String>
                 assertEquals(expected, actual)
             }
-            is JsonExpectation -> {
+            is JsonExpectation             -> {
                 val expected: Json = assertable.expectation.value
                 val result: Json = assertable.result as Json
                 assertEquals(expected, result)
             }
-            else -> {
+            else                           -> {
                 throw RuntimeException("Unable to determine expectation type :(")
             }
         }

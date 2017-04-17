@@ -25,7 +25,7 @@ object MainRat {
         serverConfig { builder ->
             builder
                 .baseDir(BaseDir.find())
-                .yaml("db.yml")
+                .yaml("hsqldb.yml")
                 .env()
                 .sysProps()
                 .args(args)
@@ -49,6 +49,9 @@ object MainRat {
                 }
                 prefix("lib") {
                     fileSystem("static/lib") { files() }
+                }
+                prefix("font") {
+                    fileSystem("static/font") { files() }
                 }
             }
 
