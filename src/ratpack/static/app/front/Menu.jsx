@@ -25,7 +25,6 @@ class Menu extends React.Component {
     const {scenarios} = this.props;
     const scenarioComponents = scenarios.map((it: Scenario): MenuItem[] => {
       return (<MenuItem key={it.name} onTouchTap={() => {
-        console.log(`Opening Item ${it.name}`);
         this.props.selectScenario(it.name);
       }}>{it.name}</MenuItem>);
     });
@@ -33,7 +32,6 @@ class Menu extends React.Component {
       <div>
         <Drawer width={300} open={true}>
           <MenuItem key="new" onTouchTap={() => {
-            console.log('Creating new scenario');
             this.props.newScenario();
           }}>New Scenario</MenuItem>
           {scenarioComponents}

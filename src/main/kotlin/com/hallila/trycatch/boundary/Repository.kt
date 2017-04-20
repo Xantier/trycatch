@@ -19,18 +19,28 @@ interface Repository {
 @Singleton class RepositoryImpl @Inject constructor(val hikari: HikariService) : Repository {
 
     override fun insert(statement: String): Observable<String> =
-        using(sessionOf(hikari.dataSource)) { session ->
-            session.run(queryOf(statement).asUpdate)
-        }.toSingletonObservable()
-            .flatMap { Observable.just("Insert statement executed. Response: $it") }
+        actOnNonEmptyStatement(statement, {
+            using(sessionOf(hikari.dataSource)) { session ->
+                session.run(queryOf(statement).asUpdate)
+            }.toSingletonObservable()
+                .flatMap { Observable.just("Insert statement executed. Response: $it") }
+        })
 
-    override fun select(statement: String): Observable<String> {
-        val csv: (Row) -> String = { row ->
-            extract(row)
+    override fun select(statement: String): Observable<String> =
+        actOnNonEmptyStatement(statement, {
+            val csv: (Row) -> String = { row ->
+                extract(row)
+            }
+            using(sessionOf(hikari.dataSource)) { session ->
+                session.run(queryOf(statement).map(csv).asList)
+            }.toObservable()
+        })
+
+    private fun actOnNonEmptyStatement(statement: String, action: (String) -> Observable<String>): Observable<String> {
+        if (statement == "") {
+            return Observable.empty()
         }
-        return using(sessionOf(hikari.dataSource)) { session ->
-            session.run(queryOf(statement).map(csv).asList)
-        }.toObservable()
+        return action(statement)
     }
 
     private fun extract(row: Row): String {

@@ -16,8 +16,6 @@ import javax.inject.Singleton
 @Singleton class ScenarioRunHandler @Inject constructor(val scenarioRunner: ScenarioRunner) : Handler, WithLogging() {
     override fun handle(ctx: Context) {
         ctx.parse(Jackson.jsonNode()).map {
-            it.get("json")
-        }.map {
             Scenario.buildFromJson(it)
         }.onError { e ->
             LOG.warn("Failed to construct Scenario", e)

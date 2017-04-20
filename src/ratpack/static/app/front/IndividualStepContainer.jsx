@@ -1,7 +1,6 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
-import Toggle from 'material-ui/Toggle';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 type Props = {

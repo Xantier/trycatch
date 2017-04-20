@@ -1,12 +1,6 @@
 package com.hallila.trycatch.handler
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.github.kittinunf.fuel.core.Method
 import com.hallila.trycatch.WithLogging
-import com.hallila.trycatch.model.JsonAssertionStep
-import com.hallila.trycatch.model.JsonExpectation
-import com.hallila.trycatch.model.Request
 import com.hallila.trycatch.service.AssertionService
 import com.hallila.trycatch.service.HttpClientService
 import com.hallila.trycatch.service.ResponseParsingService
@@ -24,7 +18,7 @@ import javax.inject.Singleton
     override fun handle(ctx: Context) {
         ctx.parse(jsonNode()).map {
             LOG.debug("Client input JSON: {}", it)
-            val method = method(it.get(JsonHelpers.METHOD).asText())
+            val method = httpMethodFromString(it.get(JsonHelpers.METHOD).asText())
             parseHttpRequest(it, method)
         }.onError { e ->
             LOG.warn("Failed to parse JSON", e)
@@ -39,17 +33,6 @@ import javax.inject.Singleton
                 val result = AssertionService.assertEquals(req.expectation.value, x)
                 ctx.render(json(ResponseParsingService.parseQueryResponse(result)))
             }
-        }
-    }
-
-    private fun parseHttpRequest(it: JsonNode, method: Method): JsonAssertionStep {
-        return if (method == Method.GET) {
-            JsonAssertionStep("Individual Step", "{\"empty\":\"empty\"}", JsonExpectation(),
-                Request(method, it.get(JsonHelpers.URL).asText(), toParamsMap(it.get(JsonHelpers.PARAMS) as ArrayNode)))
-        } else {
-            val valid = it.get(JsonHelpers.VALID_JSON)
-            JsonAssertionStep("Individual Step", tryParseJson(valid, it, JsonHelpers.PAYLOAD), JsonExpectation(tryParseJson(valid, it, JsonHelpers.EXPECTED)),
-                Request(method, it.get(JsonHelpers.URL).asText(), toParamsMap(it.get(JsonHelpers.PARAMS) as ArrayNode)))
         }
     }
 }

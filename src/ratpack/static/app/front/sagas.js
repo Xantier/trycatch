@@ -56,11 +56,12 @@ function* saveScenario(): void {
   const payload = yield scenarioPayload();
   try {
     const response = yield call(postJson('/api/scenario/save'), payload);
-    yield put({type: t.SAVE_SCENARIO_SUCCESS, response: response});
+    yield put({type: t.SAVE_SCENARIO_SUCCESS, response: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: t.SAVE_SCENARIO_FAILED, message: e.message});
   }
+
 }
 
 function* runScenario(): void {

@@ -17,7 +17,7 @@ type Props = {
   actual: Actual
 }
 
-export default class PrettyJsonComponent extends React.Component {
+export default class RequestResultDisplayingComponent extends React.Component {
   constructor(props: Props) {
     super(props);
     this.beautify = this.beautify.bind(this);
@@ -49,13 +49,15 @@ export default class PrettyJsonComponent extends React.Component {
       displayJson.call(this, 'expectation', this.props.expectation);
       displayJson.call(this, 'actual', this.props.actual.body);
     }
-
   }
 
   render(): React.Element {
-    const icon = this.props.actual.responseCode !== -1 ?
-      <FontIcon className="material-icons" color={green500}>done</FontIcon>
-      : <FontIcon className="material-icons" color={red500}>error</FontIcon>;
+    let icon;
+    if (this.props.actual) {
+      icon = this.props.actual.responseCode !== -1 ?
+        <FontIcon className="material-icons" color={green500}>done</FontIcon>
+        : <FontIcon className="material-icons" color={red500}>error</FontIcon>;
+    }
     const expectedJsx = this.props.expectation && this.props.expectation !== '' ? (<div>
       <h2>Expected</h2>
       <div ref="expectation"/>

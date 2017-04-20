@@ -3,7 +3,7 @@ import {Card, CardText} from 'material-ui/Card';
 import Toggle from 'material-ui/Toggle';
 import './FlippableCard.scss';
 
-export default class ExpandableCard extends React.Component {
+export default class FlippableCard extends React.Component {
 
   constructor(props) {
     super(props);
@@ -44,7 +44,7 @@ export default class ExpandableCard extends React.Component {
               label={this.props.label}
             />
             <CardText>
-              {this.props.expandable}
+            In  {this.props.expandable}
             </CardText>
           </Card>
 

@@ -1,12 +1,10 @@
 package com.hallila.trycatch.model
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
 import com.github.kittinunf.fuel.core.Method
 import com.hallila.trycatch.handler.JsonHelpers
-import com.hallila.trycatch.handler.method
-import com.hallila.trycatch.handler.toParamsMap
-import com.hallila.trycatch.handler.tryParseJson
+import com.hallila.trycatch.handler.httpMethodFromString
+import com.hallila.trycatch.handler.parseHttpRequest
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -59,23 +57,19 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                 .filter { it.key != "name" }
                 .map {
                     when (it.key) {
-                        JsonHelpers.REQUEST -> {
-                            val valid = it.value.get(JsonHelpers.VALID_JSON)
-                            JsonAssertionStep(JsonHelpers.REQUEST + " " + name, tryParseJson(valid, it.value, JsonHelpers.PAYLOAD),
-                                JsonExpectation(tryParseJson(valid, it.value, JsonHelpers.EXPECTED)),
-                                Request(method(it.value.get(JsonHelpers.METHOD).asText()), it.value.get(JsonHelpers.URL).asText(),
-                                    toParamsMap(it.value.get(JsonHelpers.PARAMS) as ArrayNode)),
-                                StepKey.REQUEST)
-                        }
+                        JsonHelpers.REQUEST ->
+                            parseHttpRequest(it.value, httpMethodFromString(it.value.get(JsonHelpers.METHOD).asText()))
+                        JsonHelpers.INSERT  ->
+                            InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                                DatabaseResponseExpectation("Done successfully"),
+                                StepKey.INSERT)
 
-                        JsonHelpers.INSERT  -> InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
-                            DatabaseResponseExpectation("Done successfully"),
-                            StepKey.INSERT)
-
-                        JsonHelpers.SELECT  -> SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
-                            CsvExpectation(listOf(it.value.get(JsonHelpers.EXPECTATION).asText())),
-                            StepKey.SELECT)
-                        else                -> throw RuntimeException("Unable to parse posted JSON :(")
+                        JsonHelpers.SELECT  ->
+                            SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                                CsvExpectation(listOf(it.value.get(JsonHelpers.EXPECTATION).asText())),
+                                StepKey.SELECT)
+                        else                ->
+                            throw RuntimeException("Unable to parse posted JSON :(")
                     }
                 }.toList()
             return Scenario(name, steps)

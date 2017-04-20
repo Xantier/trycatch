@@ -1,4 +1,3 @@
-import {handleActions} from 'redux-actions';
 import * as t from './constants';
 
 export type Request = {
