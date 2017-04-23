@@ -7,6 +7,7 @@ import {postJson, getFromUrl} from '../api/jsonApi';
 import {normalizeScenarios} from './normalizer';
 import * as t from './constants';
 import type {State} from './reducer';
+import type {Action} from './actions';
 
 function* jsonPost(): void {
   const payload = yield select((state: State): Object => state.active.request);
@@ -85,6 +86,10 @@ function* loadScenarios(): void {
     yield put({type: t.LOAD_SCENARIOS_FAILED, message: e.message});
   }
 }
+function* selectAndRunScenario(action: Action): void {
+  yield put({type: t.SELECT_SCENARIO, payload: action.payload});
+  yield runScenario();
+}
 
 function* rootSaga(): void {
   yield [
@@ -93,6 +98,7 @@ function* rootSaga(): void {
     takeEvery(t.ASSERT_DATABASE_VALUES, assertDatabaseValues),
     takeEvery(t.SAVE_SCENARIO, saveScenario),
     takeEvery(t.RUN_SCENARIO, runScenario),
+    takeEvery(t.SELECT_AND_RUN_SCENARIO, selectAndRunScenario),
     takeEvery(t.LOAD_SCENARIOS, loadScenarios)
   ];
 }

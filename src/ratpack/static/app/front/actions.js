@@ -50,11 +50,12 @@ export function saveScenario(): Action {
 export function runScenario(): Action {
   return {type: t.RUN_SCENARIO};
 }
-
 export function loadScenarios(): Action {
   return {type: t.LOAD_SCENARIOS};
 }
-
 export function selectScenario(name: string): Action {
   return {type: t.SELECT_SCENARIO, payload: name};
+}
+export function selectAndRunScenario(name: string): Action {
+  return {type: t.SELECT_AND_RUN_SCENARIO, payload: name};
 }
