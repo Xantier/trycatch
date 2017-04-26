@@ -2,9 +2,9 @@ package com.hallila.trycatch.config
 
 import com.google.inject.AbstractModule
 import com.google.inject.multibindings.Multibinder
+import com.hallila.trycatch.boundary.HttpClient
 import com.hallila.trycatch.boundary.Repository
 import com.hallila.trycatch.boundary.RepositoryImpl
-import com.hallila.trycatch.boundary.RetrofitService
 import com.hallila.trycatch.handler.*
 import com.hallila.trycatch.service.*
 import ratpack.handling.HandlerDecorator
@@ -24,7 +24,7 @@ class WebContextModule : AbstractModule() {
         bind(ScenarioRunner::class.java)
         bind(DatabaseInsertHandler::class.java)
         bind(DatabaseSelectHandler::class.java)
-        bind(RetrofitService::class.java).toInstance(RetrofitContext.build().create(RetrofitService::class.java))
+        bind(HttpClient::class.java)
         Multibinder.newSetBinder(binder(), HandlerDecorator::class.java)
             .addBinding()
             .toInstance(ratpack.handling.HandlerDecorator.prepend(LoggingHandler()))

@@ -6,6 +6,7 @@ import com.github.kittinunf.fuel.core.Method
 import com.hallila.trycatch.model.JsonAssertionStep
 import com.hallila.trycatch.model.JsonExpectation
 import com.hallila.trycatch.model.Request
+import okhttp3.MediaType
 
 object JsonHelpers {
     val VALID_JSON = "validJson"
@@ -19,6 +20,7 @@ object JsonHelpers {
     val SELECT = "select"
     val QUERY = "query"
     val EXPECTATION = "expectation"
+    val MEDIA_TYPE_JSON: MediaType = MediaType.parse("application/json; charset=utf-8")
 }
 
 

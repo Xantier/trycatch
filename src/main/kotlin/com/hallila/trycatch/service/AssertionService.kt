@@ -8,6 +8,8 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 
 object AssertionService {
+    val FAILED_QUERY_RESULT = "Failed to parse JSON response from API"
+
     fun assertEquals(expected: List<String>, actual: List<String>): Either<AssertionResult<String>, List<String>> =
         if (expected == actual) {
             Either.Right<AssertionResult<String>, List<String>>(actual)
@@ -24,17 +26,20 @@ object AssertionService {
             Either.Left<AssertionResult<String>, String>(AssertionResult(expected, actual))
         }
 
-    fun assertEquals(expected: Json, actual: QueryResult): Either<AssertionResult<QueryResult>, QueryResult> =
+    fun assertEquals(expected: Json, actual: QueryResult): Either<AssertionResult<FailureResult<*>>, QueryResult> =
         try {
-            JSONAssert.assertEquals(JSONObject(expected.content), JSONObject(actual.body), JSONCompareMode.LENIENT)
-            Either.Right<AssertionResult<QueryResult>, QueryResult>(actual)
+            JSONAssert.assertEquals(JSONObject(expected.content), JSONObject(actual.response.body().string()), JSONCompareMode.LENIENT)
+            Either.Right<AssertionResult<FailureResult<*>>, QueryResult>(actual)
         } catch(e: Throwable) {
             when (e) {
-                is AssertionError -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult(expected.toString(), actual))
-                is JSONException  -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult(expected.toString(), QueryResult("Failed to parse JSON response from API", -1)))
-                else              -> Either.Left<AssertionResult<QueryResult>, QueryResult>(AssertionResult(expected.toString(), QueryResult("Failed to parse JSON response from API", -1)))
+                is AssertionError -> left(actual, expected)
+                is JSONException  -> left(failedJsonParseResponse(actual.response.body().string(), actual.responseCode), expected)
+                else              -> left(failedJsonParseResponse(actual.response.body().string(), actual.responseCode), expected)
             }
         }
+
+    private fun failedJsonParseResponse(body: String, responseCode: Int, msg: String = FAILED_QUERY_RESULT) = mapOf("response" to body, "errormessage" to msg, "responseCode" to responseCode)
+    private fun <T> left(actual: T, expected: Json) = Either.Left<AssertionResult<FailureResult<T>>, QueryResult>(AssertionResult(expected.toString(), FailureResult(actual)))
 
     private fun assertEquals(expected: Json, result: Json): Either<AssertionResult<Json>, Json> =
         try {
@@ -68,4 +73,5 @@ object AssertionService {
         }
 }
 
-data class AssertionResult<T>(val expected: String, val actual: T)
+data class FailureResult<out T>(val actual: T)
+data class AssertionResult<out T>(val expected: String, val actual: T)

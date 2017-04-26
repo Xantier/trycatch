@@ -26,7 +26,7 @@ object ResponseParsingService {
             }
         }
 
-    fun parseQueryResponse(response: Either<AssertionResult<QueryResult>, QueryResult>): Map<String, *> =
+    fun parseQueryResponse(response: Either<AssertionResult<FailureResult<*>>, QueryResult>): Map<String, *> =
         when (response) {
             is Either.Left -> {
                 val left = response.l
