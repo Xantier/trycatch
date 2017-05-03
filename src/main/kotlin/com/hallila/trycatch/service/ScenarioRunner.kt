@@ -16,23 +16,28 @@ import rx.lang.kotlin.toObservable
             handleScenario(it)
         })
 
+    // TODO: Create a better reported
+    // TODO: Modify error cases to use some static error object.
     fun handleScenario(scenario: Scenario): Observable<Result> =
         scenario.steps.toObservable().flatMap { step ->
             when (step) {
                 is InsertStep        -> databaseService.insert(step.statement)
                     .zipWith(Observable.just(step), { result, expected ->
                         Assertable<DatabaseResponseExpectation, String>(step.name, expected.expectation, result)
-                    })
+                    }).onErrorResumeNext {
+                    Observable.just(Assertable(step.name, DatabaseResponseExpectation(""), "failure"))
+                }
                 is SelectStep        -> databaseService.select(step.statement)
                     .toList()
                     .zipWith(Observable.just(step), { result, expected ->
                         Assertable<CsvExpectation, List<String>>(step.name, expected.expectation, result)
-                    })
+                    }).onErrorResumeNext {
+                    Observable.just(Assertable(step.name, CsvExpectation(emptyList()), emptyList()))
+                }
                 is JsonAssertionStep -> httpClientService.call(step.request, step.payload)
                     .zipWith(Observable.just(step), { result, expected ->
                         Assertable(step.name, expected.expectation, Json(result.response.body().string()))
                     }).onErrorResumeNext {
-                    // TODO: Create exception type for the monad that we can ignore
                     Observable.just(Assertable(step.name, JsonExpectation("{}"), Json("{}")))
                 }
                 else                 -> throw RuntimeException("Failed to determine type of step in Scenario")

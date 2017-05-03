@@ -123,9 +123,9 @@ const reducer = (state: State = init, action: Object): State => {
     case t.POST_JSON_FAILED:
       return {...state, active: {...state.active, requestResponse: action.payload}};
     case t.INITIALIZE_DATABASE_SUCCESS:
-      return {...state, active: {...state.active, databaseInsertResponse: action.payload}};
+      return {...state, active: {...state.active, insert: {...state.active.insert, databaseInsertResponse: action.payload}}};
     case t.INITIALIZE_DATABASE_FAILED:
-      return {...state, active: {...state.active, databaseInsertResponse: action.payload}};
+      return {...state, active: {...state.active, insert: {...state.active.insert, databaseInsertResponse: action.payload}}};
     case t.ASSERT_DATABASE_VALUES_SUCCESS:
       return {...state, active: {...state.active, select: {...state.active.select, databaseAssertionResponse: action.response}}};
     case t.ASSERT_DATABASE_VALUES_FAILED:
@@ -142,6 +142,10 @@ const reducer = (state: State = init, action: Object): State => {
       return {...state, active: init.active};
     case t.SAVE_SCENARIO_SUCCESS:
       return {...state, scenarios: [...state.scenarios, action.response]};
+    case t.RUN_SCENARIO_SUCCESS:
+      return {...state};
+    case t.RUN_SCENARIO_FAILED:
+      return {...state};
     default:
       return state;
   }

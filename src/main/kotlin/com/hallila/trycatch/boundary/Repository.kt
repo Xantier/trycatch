@@ -40,7 +40,12 @@ interface Repository {
         if (statement == "") {
             return Observable.empty()
         }
-        return action(statement)
+        return try {
+            action(statement)
+        } catch (e: Exception) {
+            Observable.error<String>(e)
+        }
+
     }
 
     private fun extract(row: Row): String {

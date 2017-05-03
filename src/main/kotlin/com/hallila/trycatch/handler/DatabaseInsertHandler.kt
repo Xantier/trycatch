@@ -1,5 +1,6 @@
 package com.hallila.trycatch.handler
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.hallila.trycatch.WithLogging
 import com.hallila.trycatch.service.AssertionService
 import com.hallila.trycatch.service.DatabaseService
@@ -18,9 +19,8 @@ import javax.inject.Singleton
     val exp: String = "Insert statement executed. Response: 1"
     override fun handle(ctx: Context) {
         ctx.parse(Jackson.jsonNode()).map {
-            val node = it.get("json")
-            LOG.debug("Got Json {}", node)
-            node.get("query").asText()
+            LOG.debug("Got Json {}", it)
+            it.get("query").asText()
         }.onError { e ->
             LOG.warn("Failed to parse JSON", e)
             ctx.response.status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()).send("Failed to Parse JSON: ${e.message}")
@@ -28,7 +28,11 @@ import javax.inject.Singleton
             RxRatpack.promise(service.insert(stmt))
                 .onError { e ->
                     LOG.warn("Failed to run DB insert statement", e)
-                    ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send("Failed to run DB insert statement: ${e.message}")
+                    ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send(
+                        ObjectMapper().writeValueAsString(mapOf(
+                            "result" to "failure",
+                            "message" to "Failed to run DB insert statement: ${e.message}"
+                        )))
                 }
                 .then { response ->
                     val result = AssertionService.assertEquals(exp, response.first())

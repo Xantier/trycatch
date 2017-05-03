@@ -1,6 +1,7 @@
 import React from 'react';
 import SqlInput from './database/SqlInput.jsx';
 import DatabaseInputComponent from './database/DatabaseInputComponent.jsx';
+import SuccessFailResultComponent from './database/SuccessFailResultComponent.jsx';
 import JsonComponent from './request/JsonComponent.jsx';
 import RequestComponent from './request/RequestComponent.jsx';
 import RequestResultDisplayingComponent from './request/RequestResultDisplayingComponent.jsx';
@@ -36,8 +37,8 @@ const centralStyles = {
 };
 export default (props: Props): React.Element => {
   const {
-            postJson, initializeDatabase, assertDatabaseValues, scenarioName,
-            saveScenario, runScenario, updateInitializationScript, updateName, insert
+          postJson, initializeDatabase, assertDatabaseValues, scenarioName,
+          saveScenario, runScenario, updateInitializationScript, updateName, insert
         } = props;
   return (
       <div style={centralStyles}>
@@ -46,10 +47,10 @@ export default (props: Props): React.Element => {
           <CardHeader title="Scenario Name"/>
           <CardText>
             <TextField hintText="Scenario Name" floatingLabelText="Enter name for the scenario"
-                     value={scenarioName}
-                     onChange={(e: Event) => {
-                       updateName(e.target.value);
-                     }}/>
+                       value={scenarioName}
+                       onChange={(e: Event) => {
+                         updateName(e.target.value);
+                       }}/>
           </CardText>
         </Card>
         <Divider/>
@@ -74,6 +75,7 @@ export default (props: Props): React.Element => {
         <IndividualStepContainer run={initializeDatabase} title="Initialize Database">
           <SqlInput updateFn={updateInitializationScript} label="Insert Statement"
                     placeholder="Insert DB insert statement" name={insert.name} query={insert.query}/>
+          <SuccessFailResultComponent result={insert.databaseInsertResponse}/>
         </IndividualStepContainer>
         <Divider/>
 

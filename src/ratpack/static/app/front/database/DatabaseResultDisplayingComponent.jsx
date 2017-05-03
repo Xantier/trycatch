@@ -1,4 +1,6 @@
 import React from 'react';
+
+import {resultStyle} from '../styles';
 import {Table, TableBody, TableRow, TableRowColumn} from 'material-ui/Table';
 
 export default ({expectation, result, actual}: Props): React.Element => {
@@ -25,7 +27,7 @@ export default ({expectation, result, actual}: Props): React.Element => {
           </Table>
           {
             expectation !== '' ?
-                (<div>
+                (<div style={resultStyle(result)}>
                   <h4>Test Result</h4>
                   <span>{result}</span>
                 </div>) :

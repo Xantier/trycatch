@@ -24,6 +24,7 @@ fun jsonReport(results: Observable<Result>, reporter: (List<Any>) -> Unit) {
         .subscribe({
             reporter(it)
         }, {
-            reporter(listOf(mapOf("Error" to "Failed to process this step because of this: ${it.message}")))
+            reporter(listOf(mapOf("Error" to "${it.message}",
+                "step" to it.cause)))
         })
 }
