@@ -8,6 +8,8 @@ import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import AutoComplete from 'material-ui/AutoComplete';
 import {httpHeaders} from './constants.js';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
 
 type HeaderMap = {
   key: string,
@@ -28,6 +30,7 @@ const actionButtonStyle = {
 export default ({updateRequest, method, url, params}: Props): React.Element => {
   const KEY = 'header-key';
   const VALUE = 'header-value';
+  const DELETE = 'header-delete';
   const headers = params
     .sort((a: Object, b: Object): number => a.id - b.id)
     .map((it: HeaderMap): React.Element => {
@@ -44,6 +47,11 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
             onNewRequest={(value: string) => {
               updateRequest(VALUE, value, it.id);
             }}/>
+          <IconButton tooltip="Delete extra header" onTouchTap={() => {
+            updateRequest(DELETE, '', it.id);
+          }}>
+          <FontIcon className="material-icons">delete</FontIcon>
+          </IconButton>
         </div>);
     });
   return (

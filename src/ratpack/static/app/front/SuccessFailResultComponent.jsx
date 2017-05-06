@@ -4,7 +4,6 @@ import {Card, CardText, CardTitle} from 'material-ui/Card';
 import {pink600, red300, teal300} from 'material-ui/styles/colors';
 
 export default ({result, message}: Props): React.Element => {
-  console.log(message);
   return (
       <div>
         {

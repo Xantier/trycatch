@@ -2,7 +2,6 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import Toggle from 'material-ui/Toggle';
 
 type Props = {
   children: React.Element[],
@@ -22,19 +21,15 @@ export default class IndividualStepContainer extends React.Component {
     this.setState({expanded: expanded});
   };
 
-  handleToggle = (event: any, toggle: boolean): State => {
-    this.setState({expanded: toggle});
-  };
-
   render(): React.Element {
-    const toggle = (<Toggle toggled={this.state.expanded} onToggle={this.handleToggle} labelPosition="right"
-                            label={`Display ${this.props.title}`}/>);
     return (
         <div>
           <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
-            <CardText>
-              {toggle}
-            </CardText>
+            <CardHeader
+                title={this.props.title}
+                actAsExpander={true}
+                showExpandableButton={true}
+            />
             <CardText expandable={true}>
               {this.props.children}
               <CardActions>

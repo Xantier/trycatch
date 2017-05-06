@@ -1,21 +1,22 @@
 import {connect} from 'react-redux';
+import {close} from './notification';
 import {
-    postJson,
-    initializeDatabase,
-    assertDatabaseValues,
-    updateExpected,
-    updateSelect,
-    updateJson,
-    updateInitializationScript,
-    saveScenario,
-    runScenario,
-    updateName,
-    updateRequest
+  postJson,
+  initializeDatabase,
+  assertDatabaseValues,
+  updateExpected,
+  updateSelect,
+  updateJson,
+  updateInitializationScript,
+  saveScenario,
+  runScenario,
+  updateName,
+  updateRequest
 } from './actions';
 import React from 'react';
 import SqlInput from './database/SqlInput.jsx';
 import DatabaseInputComponent from './database/DatabaseInputComponent.jsx';
-import SuccessFailResultComponent from './database/SuccessFailResultComponent.jsx';
+import SuccessFailResultComponent from './SuccessFailResultComponent.jsx';
 import JsonComponent from './request/JsonComponent.jsx';
 import RequestComponent from './request/RequestComponent.jsx';
 import RequestResultDisplayingComponent from './request/RequestResultDisplayingComponent.jsx';
@@ -25,11 +26,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentSend from 'material-ui/svg-icons/content/send';
+import Snackbar from 'material-ui/Snackbar';
+import {red300, green200} from 'material-ui/styles/colors';
 
 import TextField from 'material-ui/TextField';
 import type {SqlInputType, Request} from './reducer';
 
 import type {State} from './reducer';
+import SimpleCard from './SimpleCard';
 
 type Props = {
   postJson: () => void,
@@ -45,7 +49,8 @@ type Props = {
   updateRequest: () => void,
   insert: SqlInputType,
   request: Request,
-  requestResponse: Object
+  requestResponse: Object,
+  notification: Object
 }
 
 const centralStyles = {
@@ -76,19 +81,24 @@ const form = (props: Props): React.Element => {
                 <div>
                   <JsonComponent {...props} isRequest={true}/>
                 </div>
-                <div>
-                  <JsonComponent {...props} isRequest={false}/>
-                </div>
               </div>) : null
           }
+          <div>
+            <h2>Expectation</h2>
+            <div>
+              <JsonComponent {...props}/>
+            </div>
+          </div>
           <RequestResultDisplayingComponent {...props.requestResponse} />
         </IndividualStepContainer>
         <Divider/>
 
         <IndividualStepContainer run={props.initializeDatabase} title="Initialize Database">
-          <SqlInput updateFn={props.updateInitializationScript} label="Insert Statement"
-                    placeholder="Insert DB insert statement" name={insert.name} query={insert.query}/>
-          <SuccessFailResultComponent {...insert.databaseInsertResponse}/>
+          <SimpleCard>
+            <SqlInput updateFn={props.updateInitializationScript} label="Insert Statement"
+                      placeholder="Insert DB insert statement" name={insert.name} query={insert.query}/>
+            <SuccessFailResultComponent {...insert.databaseInsertResponse}/>
+          </SimpleCard>
         </IndividualStepContainer>
         <Divider/>
 
@@ -97,6 +107,15 @@ const form = (props: Props): React.Element => {
         </IndividualStepContainer>
         <RaisedButton onClick={props.saveScenario} label="Save scenario" icon={<ContentSave/>} secondary={true}/>
         <RaisedButton onClick={props.runScenario} label="Run scenario" icon={<ContentSend/>} primary={true}/>
+        <Snackbar
+            open={props.notification.open}
+            message={props.notification.message}
+            autoHideDuration={4000}
+            action="OK"
+            onActionTouchTap={close}
+            onRequestClose={close}
+            bodyStyle={{backgroundColor: props.notification.isError && props.notification.isError === true ? red300 : props.notification.isError === false ? green200 : null}}
+        />
       </div>
   );
 };
@@ -108,7 +127,8 @@ const ScenarioForm = connect(
         requestResponse: state.active.requestResponse,
         select: state.active.select,
         insert: state.active.insert,
-        scenarioName: state.active.name
+        scenarioName: state.active.name,
+        notification: state.notification
       };
     },
     function mapDispatchToProps(dispatch: () => void): Object {

@@ -2,14 +2,15 @@ import React from 'react';
 import DatabaseAssertionInput from './DatabaseAssertionInput.jsx';
 import DatabaseResultDisplayingComponent from './DatabaseResultDisplayingComponent.jsx';
 import ExpandableCard from '../ExpandableCard.jsx';
+import SimpleCard from '../SimpleCard.jsx';
 
 export default (props: Props): React.Element => {
   const isFailure = props.select.databaseAssertionResponse && props.select.databaseAssertionResponse.result === 'failure';
   if (isFailure) {
-    return (<div>
+    return (<SimpleCard>
       <DatabaseAssertionInput {...props}/>
       <DatabaseResultDisplayingComponent {...props.select.databaseAssertionResponse}/>
-    </div>);
+    </SimpleCard>);
   }
   return (<div>
     <ExpandableCard label="Display Query Results"

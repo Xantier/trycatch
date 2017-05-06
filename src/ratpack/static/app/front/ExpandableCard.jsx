@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, CardText} from 'material-ui/Card';
 import Toggle from 'material-ui/Toggle';
+import {grey700} from 'material-ui/styles/colors';
 
 type State = {
   expanded: boolean
@@ -35,7 +36,7 @@ export default class ExpandableCard extends React.Component {
                label={this.props.label}/>) : null;
     return (
       <div>
-        <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
+        <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange} style={{backgroundColor: grey700}}>
           <CardText>
             {this.props.content}
             {toggle}

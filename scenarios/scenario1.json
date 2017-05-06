@@ -1,40 +1,34 @@
 {
-  "name": "scenario1",
-  "steps": [
-    {
-      "name": "request scenario1",
-      "payload": "{\"hi\":\"universe\"}",
-      "expectation": {
-        "value": {
-          "content": "{\"userId\":1,\"id\":1,\"title\":\"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\"body\":\"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"}"
-        }
-      },
-      "request": {
-        "method": "POST",
-        "path": "http://jsonplaceholder.typicode.com/posts/1",
-        "params": {
-          "API-Key": "foo"
-        }
-      },
-      "type": "REQUEST"
+  "name" : "scenario1",
+  "steps" : [ {
+    "name" : "request scenario1",
+    "payload" : "{\"hi\":\"universe\"}",
+    "expectation" : {
+      "value" : {
+        "content" : "{\"userId\":1,\"id\":1,\"title\":\"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\"body\":\"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"}"
+      }
     },
-    {
-      "name": "insert scenario1",
-      "statement": "INSERT INTO cities (name) values ('new City3')",
-      "expectation": {
-        "value": "Done successfully"
-      },
-      "type": "INSERT"
+    "request" : {
+      "method" : "POST",
+      "path" : "http://jsonplaceholder.typicode.com/posts/1",
+      "params" : {
+        "API-Key" : "foo"
+      }
     },
-    {
-      "name": "select scenario1",
-      "statement": "SELECT * FROM cities where name = 'new City2'",
-      "expectation": {
-        "value": [
-          ""
-        ]
-      },
-      "type": "SELECT"
-    }
-  ]
+    "type" : "REQUEST"
+  }, {
+    "name" : "insert scenario1",
+    "statement" : "INSERT INTO cities (name) values ('new City3')",
+    "expectation" : {
+      "value" : "Done successfully"
+    },
+    "type" : "INSERT"
+  }, {
+    "name" : "select scenario1",
+    "statement" : "SELECT * FROM cities where name = 'new City2'",
+    "expectation" : {
+      "value" : [ "123,rwrwe,erwwer,erwrew\n23232,fdsaf,4342,sdffdas4\n34234,54,5fdf,45435" ]
+    },
+    "type" : "SELECT"
+  } ]
 }

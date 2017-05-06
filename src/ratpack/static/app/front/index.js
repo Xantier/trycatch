@@ -9,6 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {brown100} from 'material-ui/styles/colors';
+import ReactMaterialUiNotifications from 'react-materialui-notifications';
 
 import reducer from './reducer';
 import sagas from './sagas';
@@ -20,7 +21,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 const sagaMiddleware = saga();
 const logger = createLogger();
-const store = createStore(
+export const store = createStore(
   reducer,
   compose(
     applyMiddleware(sagaMiddleware, logger),
@@ -38,6 +39,17 @@ ReactDOM.render(
         <div>
           <ScenarioForm />
         </div>
+        <ReactMaterialUiNotifications
+            desktop={true}
+            transitionName={{
+              leave: 'dummy',
+              leaveActive: 'fadeOut',
+              appear: 'dummy',
+              appearActive: 'zoomInUp'
+            }}
+            transitionAppear={true}
+            transitionLeave={true}
+        />
       </div>
     </MuiThemeProvider>
   </Provider>,

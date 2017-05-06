@@ -1,7 +1,8 @@
 import React from 'react';
+import TextField from 'material-ui/TextField';
 import SqlInput from './SqlInput.jsx';
 
-import type {SqlInputType} from './reducer';
+import type {SqlInputType} from '../reducer';
 
 type Props = {
   updateExpected: () => void,
@@ -11,7 +12,7 @@ type Props = {
 
 export default (props: Props): React.Element => {
   const {updateExpected, updateSelect, select} = props;
-  const {query} = select;
+  const {query, expectation} = select;
   const update = (text: String, action: () => void) => {
     action(text);
   };
@@ -21,12 +22,23 @@ export default (props: Props): React.Element => {
     label: 'DB Query',
     name: select.name
   };
-
+  let expected = expectation;
+  if (expectation instanceof Array) {
+    expected = expectation.join('\n');
+  }
   return (
-    <div>
-      <SqlInput {...sql} updateFn={updateSelect}/>
-      <textarea type="text" placeholder="Insert Comma separated expected results"
-             onChange={(e: Event) => update(e.target.value, updateExpected)}/>
-    </div>
+      <div>
+        <SqlInput {...sql} updateFn={updateSelect}/>
+        <TextField
+            floatingLabelText="Expected results"
+            hintText="Insert Comma separated expected results"
+            floatingLabelFixed={true}
+            rows={10}
+            rowsMax={40}
+            multiLine={true}
+            fullWidth={true}
+            value={expected}
+            onChange={(e: Event) => update(e.target.value, updateExpected)}/>
+      </div>
   );
 };

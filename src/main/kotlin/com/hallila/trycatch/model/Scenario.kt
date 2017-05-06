@@ -18,7 +18,7 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                 val entryName = entry["name"] as String
                 val value = entry["type"]
                 when (StepKey.valueOf(value as String)) {
-                    StepKey.INSERT  -> {
+                    StepKey.INSERT -> {
                         InsertStep(entryName, entry["statement"] as String, DatabaseResponseExpectation(content(entry)))
                     }
                     StepKey.REQUEST -> {
@@ -29,7 +29,7 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                         JsonAssertionStep(entryName, payload, JsonExpectation(jsonContent(entry)),
                             Request(method, path, request["params"] as Map<String, String>))
                     }
-                    StepKey.SELECT  -> {
+                    StepKey.SELECT -> {
                         val expectation = entry[JsonHelpers.EXPECTATION] as Map<*, *>
                         SelectStep(entryName, entry["statement"] as String, CsvExpectation(expectation["value"] as List<String>))
                     }
@@ -59,16 +59,16 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                     when (it.key) {
                         JsonHelpers.REQUEST ->
                             parseHttpRequest(it.value, httpMethodFromString(it.value.get(JsonHelpers.METHOD).asText()), JsonHelpers.REQUEST + " " + name)
-                        JsonHelpers.INSERT  ->
+                        JsonHelpers.INSERT ->
                             InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
                                 DatabaseResponseExpectation("Done successfully"),
                                 StepKey.INSERT)
 
-                        JsonHelpers.SELECT  ->
+                        JsonHelpers.SELECT ->
                             SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
                                 CsvExpectation(listOf(it.value.get(JsonHelpers.EXPECTATION).asText())),
                                 StepKey.SELECT)
-                        else                ->
+                        else ->
                             throw RuntimeException("Unable to parse posted JSON :(")
                     }
                 }.toList()
@@ -122,7 +122,11 @@ interface Step<out T> {
 class Json(val content: String = "{}") {
     fun obj(): JSONObject = if (content == "{}") JSONObject() else JSONObject(content)
     fun array(): JSONArray = if (content == "{}") JSONArray() else JSONArray(content)
-    override fun toString(): String = obj().toString()
+    override fun toString(): String = try {
+        obj().toString()
+    } catch (e: Exception) {
+        ""
+    }
 }
 
 enum class StepKey() {

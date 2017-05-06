@@ -33,7 +33,7 @@ object ResponseParsingService {
                 mapOf(
                     "result" to "failure",
                     "expectation" to left.expected,
-                    "actual" to left.actual
+                    "actual" to left.actual.actual
                 )
             }
             is Either.Right -> {

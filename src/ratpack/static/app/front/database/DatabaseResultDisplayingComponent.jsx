@@ -2,7 +2,7 @@ import React from 'react';
 
 import {resultStyle} from '../styles';
 import {Table, TableBody, TableRow, TableRowColumn} from 'material-ui/Table';
-import SuccessFailResultComponent from './SuccessFailResultComponent.jsx';
+import SuccessFailResultComponent from '../SuccessFailResultComponent.jsx';
 
 export default ({expectation, result, actual, message}: Props): React.Element => {
   if (result !== 'failure') {

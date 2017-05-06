@@ -15,6 +15,12 @@ export type SqlInputType = {
   expectation: string
 }
 
+export type Notification = {
+  open: boolean,
+  isError: boolean,
+  message: string
+}
+
 export type Scenario = {
   name: string,
   select: SqlInputType,
@@ -26,7 +32,9 @@ export type Scenario = {
 export type State = {
   active: Scenario,
   scenarios: Array<Scenario>,
-  loading: boolean
+  loading: boolean,
+  running: boolean,
+  notification: Notification
 };
 
 const init = {
@@ -61,12 +69,20 @@ const init = {
     success: true,
     error: null,
     errorMessage: null
+  },
+  notification: {
+    open: false,
+    message: '',
+    isError: false
   }
 };
 
 function updateHeader(params: Object[], action: Object): Object {
   if (action.meta.contentType.endsWith('add')) {
     return [...params, {key: '', value: '', id: params.length + 1}];
+  }
+  if (action.meta.contentType.endsWith('delete')) {
+    return params.filter((it: Object) => it.id !== action.meta.id);
   }
   return params.map((it: Object): Object => {
     if (it.id === action.meta.id) {
@@ -165,6 +181,10 @@ const reducer = (state: State = init, action: Object): State => {
       return {...state, running: false, status: action.payload};
     case t.RUN_SCENARIO_FAILED:
       return {...state, running: false, status: action.payload};
+    case t.ADD_NOTIFICATION:
+      return {...state, notification: {open: true, message: action.payload, isError: action.isError}};
+    case t.CLOSE_NOTIFICATION:
+      return {...state, notification: {open: false, message: '', isError: false}};
     default:
       return state;
   }

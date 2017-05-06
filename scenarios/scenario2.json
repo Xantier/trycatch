@@ -11,9 +11,7 @@
     "request" : {
       "method" : "POST",
       "path" : "http://localhost/post",
-      "params" : {
-        "API-Key" : "bar"
-      }
+      "params" : { }
     },
     "type" : "REQUEST"
   }, {

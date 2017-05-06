@@ -6,39 +6,56 @@ import logger from 'loglevel';
 import {postJson, getFromUrl} from '../api/jsonApi';
 import {normalizeScenarios, normalizeRunPayload} from './normalizer';
 import * as t from './constants';
+import notification from './notification';
 import type {State} from './reducer';
-import type {Action} from './actions';
+
+const extractErrorResponse = (e: Object): Object => {
+  let response = '';
+  try {
+    response = JSON.parse(e.response.text);
+  } catch (e2) {
+    logger.error('Failed to parse JSON response.');
+  }
+  notification(response.message ? `Server responded with an error: ${response.message}` : 'Server responded with an error', true);
+  return response;
+};
 
 function* jsonPost(): void {
   const payload = yield select((state: State): Object => state.active.request);
   try {
+    notification('Posting');
     const response = yield call(postJson('/api/json'), payload);
+    notification('Got Response', false);
     yield put({type: t.POST_JSON_SUCCESS, payload: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
-    yield put({type: t.POST_JSON_FAILED, payload: JSON.parse(e.response.text)});
+    yield put({type: t.POST_JSON_FAILED, payload: extractErrorResponse(e)});
   }
 }
 
 function* initDb(): void {
   const payload = yield select((state: State): Object => state.active.insert);
   try {
+    notification('Initializing Database state');
     const response = yield call(postJson('/api/insert'), payload);
+    notification('Database initialization call succeeded', false);
     yield put({type: t.INITIALIZE_DATABASE_SUCCESS, payload: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
-    yield put({type: t.INITIALIZE_DATABASE_FAILED, payload: JSON.parse(e.response.text)});
+    yield put({type: t.INITIALIZE_DATABASE_FAILED, payload: extractErrorResponse(e)});
   }
 }
 
 function* assertDatabaseValues(): void {
   const payload = yield select((state: State): Object => state.active.select);
   try {
+    notification('Asserting Database data');
     const response = yield call(postJson('/api/select'), {json: payload});
+    notification('Database asserition call succeeded', false);
     yield put({type: t.ASSERT_DATABASE_VALUES_SUCCESS, payload: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
-    yield put({type: t.ASSERT_DATABASE_VALUES_FAILED, payload: JSON.parse(e.response.text)});
+    yield put({type: t.ASSERT_DATABASE_VALUES_FAILED, payload: extractErrorResponse(e)});
   }
 }
 
@@ -56,11 +73,13 @@ function scenarioPayload(): (state: State) => Object {
 function* saveScenario(): void {
   const payload = yield scenarioPayload();
   try {
+    notification('Saving Scenario');
     const response = yield call(postJson('/api/scenario/save'), payload);
+    notification('Scenario saved successfully', false);
     yield put({type: t.SAVE_SCENARIO_SUCCESS, response: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
-    yield put({type: t.SAVE_SCENARIO_FAILED, payload: JSON.parse(e.response.text)});
+    yield put({type: t.SAVE_SCENARIO_FAILED, payload: extractErrorResponse(e)});
   }
 
 }
@@ -68,12 +87,13 @@ function* saveScenario(): void {
 function* runScenario(): void {
   const payload = yield scenarioPayload();
   try {
+    notification('Running Scenario');
     const response = yield call(postJson('/api/scenario/run'), payload);
+    notification('Scenario run completed', false);
     yield put({type: t.RUN_SCENARIO_SUCCESS, payload: normalizeRunPayload(JSON.parse(response.text))});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
-    logger.error(e.response.text);
-    yield put({type: t.RUN_SCENARIO_FAILED, payload: JSON.parse(e.response.text)});
+    yield put({type: t.RUN_SCENARIO_FAILED, payload: extractErrorResponse(e)});
   }
 }
 
@@ -84,7 +104,7 @@ function* loadScenarios(): void {
     yield put({type: t.LOAD_SCENARIOS_SUCCESS, response: scenarios});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
-    yield put({type: t.LOAD_SCENARIOS_FAILED, payload: JSON.parse(e.response.text)});
+    yield put({type: t.LOAD_SCENARIOS_FAILED, payload: extractErrorResponse(e)});
   }
 }
 function* selectAndRunScenario(action: Action): void {
