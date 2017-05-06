@@ -1,5 +1,6 @@
 package com.hallila.trycatch.service
 
+import ratpack.exec.Promise
 import rx.Observable
 
 fun report(results: Observable<Result>, reporter: (String) -> Unit = ::println) {
@@ -19,12 +20,12 @@ fun report(results: Observable<Result>, reporter: (String) -> Unit = ::println) 
     })
 }
 
-fun jsonReport(results: Observable<Result>, reporter: (List<Any>) -> Unit) {
-    results.toList()
-        .subscribe({
-            reporter(it)
-        }, {
-            reporter(listOf(mapOf("Error" to "${it.message}",
-                "step" to it.cause)))
-        })
+fun jsonReport(results: Promise<List<Result>>, reporter: (List<Any>) -> Unit) {
+    results.onError { it ->
+        reporter(listOf(mapOf(
+            "Error" to "${it.message}",
+            "step" to it.cause)))
+    }.then { it: List<Result> ->
+        reporter(it)
+    }
 }

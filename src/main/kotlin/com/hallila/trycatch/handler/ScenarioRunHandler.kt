@@ -9,6 +9,7 @@ import ratpack.handling.Context
 import ratpack.handling.Handler
 import ratpack.jackson.Jackson
 import ratpack.jackson.Jackson.json
+import ratpack.rx.RxRatpack
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +22,7 @@ import javax.inject.Singleton
             LOG.warn("Failed to construct Scenario", e)
             ctx.response.status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()).send("Failed to construct Scenario: ${e.message}")
         }.then {
-            jsonReport(scenarioRunner.handleScenario(it), { ctx.render(json(it)) })
+            jsonReport(RxRatpack.promise(scenarioRunner.handleScenario(it)), { ctx.render(json(it)) })
         }
     }
 }

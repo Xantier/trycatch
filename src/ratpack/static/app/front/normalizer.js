@@ -20,17 +20,20 @@ type BackendRunResponse = {
 type Status = {
   success: boolean,
   error: ?string,
-  errorMessage: ?string
+  errorMessage: ?string,
+  stepName: ?string
 }
 type NormalizedPayload = {
   status: Status
 }
 export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedPayload => {
   if (response[0] && response[0].Error && response[0].Error !== undefined) {
+    const step = response[0].step;
     return {
       success: false,
       error: response[0].Error,
-      errorMessage: response[0].cause
+      errorMessage: step,
+      stepName: step.value.name
     };
   }
   return {success: true};

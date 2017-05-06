@@ -114,7 +114,10 @@ const form = (props: Props): React.Element => {
             action="OK"
             onActionTouchTap={close}
             onRequestClose={close}
-            bodyStyle={{backgroundColor: props.notification.isError && props.notification.isError === true ? red300 : props.notification.isError === false ? green200 : null}}
+            bodyStyle={{
+              backgroundColor: props.notification.isError && props.notification.isError === true
+                  ? red300 : green200
+            }}
         />
       </div>
   );

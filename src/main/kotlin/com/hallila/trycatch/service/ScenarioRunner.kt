@@ -5,6 +5,7 @@ import com.google.inject.Singleton
 import com.hallila.trycatch.model.*
 import org.funktionale.either.Either
 import rx.Observable
+import rx.lang.kotlin.onError
 import rx.lang.kotlin.toObservable
 
 @Singleton class ScenarioRunner @Inject constructor(
@@ -24,20 +25,20 @@ import rx.lang.kotlin.toObservable
                 is InsertStep        -> databaseService.insert(step.statement)
                     .zipWith(Observable.just(step), { result, expected ->
                         Assertable<DatabaseResponseExpectation, String>(step.name, expected.expectation, result)
-                    }).onErrorResumeNext {
+                    }).onError {
                     Observable.just(Assertable(step.name, DatabaseResponseExpectation(""), "failure"))
                 }
                 is SelectStep        -> databaseService.select(step.statement)
                     .toList()
                     .zipWith(Observable.just(step), { result, expected ->
                         Assertable<CsvExpectation, List<String>>(step.name, expected.expectation, result)
-                    }).onErrorResumeNext {
+                    }).onError {
                     Observable.just(Assertable(step.name, CsvExpectation(emptyList()), emptyList()))
                 }
                 is JsonAssertionStep -> httpClientService.call(step.request, step.payload)
                     .zipWith(Observable.just(step), { result, expected ->
                         Assertable(step.name, expected.expectation, Json(result.response.body().string()))
-                    }).onErrorResumeNext {
+                    }).onError {
                     Observable.just(Assertable(step.name, JsonExpectation("{}"), Json("{}")))
                 }
                 else                 -> throw RuntimeException("Failed to determine type of step in Scenario")

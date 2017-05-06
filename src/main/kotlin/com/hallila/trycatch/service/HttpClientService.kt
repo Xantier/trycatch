@@ -23,31 +23,47 @@ interface HttpClientService {
 
     override fun call(request: Request, payload: String): Observable<QueryResult> =
         when (request.method) {
-            Method.GET    -> get(request.path, request.params)
-            Method.POST   -> post(request.path, payload, request.params)
-            Method.PUT    -> put(request.path, payload, request.params)
+            Method.GET -> get(request.path, request.params)
+            Method.POST -> post(request.path, payload, request.params)
+            Method.PUT -> put(request.path, payload, request.params)
             Method.DELETE -> delete(request.path, payload, request.params)
-            Method.PATCH  -> TODO()
-            Method.HEAD   -> TODO()
+            Method.PATCH -> TODO()
+            Method.HEAD -> TODO()
         }
 
     override fun get(url: String, headers: Map<String, String>): Observable<QueryResult> {
-        val request = okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).get().build()
+        val request = try {
+            okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).get().build()
+        } catch (e: Exception) {
+            return Observable.error<QueryResult>(e)
+        }
         return client.execute(request).map(::QueryResult)
     }
 
     override fun post(url: String, payload: String, headers: Map<String, String>): Observable<QueryResult> {
-        val request = okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).post(requestBody(payload)).build()
+        val request = try {
+            okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).post(requestBody(payload)).build()
+        } catch (e: Exception) {
+            return Observable.error<QueryResult>(e)
+        }
         return client.execute(request).map(::QueryResult)
     }
 
     override fun put(url: String, payload: String, headers: Map<String, String>): Observable<QueryResult> {
-        val request = okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).put(requestBody(payload)).build()
+        val request = try {
+            okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).put(requestBody(payload)).build()
+        } catch (e: Exception) {
+            return Observable.error<QueryResult>(e)
+        }
         return client.execute(request).map(::QueryResult)
     }
 
     override fun delete(url: String, payload: String, headers: Map<String, String>): Observable<QueryResult> {
-        val request = okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).delete(requestBody(payload)).build()
+        val request = try {
+            okhttp3.Request.Builder().url(url).headers(toHeaders(headers)).delete(requestBody(payload)).build()
+        } catch (e: Exception) {
+            return Observable.error<QueryResult>(e)
+        }
         return client.execute(request).map(::QueryResult)
     }
 
