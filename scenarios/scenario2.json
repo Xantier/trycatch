@@ -1,41 +1,34 @@
 {
-  "name": "scenario2",
-  "steps": [
-    {
-      "type": "INSERT",
-      "name": "insert scenario two",
-      "statement": "INSERT INTO Cities (name) values ('test city')",
-      "expectation": {
-        "value": "inserted successfully"
+  "name" : "scenario2",
+  "steps" : [ {
+    "name" : "request scenario2",
+    "payload" : "{\"hello\":\"world12\"}",
+    "expectation" : {
+      "value" : {
+        "content" : "{\"hello\":\"world\"}"
       }
     },
-    {
-      "type": "REQUEST",
-      "name": "request scenario two",
-      "payload": "{\"hello\":\"world\"}",
-      "expectation": {
-        "value": {
-          "content": "{\"hello\":\"world\"}"
-        }
-      },
-      "request": {
-        "method": "POST",
-        "path": "http://localhost/post",
-        "params": {
-          "API-Key": "bar"
-        }
+    "request" : {
+      "method" : "POST",
+      "path" : "http://localhost/post",
+      "params" : {
+        "API-Key" : "bar"
       }
     },
-    {
-      "type": "SELECT",
-      "name": "select scenario two",
-      "statement": "SELECT * FROM Cities where name = 'test city'",
-      "expectation": {
-        "value": [
-          "5,test city",
-          "6,test city2"
-        ]
-      }
-    }
-  ]
+    "type" : "REQUEST"
+  }, {
+    "name" : "insert scenario2",
+    "statement" : "INSERT INTO Cities (name) values ('test city')",
+    "expectation" : {
+      "value" : "Done successfully"
+    },
+    "type" : "INSERT"
+  }, {
+    "name" : "select scenario2",
+    "statement" : "SELECT * FROM Cities where name = 'test city'",
+    "expectation" : {
+      "value" : [ "" ]
+    },
+    "type" : "SELECT"
+  } ]
 }

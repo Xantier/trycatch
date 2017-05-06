@@ -20,6 +20,7 @@ export default (props: Props): React.Element => {
     action(prettyData.sql(query));
   };
   return (<div>
+    <RaisedButton label="Beautify SQL" onClick={() => beautify(updateFn)} secondary={true} icon={<ActionLineStyle/>}/>
     <TextField
         hintText={placeholder}
         floatingLabelText={label}
@@ -31,6 +32,5 @@ export default (props: Props): React.Element => {
         onChange={(e: Event) => {
           update(e.target.value, updateFn);
         }}/>
-    <RaisedButton label="Beautify" onClick={() => beautify(updateFn)} secondary={true} icon={<ActionLineStyle/>}/>
   </div>);
 };

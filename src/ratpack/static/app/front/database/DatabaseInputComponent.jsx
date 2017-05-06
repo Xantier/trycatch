@@ -4,6 +4,13 @@ import DatabaseResultDisplayingComponent from './DatabaseResultDisplayingCompone
 import ExpandableCard from '../ExpandableCard.jsx';
 
 export default (props: Props): React.Element => {
+  const isFailure = props.select.databaseAssertionResponse && props.select.databaseAssertionResponse.result === 'failure';
+  if (isFailure) {
+    return (<div>
+      <DatabaseAssertionInput {...props}/>
+      <DatabaseResultDisplayingComponent {...props.select.databaseAssertionResponse}/>
+    </div>);
+  }
   return (<div>
     <ExpandableCard label="Display Query Results"
                     content={<DatabaseAssertionInput {...props}/>}

@@ -1,5 +1,6 @@
 package com.hallila.trycatch.handler
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.hallila.trycatch.WithLogging
 import com.hallila.trycatch.service.AssertionService
 import com.hallila.trycatch.service.HttpClientService
@@ -19,7 +20,7 @@ import javax.inject.Singleton
         ctx.parse(jsonNode()).map {
             LOG.debug("Client input JSON: {}", it)
             val method = httpMethodFromString(it.get(JsonHelpers.METHOD).asText())
-            parseHttpRequest(it, method)
+            parseHttpRequest(it = it, method = method)
         }.onError { e ->
             LOG.warn("Failed to parse JSON", e)
             ctx.response.status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()).send("Failed to Parse JSON: ${e.message}")
@@ -27,7 +28,11 @@ import javax.inject.Singleton
             RxRatpack.promiseSingle(client.call(req.request, req.payload))
                 .onError { e ->
                     LOG.warn("Failed to make request to external API", e)
-                    ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send("Failed to make request to external API: ${e.message}")
+                    ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send(
+                        ObjectMapper().writeValueAsString(mapOf(
+                            "result" to "failure",
+                            "message" to "Failed to make request to external API: ${e.message}"
+                        )))
                 }.then { x ->
                 LOG.debug("API Responded with: {}", x)
                 val result = AssertionService.assertEquals(req.expectation.value, x)

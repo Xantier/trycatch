@@ -1,17 +1,20 @@
 import React from 'react';
 
-import {resultStyle} from '../styles';
+import {Card, CardText, CardTitle} from 'material-ui/Card';
+import {pink600, red300, teal300} from 'material-ui/styles/colors';
 
-export default ({result}: Props): React.Element => {
-  console.log(result);
+export default ({result, message}: Props): React.Element => {
+  console.log(message);
   return (
       <div>
         {
           result ?
-              (<div style={resultStyle(result)}>
-                <h4>Test Result</h4>
-                <span>{result.message}</span>
-              </div>) :
+              (<Card>
+                <CardTitle title="Failed to complete step" titleColor={red300}/>
+                <CardText>
+                  <div>{message}</div>
+                </CardText>
+              </Card>) :
               (null)
         }
       </div>

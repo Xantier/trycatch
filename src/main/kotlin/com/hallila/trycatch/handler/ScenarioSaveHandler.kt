@@ -1,6 +1,7 @@
 package com.hallila.trycatch.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml
 import com.hallila.trycatch.WithLogging
 import com.hallila.trycatch.model.Scenario
@@ -17,7 +18,8 @@ import java.util.*
 
 
 class ScenarioSaveHandler : Handler, WithLogging() {
-    val om = ObjectMapper()
+    val om = ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
+
     override fun handle(ctx: Context) {
         ctx.parse(Jackson.jsonNode()).map {
             Scenario.buildFromJson(it)

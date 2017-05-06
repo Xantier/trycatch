@@ -1,5 +1,6 @@
 package com.hallila.trycatch.handler
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.hallila.trycatch.WithLogging
 import com.hallila.trycatch.service.AssertionService
 import com.hallila.trycatch.service.DatabaseService
@@ -33,7 +34,11 @@ data class Select(val expected: String, val statement: String)
                 .map { AssertionService.assertEquals(json.expected, it) }
             ).onError { e ->
                 LOG.warn("Failed to make request to the database", e)
-                ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send("Failed to make request to the database: ${e.message}")
+                ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send(
+                    ObjectMapper().writeValueAsString(mapOf(
+                        "result" to "failure",
+                        "message" to "Failed to make request to the database: ${e.message}"
+                    )))
             }.then {
                 ctx.render(Jackson.json(ResponseParsingService.parseResponse(it)))
             }

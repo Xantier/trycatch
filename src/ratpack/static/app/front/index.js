@@ -8,6 +8,7 @@ import {Provider} from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {brown100} from 'material-ui/styles/colors';
 
 import reducer from './reducer';
 import sagas from './sagas';
@@ -30,7 +31,7 @@ sagaMiddleware.run(sagas);
 ReactDOM.render(
   <Provider store={store}>
     <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-      <div>
+      <div style={{'backgroundColor': brown100}}>
         <div>
           <Menu/>
         </div>

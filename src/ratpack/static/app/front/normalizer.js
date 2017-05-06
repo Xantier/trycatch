@@ -13,7 +13,28 @@ type Step = {}
 type BackendScenario = {
   steps: Step[]
 }
-
+type BackendRunResponse = {
+  Error: ?string,
+  cause: ?string
+}
+type Status = {
+  success: boolean,
+  error: ?string,
+  errorMessage: ?string
+}
+type NormalizedPayload = {
+  status: Status
+}
+export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedPayload => {
+  if (response[0] && response[0].Error && response[0].Error !== undefined) {
+    return {
+      success: false,
+      error: response[0].Error,
+      errorMessage: response[0].cause
+    };
+  }
+  return {success: true};
+};
 export const normalizeScenarios = (scenarios: BackendScenario[]): Scenario[] => {
   return scenarios.map((it: BackendScenario): Scenario => {
     return it.steps.reduce((acc: Scenario, step: Step): Scenario => {

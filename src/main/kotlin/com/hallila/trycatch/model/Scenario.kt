@@ -58,7 +58,7 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                 .map {
                     when (it.key) {
                         JsonHelpers.REQUEST ->
-                            parseHttpRequest(it.value, httpMethodFromString(it.value.get(JsonHelpers.METHOD).asText()))
+                            parseHttpRequest(it.value, httpMethodFromString(it.value.get(JsonHelpers.METHOD).asText()), JsonHelpers.REQUEST + " " + name)
                         JsonHelpers.INSERT  ->
                             InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
                                 DatabaseResponseExpectation("Done successfully"),

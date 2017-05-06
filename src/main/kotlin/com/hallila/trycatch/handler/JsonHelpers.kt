@@ -26,18 +26,18 @@ object JsonHelpers {
 
 fun tryParseJson(valid: JsonNode, it: JsonNode?, key: String): String = if (valid.get(key).asBoolean()) it?.get(key)?.toString() ?: "{}" else "{}"
 
-fun parseHttpRequest(it: JsonNode, method: Method): JsonAssertionStep {
+fun parseHttpRequest(it: JsonNode, method: Method, name: String = "HTTP Request"): JsonAssertionStep {
     return if (method == Method.GET) {
-        JsonAssertionStep("Individual Step", "{\"empty\":\"empty\"}", JsonExpectation(),
+        JsonAssertionStep(name, "{\"empty\":\"empty\"}", JsonExpectation(),
             Request(method, it.get(JsonHelpers.URL).asText(), toParamsMap(it.get(JsonHelpers.PARAMS) as ArrayNode)))
     } else {
         val valid = it.get(JsonHelpers.VALID_JSON)
-        JsonAssertionStep("Individual Step", tryParseJson(valid, it, JsonHelpers.PAYLOAD), JsonExpectation(tryParseJson(valid, it, JsonHelpers.EXPECTED)),
+        JsonAssertionStep(name, tryParseJson(valid, it, JsonHelpers.PAYLOAD), JsonExpectation(tryParseJson(valid, it, JsonHelpers.EXPECTED)),
             Request(method, it.get(JsonHelpers.URL).asText(), toParamsMap(it.get(JsonHelpers.PARAMS) as ArrayNode)))
     }
 }
 
-fun httpMethodFromString(s: String): Method = Method.values().find({ it.value == s })!!
+fun httpMethodFromString(s: String): Method = Method.values().find({ it.value == s }) ?: Method.GET
 
 fun toParamsMap(params: ArrayNode): Map<String, String> = params.map {
     val KEY = "key"

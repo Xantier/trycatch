@@ -4,7 +4,7 @@ import {call, put} from 'redux-saga/effects';
 import logger from 'loglevel';
 
 import {postJson, getFromUrl} from '../api/jsonApi';
-import {normalizeScenarios} from './normalizer';
+import {normalizeScenarios, normalizeRunPayload} from './normalizer';
 import * as t from './constants';
 import type {State} from './reducer';
 import type {Action} from './actions';
@@ -24,7 +24,7 @@ function* initDb(): void {
   const payload = yield select((state: State): Object => state.active.insert);
   try {
     const response = yield call(postJson('/api/insert'), payload);
-    yield put({type: t.INITIALIZE_DATABASE_SUCCESS, response: JSON.parse(response.text)});
+    yield put({type: t.INITIALIZE_DATABASE_SUCCESS, payload: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: t.INITIALIZE_DATABASE_FAILED, payload: JSON.parse(e.response.text)});
@@ -35,7 +35,7 @@ function* assertDatabaseValues(): void {
   const payload = yield select((state: State): Object => state.active.select);
   try {
     const response = yield call(postJson('/api/select'), {json: payload});
-    yield put({type: t.ASSERT_DATABASE_VALUES_SUCCESS, response: JSON.parse(response.text)});
+    yield put({type: t.ASSERT_DATABASE_VALUES_SUCCESS, payload: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     yield put({type: t.ASSERT_DATABASE_VALUES_FAILED, payload: JSON.parse(e.response.text)});
@@ -69,7 +69,7 @@ function* runScenario(): void {
   const payload = yield scenarioPayload();
   try {
     const response = yield call(postJson('/api/scenario/run'), payload);
-    yield put({type: t.RUN_SCENARIO_SUCCESS, response: JSON.parse(response.text)});
+    yield put({type: t.RUN_SCENARIO_SUCCESS, payload: normalizeRunPayload(JSON.parse(response.text))});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
     logger.error(e.response.text);
