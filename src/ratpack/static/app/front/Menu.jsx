@@ -59,7 +59,7 @@ class Menu extends React.Component {
     />);
     return (
         <div>
-          <Drawer width={350} open={true}>
+          <Drawer width="16%" open={true}>
             <AppBar title="Try-Catch"
                     showMenuIconButton={false}
                     iconElementRight={running ? (<RefreshIndicator size={50} left={250} top={10} status="loading" color={pink600}/>) : null}

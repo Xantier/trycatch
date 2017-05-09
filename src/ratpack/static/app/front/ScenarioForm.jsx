@@ -21,12 +21,13 @@ import JsonComponent from './request/JsonComponent.jsx';
 import RequestComponent from './request/RequestComponent.jsx';
 import RequestResultDisplayingComponent from './request/RequestResultDisplayingComponent.jsx';
 import IndividualStepContainer from './IndividualStepContainer.jsx';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Card, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import Snackbar from 'material-ui/Snackbar';
+import {Toolbar, ToolbarTitle} from 'material-ui/Toolbar';
 import {red300, green200} from 'material-ui/styles/colors';
 
 import TextField from 'material-ui/TextField';
@@ -53,16 +54,14 @@ type Props = {
   notification: Object
 }
 
-const centralStyles = {
-  marginLeft: 350
-};
 const form = (props: Props): React.Element => {
   const {insert} = props;
   return (
-      <div style={centralStyles}>
-
+      <div>
         <Card>
-          <CardHeader title="Scenario Name"/>
+          <Toolbar>
+            <ToolbarTitle text="Test Scenario"/>
+          </Toolbar>
           <CardText>
             <TextField hintText="Scenario Name" floatingLabelText="Enter name for the scenario"
                        value={props.scenarioName}
@@ -73,7 +72,7 @@ const form = (props: Props): React.Element => {
         </Card>
         <Divider/>
 
-        <IndividualStepContainer run={props.postJson} title="Make HTTP Request">
+        <IndividualStepContainer run={props.postJson} title="Make HTTP Request" withActions={true}>
           <RequestComponent {...props} {...props.request}/>
           {props.request && props.request.method !== 'GET' ?
               (<div>
@@ -93,7 +92,7 @@ const form = (props: Props): React.Element => {
         </IndividualStepContainer>
         <Divider/>
 
-        <IndividualStepContainer run={props.initializeDatabase} title="Initialize Database">
+        <IndividualStepContainer run={props.initializeDatabase} title="Initialize Database" withActions={true}>
           <SimpleCard>
             <SqlInput updateFn={props.updateInitializationScript} label="Insert Statement"
                       placeholder="Insert DB insert statement" name={insert.name} query={insert.query}/>
@@ -102,7 +101,7 @@ const form = (props: Props): React.Element => {
         </IndividualStepContainer>
         <Divider/>
 
-        <IndividualStepContainer run={props.assertDatabaseValues} title="Assert Database Values">
+        <IndividualStepContainer run={props.assertDatabaseValues} title="Assert Database Values" withActions={true}>
           <DatabaseInputComponent {...props}/>
         </IndividualStepContainer>
         <RaisedButton onClick={props.saveScenario} label="Save scenario" icon={<ContentSave/>} secondary={true}/>

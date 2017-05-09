@@ -6,7 +6,8 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 type Props = {
   children: React.Element[],
   title: string,
-  run: () => void
+  run: () => void,
+  withActions: boolean
 }
 export default class IndividualStepContainer extends React.Component {
 
@@ -32,9 +33,10 @@ export default class IndividualStepContainer extends React.Component {
             />
             <CardText expandable={true}>
               {this.props.children}
-              <CardActions>
-                <RaisedButton onClick={this.props.run} label="Test Individual Step" icon={<AvPlayArrow/>} primary={true}/>
-              </CardActions>
+              {this.props.withActions ?
+                  <CardActions>
+                    <RaisedButton onClick={this.props.run} label="Test Individual Step" icon={<AvPlayArrow/>} primary={true}/>
+                  </CardActions> : null}
             </CardText>
           </Card>
         </div>

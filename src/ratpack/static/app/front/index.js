@@ -14,6 +14,7 @@ import ReactMaterialUiNotifications from 'react-materialui-notifications';
 import reducer from './reducer';
 import sagas from './sagas';
 import ScenarioForm from './ScenarioForm.jsx';
+import ScenarioResults from './ScenarioResults.jsx';
 import Menu from './Menu.jsx';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -22,36 +23,49 @@ injectTapEventPlugin();
 const sagaMiddleware = saga();
 const logger = createLogger();
 export const store = createStore(
-  reducer,
-  compose(
-    applyMiddleware(sagaMiddleware, logger),
-    window.devToolsExtension ? window.devToolsExtension() : (f: Function) => f
-  ));
+    reducer,
+    compose(
+        applyMiddleware(sagaMiddleware, logger),
+        window.devToolsExtension ? window.devToolsExtension() : (f: Function) => f
+    ));
 sagaMiddleware.run(sagas);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-      <div style={{'backgroundColor': brown100}}>
-        <div>
-          <Menu/>
+    <Provider store={store}>
+      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <div style={{'backgroundColor': brown100}}>
+
+          <div>
+            <Menu/>
+          </div>
+
+          <div id="pagewrap">
+            <section id="middle">
+              <div>
+                <ScenarioForm />
+              </div>
+            </section>
+            <section id="right">
+              <div>
+                <ScenarioResults />
+              </div>
+            </section>
+          </div>
+
+          <ReactMaterialUiNotifications
+              desktop={true}
+              transitionName={{
+                leave: 'dummy',
+                leaveActive: 'fadeOut',
+                appear: 'dummy',
+                appearActive: 'zoomInUp'
+              }}
+              transitionAppear={true}
+              transitionLeave={true}
+          />
         </div>
-        <div>
-          <ScenarioForm />
-        </div>
-        <ReactMaterialUiNotifications
-            desktop={true}
-            transitionName={{
-              leave: 'dummy',
-              leaveActive: 'fadeOut',
-              appear: 'dummy',
-              appearActive: 'zoomInUp'
-            }}
-            transitionAppear={true}
-            transitionLeave={true}
-        />
-      </div>
-    </MuiThemeProvider>
-  </Provider>,
-  document.getElementById('container')
-);
+      </MuiThemeProvider>
+    </Provider>,
+    document.getElementById('container')
+)
+;

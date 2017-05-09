@@ -74,7 +74,8 @@ const init = {
     open: false,
     message: '',
     isError: false
-  }
+  },
+  results: []
 };
 
 function updateHeader(params: Object[], action: Object): Object {
