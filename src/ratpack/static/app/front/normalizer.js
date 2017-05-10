@@ -36,7 +36,14 @@ export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedP
       stepName: step.value.name
     };
   }
-  return {success: true};
+  return response.map((it) => {
+    const result = it.result;
+    return {
+      stepIdentifier: it.identifier,
+      success: result.right,
+      response: result.right ? result.r : result.l
+    };
+  });
 };
 export const normalizeScenarios = (scenarios: BackendScenario[]): Scenario[] => {
   return scenarios.map((it: BackendScenario): Scenario => {

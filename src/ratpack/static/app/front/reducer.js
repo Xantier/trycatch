@@ -39,6 +39,7 @@ export type State = {
 
 const init = {
   active: {
+    runs: 0,
     name: '',
     request: {
       validJson: {
@@ -147,13 +148,25 @@ const reducer = (state: State = init, action: Object): State => {
     case t.POST_JSON_FAILED:
       return {...state, active: {...state.active, requestResponse: action.payload}};
     case t.INITIALIZE_DATABASE_SUCCESS:
-      return {...state, active: {...state.active, insert: {...state.active.insert, databaseInsertResponse: action.payload}}};
+      return {
+        ...state,
+        active: {...state.active, insert: {...state.active.insert, databaseInsertResponse: action.payload}}
+      };
     case t.INITIALIZE_DATABASE_FAILED:
-      return {...state, active: {...state.active, insert: {...state.active.insert, databaseInsertResponse: action.payload}}};
+      return {
+        ...state,
+        active: {...state.active, insert: {...state.active.insert, databaseInsertResponse: action.payload}}
+      };
     case t.ASSERT_DATABASE_VALUES_SUCCESS:
-      return {...state, active: {...state.active, select: {...state.active.select, databaseAssertionResponse: action.payload}}};
+      return {
+        ...state,
+        active: {...state.active, select: {...state.active.select, databaseAssertionResponse: action.payload}}
+      };
     case t.ASSERT_DATABASE_VALUES_FAILED:
-      return {...state, active: {...state.active, select: {...state.active.select, databaseAssertionResponse: action.payload}}};
+      return {
+        ...state,
+        active: {...state.active, select: {...state.active.select, databaseAssertionResponse: action.payload}}
+      };
     case t.LOAD_SCENARIOS:
       return {...state, loading: true};
     case t.LOAD_SCENARIOS_FAILED:
@@ -167,19 +180,19 @@ const reducer = (state: State = init, action: Object): State => {
     case t.SAVE_SCENARIO_SUCCESS:
       return {
         ...state, scenarios: state.scenarios.find((it: Scenario) => it.name === action.response.name) === null ?
-            [...state.scenarios, normalize([action.response])]
-            : state.scenarios.map((it: Scenario): Scenario => {
-              if (it.name === action.response.name) {
-                return normalize([action.response])[0];
-              }
-              return it;
-            })
+          [...state.scenarios, normalize([action.response])]
+          : state.scenarios.map((it: Scenario): Scenario => {
+            if (it.name === action.response.name) {
+              return normalize([action.response])[0];
+            }
+            return it;
+          })
       };
     case t.RUN_SCENARIO:
     case t.SELECT_AND_RUN_SCENARIO:
-      return {...state, running: true};
+      return {...state, running: true, active: {...state.active, runs: state.active.runs + 1}};
     case t.RUN_SCENARIO_SUCCESS:
-      return {...state, running: false, status: action.payload};
+      return {...state, running: false, status: action.payload, results: action.payload};
     case t.RUN_SCENARIO_FAILED:
       return {...state, running: false, status: action.payload};
     case t.ADD_NOTIFICATION:

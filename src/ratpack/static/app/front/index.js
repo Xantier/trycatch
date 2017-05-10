@@ -9,7 +9,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {brown100} from 'material-ui/styles/colors';
-import ReactMaterialUiNotifications from 'react-materialui-notifications';
 
 import reducer from './reducer';
 import sagas from './sagas';
@@ -52,17 +51,6 @@ ReactDOM.render(
             </section>
           </div>
 
-          <ReactMaterialUiNotifications
-              desktop={true}
-              transitionName={{
-                leave: 'dummy',
-                leaveActive: 'fadeOut',
-                appear: 'dummy',
-                appearActive: 'zoomInUp'
-              }}
-              transitionAppear={true}
-              transitionLeave={true}
-          />
         </div>
       </MuiThemeProvider>
     </Provider>,
