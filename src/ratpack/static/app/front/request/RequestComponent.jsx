@@ -58,7 +58,7 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
       <div>
         <div>
           <SelectField
-              style={{float: 'left', width: '23%', marginRight: '1%'}}
+              style={{float: 'left', width: '18%', marginRight: '2%'}}
               value={method} floatingLabelText="HTTP Method"
               onChange={(_: Object, __: string, value: string) => {
                 updateRequest('method', value);
@@ -69,7 +69,7 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
             <MenuItem value="DELETE" primaryText="DELETE"/>
           </SelectField>
           <TextField
-              style={{float: 'left', width: '76%'}}
+              style={{float: 'left', width: '80%'}}
               hintText="https://jsonplaceholder.typicode.com/posts/1"
               floatingLabelText="URL"
               value={url}

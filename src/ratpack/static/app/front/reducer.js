@@ -37,6 +37,12 @@ export type State = {
   notification: Notification
 };
 
+export type Result = {
+  stepIdentifier: string,
+  success: boolean,
+  response: Object
+};
+
 const init = {
   active: {
     runs: 0,
@@ -76,7 +82,7 @@ const init = {
     message: '',
     isError: false
   },
-  results: []
+  results: {}
 };
 
 function updateHeader(params: Object[], action: Object): Object {
@@ -190,11 +196,20 @@ const reducer = (state: State = init, action: Object): State => {
       };
     case t.RUN_SCENARIO:
     case t.SELECT_AND_RUN_SCENARIO:
-      return {...state, running: true, active: {...state.active, runs: state.active.runs + 1}};
+      return {...state, running: true, active: {...state.active}};
     case t.RUN_SCENARIO_SUCCESS:
-      return {...state, running: false, status: action.payload, results: [...state.results, {...action.payload, runNumber: state.active.runs}]};
     case t.RUN_SCENARIO_FAILED:
-      return {...state, running: false, status: action.payload, results: [...state.results, {...action.payload, runNumber: state.active.runs}]};
+      const resultContainer = state.results[action.scenario.name];
+      const results = resultContainer ? [...resultContainer, {[resultContainer.length]: action.payload}] : [{0: action.payload}];
+      return {
+        ...state,
+        running: false,
+        status: action.payload,
+        results: {
+          ...state.results,
+          [action.scenario.name]: results
+        }
+      };
     case t.ADD_NOTIFICATION:
       return {...state, notification: {open: true, message: action.payload, isError: action.isError}};
     case t.CLOSE_NOTIFICATION:

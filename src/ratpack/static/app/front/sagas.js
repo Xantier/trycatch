@@ -90,10 +90,10 @@ function* runScenario(): void {
     notification('Running Scenario');
     const response = yield call(postJson('/api/scenario/run'), payload);
     notification('Scenario run completed', false);
-    yield put({type: t.RUN_SCENARIO_SUCCESS, payload: normalizeRunPayload(JSON.parse(response.text))});
+    yield put({type: t.RUN_SCENARIO_SUCCESS, payload: normalizeRunPayload(JSON.parse(response.text)), scenario: payload});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);
-    yield put({type: t.RUN_SCENARIO_FAILED, payload: extractErrorResponse(e)});
+    yield put({type: t.RUN_SCENARIO_FAILED, payload: normalizeRunPayload(extractErrorResponse(e)), scenario: payload});
   }
 }
 

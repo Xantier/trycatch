@@ -10,16 +10,19 @@ import RunResult from './RunResult.jsx';
 import IndividualStepContainer from './IndividualStepContainer.jsx';
 import {loadScenarios, selectScenario, newScenario, selectAndRunScenario} from './actions';
 
-type Result = {};
+type Result = {
+  number: number,
+  value: Object
+}
 
 class ScenarioResults extends React.Component {
 
   render(): React.Element {
     const {active, results, running, status} = this.props;
-    const ResultComponents = results.map((it: Result): React.Element => {
+    const ResultComponents = Object.keys(results).map((key: number): React.Element => {
       return (
-          <IndividualStepContainer title={active.name + ' run ' + it.runNumber} withActions={false}>
-            <RunResult key={it.identifier} {...it}/>
+          <IndividualStepContainer key={results[key].identifier + key} title={active.name + ' run ' + key} withActions={false}>
+            <RunResult result={results[key]} number={key}/>
           </IndividualStepContainer>);
     });
     return (
@@ -44,7 +47,7 @@ const ResultConnector = connect(
     function mapStateToProps(state: State): Object {
       return {
         active: state.active,
-        results: state.results,
+        results: state.results[state.active.name] || [],
         running: state.running,
         status: state.status
       };

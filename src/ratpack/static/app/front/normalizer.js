@@ -1,4 +1,5 @@
 import type Scenario from './reducer';
+import type Result from './reducer';
 
 const INSERT = 'INSERT';
 const REQUEST = 'REQUEST';
@@ -23,9 +24,11 @@ type Status = {
   errorMessage: ?string,
   stepName: ?string
 }
+
 type NormalizedPayload = {
   status: Status
 }
+
 export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedPayload => {
   if (response[0] && response[0].Error && response[0].Error !== undefined) {
     const step = response[0].step;
@@ -36,7 +39,7 @@ export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedP
       stepName: step.value.name
     };
   }
-  return response.map((it) => {
+  return response.map((it: Result) => {
     const result = it.result;
     return {
       stepIdentifier: it.identifier,
