@@ -32,57 +32,60 @@ export default ({updateRequest, method, url, params}: Props): React.Element => {
   const VALUE = 'header-value';
   const DELETE = 'header-delete';
   const headers = params
-    .sort((a: Object, b: Object): number => a.id - b.id)
-    .map((it: HeaderMap): React.Element => {
-      return (
-        <div key={it.id}>
-          <AutoComplete
-            searchText={it.key} hintText="Key" dataSource={httpHeaders}
-            onNewRequest={(value: string) => {
-              updateRequest(KEY, value, it.id);
-            }}/>
-          <AutoComplete
-            searchText={it.value} hintText="Value"
-            dataSource={httpHeaders}
-            onNewRequest={(value: string) => {
-              updateRequest(VALUE, value, it.id);
-            }}/>
-          <IconButton tooltip="Delete extra header" onTouchTap={() => {
-            updateRequest(DELETE, '', it.id);
-          }}>
-          <FontIcon className="material-icons">delete</FontIcon>
-          </IconButton>
-        </div>);
-    });
+      .sort((a: Object, b: Object): number => a.id - b.id)
+      .map((it: HeaderMap): React.Element => {
+        return (
+            <div key={it.id}>
+              <AutoComplete
+                  searchText={it.key} hintText="Key" dataSource={httpHeaders}
+                  onNewRequest={(value: string) => {
+                    updateRequest(KEY, value, it.id);
+                  }}/>
+              <AutoComplete
+                  searchText={it.value} hintText="Value"
+                  dataSource={httpHeaders}
+                  onNewRequest={(value: string) => {
+                    updateRequest(VALUE, value, it.id);
+                  }}/>
+              <IconButton tooltip="Delete extra header" onTouchTap={() => {
+                updateRequest(DELETE, '', it.id);
+              }}>
+                <FontIcon className="material-icons">delete</FontIcon>
+              </IconButton>
+            </div>);
+      });
   return (
-    <div>
-      <SelectField value={method} floatingLabelText="HTTP Method"
-                   onChange={(_: Object, __: string, value: string) => {
-                     updateRequest('method', value);
-                   }}>
-        <MenuItem value="GET" primaryText="GET"/>
-        <MenuItem value="POST" primaryText="POST"/>
-        <MenuItem value="PUT" primaryText="PUT"/>
-        <MenuItem value="DELETE" primaryText="DELETE"/>
-      </SelectField>
-      <Divider/>
-      <TextField
-        hintText="https://jsonplaceholder.typicode.com/posts/1"
-        floatingLabelText="URL"
-        value={url}
-        onChange={(e: Event) => {
-          updateRequest('url', e.target.value);
-        }}/>
-      <Divider />
-      <Subheader>Additional headers</Subheader>
-      {headers}
-      <FloatingActionButton mini={true} style={actionButtonStyle}
-                            onClick={() => {
-                              updateRequest('header-add');
-                            }}>
-        <ContentAdd />
-      </FloatingActionButton>
-    </div>
+      <div>
+        <div>
+          <SelectField
+              style={{float: 'left', width: '23%', marginRight: '1%'}}
+              value={method} floatingLabelText="HTTP Method"
+              onChange={(_: Object, __: string, value: string) => {
+                updateRequest('method', value);
+              }}>
+            <MenuItem value="GET" primaryText="GET"/>
+            <MenuItem value="POST" primaryText="POST"/>
+            <MenuItem value="PUT" primaryText="PUT"/>
+            <MenuItem value="DELETE" primaryText="DELETE"/>
+          </SelectField>
+          <TextField
+              style={{float: 'left', width: '76%'}}
+              hintText="https://jsonplaceholder.typicode.com/posts/1"
+              floatingLabelText="URL"
+              value={url}
+              onChange={(e: Event) => {
+                updateRequest('url', e.target.value);
+              }}/>
+        </div>
+        <Subheader>Additional headers</Subheader>
+        {headers}
+        <FloatingActionButton mini={true} style={actionButtonStyle}
+                              onClick={() => {
+                                updateRequest('header-add');
+                              }}>
+          <ContentAdd />
+        </FloatingActionButton>
+      </div>
   );
 };
 

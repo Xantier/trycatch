@@ -180,21 +180,21 @@ const reducer = (state: State = init, action: Object): State => {
     case t.SAVE_SCENARIO_SUCCESS:
       return {
         ...state, scenarios: state.scenarios.find((it: Scenario) => it.name === action.response.name) === null ?
-          [...state.scenarios, normalize([action.response])]
-          : state.scenarios.map((it: Scenario): Scenario => {
-            if (it.name === action.response.name) {
-              return normalize([action.response])[0];
-            }
-            return it;
-          })
+            [...state.scenarios, normalize([action.response])]
+            : state.scenarios.map((it: Scenario): Scenario => {
+              if (it.name === action.response.name) {
+                return normalize([action.response])[0];
+              }
+              return it;
+            })
       };
     case t.RUN_SCENARIO:
     case t.SELECT_AND_RUN_SCENARIO:
       return {...state, running: true, active: {...state.active, runs: state.active.runs + 1}};
     case t.RUN_SCENARIO_SUCCESS:
-      return {...state, running: false, status: action.payload, results: action.payload};
+      return {...state, running: false, status: action.payload, results: [...state.results, {...action.payload, runNumber: state.active.runs}]};
     case t.RUN_SCENARIO_FAILED:
-      return {...state, running: false, status: action.payload};
+      return {...state, running: false, status: action.payload, results: [...state.results, {...action.payload, runNumber: state.active.runs}]};
     case t.ADD_NOTIFICATION:
       return {...state, notification: {open: true, message: action.payload, isError: action.isError}};
     case t.CLOSE_NOTIFICATION:
