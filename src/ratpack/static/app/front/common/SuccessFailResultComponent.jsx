@@ -1,20 +1,24 @@
 import React from 'react';
 
 import {Card, CardText, CardTitle} from 'material-ui/Card';
-import {red300} from 'material-ui/styles/colors';
+import {red500, green500} from 'material-ui/styles/colors';
 
-export default ({result, message}: Props): React.Element => {
+export default ({result, actual}: Props): React.Element => {
   return (
       <div>
         {
-          result ?
+          result === 'success' ?
               (<Card>
-                <CardTitle title="Failed to complete step" titleColor={red300}/>
+                <CardTitle title="Completed Successfully" titleColor={green500}/>
                 <CardText>
-                  <div>{message}</div>
+                  <div>{actual}</div>
                 </CardText>
-              </Card>) :
-              (null)
+              </Card>) : (<Card>
+            <CardTitle title="Failed to complete step" titleColor={red500}/>
+            <CardText>
+              <div>{actual}</div>
+            </CardText>
+          </Card>)
         }
       </div>
   );

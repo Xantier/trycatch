@@ -77,7 +77,7 @@ export default class RequestResultDisplayingComponent extends React.Component {
 
   render(): React.Element {
     if (this.props.result === 'failure') {
-      return <SuccessFailResultComponent {...this.props} message={RequestResultDisplayingComponent.constructErrorMsg(this.props.actual, this.props)}/>;
+      return <SuccessFailResultComponent {...this.props} actual={RequestResultDisplayingComponent.constructErrorMsg(this.props.actual, this.props)}/>;
     }
     let icon;
     if (this.props.actual) {

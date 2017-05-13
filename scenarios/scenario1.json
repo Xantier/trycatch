@@ -11,9 +11,7 @@
     "request" : {
       "method" : "GET",
       "path" : "http://jsonplaceholder.typicode.com/posts/1",
-      "params" : {
-        "API-Key" : "foo"
-      }
+      "params" : { }
     },
     "type" : "REQUEST"
   }, {
@@ -27,7 +25,7 @@
     "name" : "select scenario1",
     "statement" : "SELECT name FROM cities where name = 'new City2'",
     "expectation" : {
-      "value" : [ "new City2\nnew City2\nnew City2\nnew City2" ]
+      "value" : [ "new City2" ]
     },
     "type" : "SELECT"
   } ]
