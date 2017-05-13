@@ -1,8 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStore, applyMiddleware, compose} from 'redux';
-import saga from 'redux-saga';
-import createLogger from 'redux-logger';
 import {Provider} from 'react-redux';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -10,24 +7,14 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {brown100} from 'material-ui/styles/colors';
 
-import reducer from '../services/reducer';
-import sagas from '../services/sagas';
 import ScenarioForm from './ScenarioForm.jsx';
 import ScenarioResults from './results/ScenarioResults.jsx';
 import Menu from './Menu.jsx';
+import {store} from '../services/store';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 injectTapEventPlugin();
-const sagaMiddleware = saga();
-const logger = createLogger();
-export const store = createStore(
-    reducer,
-    compose(
-        applyMiddleware(sagaMiddleware, logger),
-        window.devToolsExtension ? window.devToolsExtension() : (f: Function) => f
-    ));
-sagaMiddleware.run(sagas);
 
 ReactDOM.render(
     <Provider store={store}>
@@ -55,5 +42,4 @@ ReactDOM.render(
       </MuiThemeProvider>
     </Provider>,
     document.getElementById('container')
-)
-;
+);

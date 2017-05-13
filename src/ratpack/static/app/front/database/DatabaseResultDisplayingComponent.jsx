@@ -4,7 +4,7 @@ import FontIcon from 'material-ui/FontIcon';
 import {green500, red500} from 'material-ui/styles/colors';
 import {Table, TableBody, TableRow, TableRowColumn} from 'material-ui/Table';
 
-export default ({expectation, result, actual}: Props): React.Element => {
+export default ({result, actual}: Props): React.Element => {
   const failure = result === 'failure';
   const actualTable = actual ? actual.split('\n').map((item: string, key: string): React.Element => {
     return (

@@ -24,9 +24,6 @@
   "scripts": {
     "start": "node app/run.js",
     "build": "webpack --config webpack.production.config.js",
-    "test": "./node_modules/.bin/mocha --reporter spec --compilers js:babel-core/register -r jsdom-global/register './test/**/*.js' ",
-    "test-watch": "./node_modules/.bin/mocha --reporter spec --compilers js:babel-core/register -r jsdom-global/register --watch './test/**/*.js' ",
-    "test-cov": "./node_modules/.bin/babel-node ./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha -- -R spec -r jsdom-global/register './test/**/*.js'",
     "lint": "./node_modules/.bin/eslint -c .eslintrc -o ./reports/eslint.xml -f checkstyle app/**/*",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },

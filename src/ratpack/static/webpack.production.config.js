@@ -33,7 +33,7 @@ module.exports = {
   output: {
     path: buildPath,
     filename: '[name].js',
-    publicPath: '/'
+    publicPath: '/static/dist/'
   },
 
   resolve: {
@@ -52,9 +52,10 @@ module.exports = {
    */
   module: {
     loaders: [
+      {test: /\.jsx?$/, exclude: /node_modules/, loader: 'react-hot-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
-      {test: /\.css$/, exclude: /node_modules/, loader: "style-loader!css-loader"},
-      {test: /\.scss$/, exclude: /node_modules/, loader: "style-loader!css-loader!sass-loader"},
+      {test: /\.css$/, exclude: /node_modules/, loader: 'style-loader!css-loader'},
+      {test: /\.scss$/, exclude: /node_modules/, loader: 'style-loader!css-loader!sass-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'eslint-loader'}
     ]
   },

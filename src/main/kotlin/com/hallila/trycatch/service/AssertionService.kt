@@ -11,8 +11,8 @@ object AssertionService {
     val FAILED_QUERY_RESULT = "Failed to parse JSON response from API"
 
     fun assertEquals(expected: List<String>, actual: List<String>): Either<AssertionResult<String>, List<String>> {
-        val exp = expected.fold("", { s1, s2 -> "$s1\n$s2" })
-        val act = actual.fold("", { s1, s2 -> "$s1\n$s2" })
+        val exp = expected.fold("", { s1, s2 -> "$s1$s2\n" }).removeSuffix("\n")
+        val act = actual.fold("", { s1, s2 -> "$s1$s2\n" }).removeSuffix("\n")
         if (expected == actual || exp == act) {
             return Either.Right<AssertionResult<String>, List<String>>(actual)
         } else {
@@ -78,7 +78,7 @@ object AssertionService {
         }
 
     fun assertEquals(expected: List<String>, actual: String): Either<AssertionResult<String>, String> {
-        val exp = expected.fold("", { s1, s2 -> "$s1\n$s2" })
+        val exp = expected.fold("", { s1, s2 -> "$s1$s2\n" }).removeSuffix("\n")
         if (exp == actual) {
             return Either.Right<AssertionResult<String>, String>(actual)
         } else {

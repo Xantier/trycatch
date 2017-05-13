@@ -21,20 +21,16 @@ data class Select(val expected: List<String>, val statement: String)
     override fun handle(ctx: Context) {
         ctx.parse(Jackson.jsonNode()).map {
             val json = it.get("json")
-            val expectation = try {
-                val a: ArrayNode = json.get("expectation") as ArrayNode
-                a.map { it.asText()}
-            } catch (e: Exception) {
-                listOf("")
-            }
+            val exp = json.get(JsonHelpers.EXPECTATION)
+            val expectation = (exp as? ArrayNode)?.map { it.asText() } ?: listOf(exp.asText())
             Select(expectation, json.get("query").asText())
         }.onError { e ->
             LOG.warn("Failed to parse JSON", e)
             ctx.response.status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()).send("Failed to Parse JSON: ${e.message}")
         }.then { json ->
             RxRatpack.promise(databaseService.select(json.statement)
-                .fold("", { s1, s2 -> "$s1\n$s2" })
-                .map { AssertionService.assertEquals(json.expected, it) }
+                .fold("", { s1, s2 -> "$s1$s2\n" })
+                .map { AssertionService.assertEquals(json.expected, it.removeSuffix("\n")) }
             ).onError { e ->
                 LOG.warn("Failed to make request to the database", e)
                 ctx.response.status(HttpResponseStatus.FAILED_DEPENDENCY.code()).send(

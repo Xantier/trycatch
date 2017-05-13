@@ -18,16 +18,16 @@
     "type" : "REQUEST"
   }, {
     "name" : "insert scenario1",
-    "statement" : "INSERT INTO cities (name) values ('new City3')",
+    "statement" : "INSERT INTO cities (name) values ('new City2')",
     "expectation" : {
       "value" : "Insert statement executed. Response: 1"
     },
     "type" : "INSERT"
   }, {
     "name" : "select scenario1",
-    "statement" : "SELECT * FROM cities where name = 'new City3'",
+    "statement" : "SELECT name FROM cities where name = 'new City2'",
     "expectation" : {
-      "value" : [ "93,new City 3" ]
+      "value" : [ "new City2\nnew City2\nnew City2\nnew City2" ]
     },
     "type" : "SELECT"
   } ]

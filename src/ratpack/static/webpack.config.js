@@ -61,8 +61,8 @@ module.exports = {
     loaders: [
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'react-hot-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
-      {test: /\.css$/, exclude: /node_modules/, loader: "style-loader!css-loader"},
-      {test: /\.scss$/, exclude: /node_modules/, loader: "style-loader!css-loader!sass-loader"},
+      {test: /\.css$/, exclude: /node_modules/, loader: 'style-loader!css-loader'},
+      {test: /\.scss$/, exclude: /node_modules/, loader: 'style-loader!css-loader!sass-loader'},
       {test: /\.jsx?$/, exclude: /node_modules/, loader: 'eslint-loader'}
     ]
   },
@@ -86,6 +86,15 @@ module.exports = {
     // HotModuleReplacement runs on our dev server and hot swap new code
     // when changes to the codebase is made during development
     new Webpack.HotModuleReplacementPlugin(),
+    new Webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"development"'
+      },
+      __CLIENT__: true,
+      __SERVER__: false,
+      __DEVELOPMENT__: false,
+      __DEVTOOLS__: false
+    }),
 
     // NoErrors plugin makes sure that build process is run only when
     // there are no errors in the code.

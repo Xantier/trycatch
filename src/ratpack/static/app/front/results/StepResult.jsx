@@ -1,12 +1,11 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
 import {List, ListItem} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+import {Table, TableBody, TableRow, TableRowColumn} from 'material-ui/Table';
 import Subheader from 'material-ui/Subheader';
-import {pink600, red300, teal300, green500, red500} from 'material-ui/styles/colors';
+import {green500, red500} from 'material-ui/styles/colors';
 
 const styles = {
   headline: {
@@ -37,13 +36,36 @@ const parseActualForDisplay = (actual: any): string => {
   }
   return actual;
 };
+const drawSelectStep = (values: string): string => {
+  if (values && (Array.isArray(values) || typeof values === 'string')) {
+    const split = typeof values === 'string' ? values.split('\n') : values;
+    const actualTable = split.length ? split.map((item: string, key: string): React.Element => {
+      return (
+          <TableRow key={key}>{item.split(',').map((i: string, k: string): React.Element =>
+              <TableRowColumn key={k}>{i}</TableRowColumn>)}
+          </TableRow>);
+    }) : (<TableRow>
+      <TableRowColumn >No Results</TableRowColumn>
+    </TableRow>);
+    return (
+        <Table selectable={false}>
+          <TableBody displayRowCheckbox={false} preScanRows={false}>
+            {actualTable}
+          </TableBody>
+        </Table>);
+  }
+  return values;
+};
 
 export default ({result}: Props): React.Element => {
+  const isSelectStep = result.stepIdentifier.substr(0, 6) === 'select';
+
   const response = result.response;
   const actual = result.success ? response : parseErroredContent(response);
   const icon = result.success ?
       <FontIcon className="material-icons" color={green500}>done</FontIcon>
       : <FontIcon className="material-icons" color={red500}>error</FontIcon>;
+  const responseContent = actual.content ? actual.content : parseActualForDisplay(actual);
   return (
       <div>
         <List>
@@ -52,14 +74,14 @@ export default ({result}: Props): React.Element => {
               (<ListItem children={
                 <div key="1">
                   <h4 style={styles}>EXPECTED</h4>
-                  <div>{response.expected}<br/></div>
+                  <div>{isSelectStep ? drawSelectStep(response.expected) : response.expected}<br/></div>
                 </div>
               }
               />) : null}
           <ListItem children={
             <div key="2">
               <h4 style={styles}>RESPONSE</h4>
-              <div>{actual.content ? actual.content : parseActualForDisplay(actual)}<br/></div>
+              <div>{isSelectStep ? drawSelectStep(responseContent) : responseContent}<br/></div>
             </div>
           }
           />

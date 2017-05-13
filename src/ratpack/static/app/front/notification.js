@@ -1,4 +1,4 @@
-import {store} from './index';
+import {store} from '../services/store';
 import * as t from '../services/constants';
 
 type Action = {

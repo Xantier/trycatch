@@ -7,4 +7,3 @@
 *.log
 *.log.gz
 node_modules
-dist
