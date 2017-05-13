@@ -1,45 +1,43 @@
 import React from 'react';
 
-import {resultStyle} from '../styles';
+import FontIcon from 'material-ui/FontIcon';
+import {green500, red500} from 'material-ui/styles/colors';
 import {Table, TableBody, TableRow, TableRowColumn} from 'material-ui/Table';
-import SuccessFailResultComponent from '../SuccessFailResultComponent.jsx';
 
-export default ({expectation, result, actual, message}: Props): React.Element => {
-  if (result !== 'failure') {
-    const expectedJsx = expectation !== '' ? (<div>
-      <h2>Expected</h2>
-    </div>) : null;
-    const actualTable = actual.split('\n').map((item: string, key: string): React.Element => {
-      return (
-          <TableRow key={key}>{item.split(',').map((i: string, k: string): React.Element =>
-              <TableRowColumn key={k}>{i}</TableRowColumn>)}
-          </TableRow>);
-    });
+export default ({expectation, result, actual}: Props): React.Element => {
+  const failure = result === 'failure';
+  const actualTable = actual ? actual.split('\n').map((item: string, key: string): React.Element => {
     return (
+        <TableRow key={key}>{item.split(',').map((i: string, k: string): React.Element =>
+            <TableRowColumn key={k}>{i}</TableRowColumn>)}
+        </TableRow>);
+  }) : (<TableRow>
+    <TableRowColumn >No Results</TableRowColumn>
+  </TableRow>);
+  return (
+      <div>
         <div>
           <div>
-            {expectedJsx}
-            <div>
-              <h2>Actual</h2>
-            </div>
-            <Table selectable={false}>
-              <TableBody displayRowCheckbox={false} preScanRows={false}>
-                {actualTable}
-              </TableBody>
-            </Table>
-            {
-              expectation !== '' ?
-                  (<div style={resultStyle(result)}>
-                    <h4>Test Result</h4>
-                    <span>{result}</span>
-                  </div>) :
-                  (<div>
-                    <h4>No expectation defined</h4>
-                  </div>)
-            }
+            <h2>Response</h2>
           </div>
+          {!failure ?
+              (<div>
+                <h4>
+                  <FontIcon className="material-icons" color={green500}>done</FontIcon> Matches expectation
+                </h4>
+              </div>)
+              : (<div>
+                <h4>
+                  <FontIcon className="material-icons" color={red500}>error</FontIcon> Does not match expectation
+                </h4>
+              </div>)
+          }
+          <Table selectable={false}>
+            <TableBody displayRowCheckbox={false} preScanRows={false}>
+              {actualTable}
+            </TableBody>
+          </Table>
         </div>
-    );
-  }
-  return <SuccessFailResultComponent result={result} message={message}/>;
+      </div>
+  );
 };

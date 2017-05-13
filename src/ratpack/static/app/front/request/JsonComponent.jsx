@@ -1,7 +1,7 @@
 import React from 'react';
 import JsonTextArea from './JsonTextArea.jsx';
 import PrettyJsonComponent from './PrettyJsonComponent.jsx';
-import ExpandableCard from '../ExpandableCard.jsx';
+import ExpandableCard from '../common/ExpandableCard.jsx';
 
 export default (props: Props): React.Element => {
   if (props.isRequest) {

@@ -6,6 +6,7 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 type Props = {
   children: React.Element[],
   title: string,
+  avatar: React.Element,
   run: () => void,
   withActions: boolean
 }
@@ -27,6 +28,7 @@ export default class IndividualStepContainer extends React.Component {
         <div>
           <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
             <CardHeader
+                avatar={this.props.avatar}
                 title={this.props.title}
                 actAsExpander={true}
                 showExpandableButton={true}

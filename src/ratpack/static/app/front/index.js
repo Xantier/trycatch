@@ -10,10 +10,10 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {brown100} from 'material-ui/styles/colors';
 
-import reducer from './reducer';
-import sagas from './sagas';
+import reducer from '../services/reducer';
+import sagas from '../services/sagas';
 import ScenarioForm from './ScenarioForm.jsx';
-import ScenarioResults from './ScenarioResults.jsx';
+import ScenarioResults from './results/ScenarioResults.jsx';
 import Menu from './Menu.jsx';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';

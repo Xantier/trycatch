@@ -2,6 +2,7 @@ import * as t from './constants';
 import {normalizeScenarios as normalize} from './normalizer';
 
 export type Request = {
+  enabled: boolean,
   payload: string,
   expectation: string,
   validJson: Object[],
@@ -11,6 +12,7 @@ export type Request = {
 }
 
 export type SqlInputType = {
+  enabled: boolean,
   query: string,
   expectation: string
 }
@@ -45,9 +47,9 @@ export type Result = {
 
 const init = {
   active: {
-    runs: 0,
     name: '',
     request: {
+      enabled: true,
       validJson: {
         payload: true,
         expectation: true
@@ -61,10 +63,12 @@ const init = {
       params: []
     },
     select: {
+      enabled: true,
       query: '',
       expectation: ''
     },
     insert: {
+      enabled: true,
       query: '',
       expectation: ''
     }
@@ -72,11 +76,11 @@ const init = {
   scenarios: [],
   loading: false,
   running: false,
-  status: {
+  status: [{
     success: true,
     error: null,
     errorMessage: null
-  },
+  }],
   notification: {
     open: false,
     message: '',

@@ -6,7 +6,7 @@ import logger from 'loglevel';
 import {postJson, getFromUrl} from '../api/jsonApi';
 import {normalizeScenarios, normalizeRunPayload} from './normalizer';
 import * as t from './constants';
-import notification from './notification';
+import notification from '../front/notification';
 import type {State} from './reducer';
 
 const extractErrorResponse = (e: Object): Object => {
@@ -51,7 +51,7 @@ function* assertDatabaseValues(): void {
   try {
     notification('Asserting Database data');
     const response = yield call(postJson('/api/select'), {json: payload});
-    notification('Database asserition call succeeded', false);
+    notification('Database assertion call succeeded', false);
     yield put({type: t.ASSERT_DATABASE_VALUES_SUCCESS, payload: JSON.parse(response.text)});
   } catch (e) {
     logger.error('Failed to post JSON. Error: ' + e);

@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import type {State, Scenario} from './reducer';
+import type {State, Scenario} from '../services/reducer';
 
 import React from 'react';
 import Drawer from 'material-ui/Drawer';
@@ -13,9 +13,9 @@ import {pink600, red300, teal300} from 'material-ui/styles/colors';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 
-import IconButtonElement from './IconButtonElement.jsx';
-import SelectableList from './SelectableList.jsx';
-import {loadScenarios, selectScenario, newScenario, selectAndRunScenario} from './actions';
+import IconButtonElement from './common/IconButtonElement.jsx';
+import SelectableList from './common/SelectableList.jsx';
+import {loadScenarios, selectScenario, newScenario, selectAndRunScenario} from '../services/actions';
 type Props = {
   newScenario: () => void,
   loadScenarios: () => void,
@@ -43,6 +43,7 @@ class Menu extends React.Component {
 
   render(): React.Element {
     const {scenarios, loading, running, status} = this.props;
+    const success = status.every((it: Object) => it.success);
     const scenarioComponents = scenarios.map((it: Scenario): MenuItem[] => {
       return (
           <ListItem primaryText={it.name} key={it.name} value={it.name} onTouchTap={() => {
@@ -63,7 +64,7 @@ class Menu extends React.Component {
             <AppBar title="Try-Catch"
                     showMenuIconButton={false}
                     iconElementRight={running ? (<RefreshIndicator size={50} left={250} top={10} status="loading" color={pink600}/>) : null}
-                    style={{'backgroundColor': status.success ? teal300 : red300}}
+                    style={{'backgroundColor': success ? teal300 : red300}}
             />
             <List>
               <ListItem key="new" onTouchTap={() => {

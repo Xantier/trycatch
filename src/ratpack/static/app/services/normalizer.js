@@ -29,7 +29,7 @@ type NormalizedPayload = {
   status: Status
 }
 
-export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedPayload => {
+export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedPayload[] => {
   if (response[0] && response[0].Error && response[0].Error !== undefined) {
     const step = response[0].step;
     return {
@@ -39,7 +39,7 @@ export const normalizeRunPayload = (response: BackendRunResponse[]): NormalizedP
       stepName: step.value.name
     };
   }
-  return response.map((it: Result) => {
+  return response.map((it: Result): NormalizedPayload[] => {
     const result = it.result;
     return {
       stepIdentifier: it.identifier,

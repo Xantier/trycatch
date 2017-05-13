@@ -2,14 +2,14 @@
   "name" : "scenario1",
   "steps" : [ {
     "name" : "request scenario1",
-    "payload" : "{\"hi\":\"universe\"}",
+    "payload" : "{\"empty\":\"empty\"}",
     "expectation" : {
       "value" : {
-        "content" : "{\"userId\":1,\"id\":1,\"title\":\"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\"body\":\"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"}"
+        "content" : "{}"
       }
     },
     "request" : {
-      "method" : "POST",
+      "method" : "GET",
       "path" : "http://jsonplaceholder.typicode.com/posts/1",
       "params" : {
         "API-Key" : "foo"
@@ -20,14 +20,14 @@
     "name" : "insert scenario1",
     "statement" : "INSERT INTO cities (name) values ('new City3')",
     "expectation" : {
-      "value" : "Done successfully"
+      "value" : "Insert statement executed. Response: 1"
     },
     "type" : "INSERT"
   }, {
     "name" : "select scenario1",
-    "statement" : "SELECT * FROM cities where name = 'new City2'",
+    "statement" : "SELECT * FROM cities where name = 'new City3'",
     "expectation" : {
-      "value" : [ "123,rwrwe,erwwer,erwrew\n23232,fdsaf,4342,sdffdas4\n34234,54,5fdf,45435" ]
+      "value" : [ "93,new City 3" ]
     },
     "type" : "SELECT"
   } ]

@@ -1,6 +1,7 @@
 package com.hallila.trycatch.model
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ArrayNode
 import com.github.kittinunf.fuel.core.Method
 import com.hallila.trycatch.handler.JsonHelpers
 import com.hallila.trycatch.handler.httpMethodFromString
@@ -61,13 +62,22 @@ data class Scenario(val name: String, val steps: List<Step<*>>) {
                             parseHttpRequest(it.value, httpMethodFromString(it.value.get(JsonHelpers.METHOD).asText()), JsonHelpers.REQUEST + " " + name)
                         JsonHelpers.INSERT ->
                             InsertStep(JsonHelpers.INSERT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
-                                DatabaseResponseExpectation("Done successfully"),
+                                DatabaseResponseExpectation("Insert statement executed. Response: 1"),
                                 StepKey.INSERT)
 
-                        JsonHelpers.SELECT ->
-                            SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
-                                CsvExpectation(listOf(it.value.get(JsonHelpers.EXPECTATION).asText())),
-                                StepKey.SELECT)
+                        JsonHelpers.SELECT -> {
+                            val exp = it.value.get(JsonHelpers.EXPECTATION)
+                            if (exp is ArrayNode) {
+                                SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                                    CsvExpectation(exp.map { it.asText() }),
+                                    StepKey.SELECT)
+                            } else {
+                                SelectStep(JsonHelpers.SELECT + " " + name, it.value.get(JsonHelpers.QUERY).asText(),
+                                    CsvExpectation(listOf(exp.asText())), StepKey.SELECT)
+                            }
+
+
+                        }
                         else ->
                             throw RuntimeException("Unable to parse posted JSON :(")
                     }

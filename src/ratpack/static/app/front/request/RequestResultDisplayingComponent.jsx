@@ -3,7 +3,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SuccessFailResultComponent from '../SuccessFailResultComponent.jsx';
+import SuccessFailResultComponent from '../common/SuccessFailResultComponent.jsx';
 import FontIcon from 'material-ui/FontIcon';
 import {green500, red500} from 'material-ui/styles/colors';
 import {Card, CardText, CardTitle} from 'material-ui/Card';

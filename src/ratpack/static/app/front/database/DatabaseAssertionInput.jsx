@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import SqlInput from './SqlInput.jsx';
 
-import type {SqlInputType} from '../reducer';
+import type {SqlInputType} from '../../services/reducer';
 
 type Props = {
   updateExpected: () => void,
@@ -31,7 +31,7 @@ export default (props: Props): React.Element => {
         <SqlInput {...sql} updateFn={updateSelect}/>
         <TextField
             floatingLabelText="Expected results"
-            hintText="Insert Comma separated expected results"
+            hintText="Insert Comma separated rows of expected results"
             floatingLabelFixed={true}
             rows={10}
             rowsMax={40}
