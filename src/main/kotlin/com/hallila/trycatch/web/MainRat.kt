@@ -30,6 +30,7 @@ object MainRat {
                 .sysProps()
                 .args(args)
                 .require("/db", HikariConfig::class.java)
+                .port(7357)
         }
         guiceRegistry {
             module(WebContextModule())
